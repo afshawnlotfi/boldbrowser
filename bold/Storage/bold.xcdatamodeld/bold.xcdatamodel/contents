@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="16G1114" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Favion" representedClassName="Favion" syncable="YES" codeGenerationType="class">
+        <attribute name="faviconData" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="faviconURL" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="SavedTab" representedClassName=".SavedTab" syncable="YES">
+        <attribute name="faviconURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sessionData" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Screenshot" representedClassName="Screenshot" syncable="YES" codeGenerationType="class"/>
+    <elements>
+        <element name="Favion" positionX="-162" positionY="-190" width="128" height="73"/>
+        <element name="SavedTab" positionX="-477" positionY="-243" width="128" height="88"/>
+        <element name="Screenshot" positionX="-288" positionY="-18" width="128" height="45"/>
+    </elements>
+</model>
