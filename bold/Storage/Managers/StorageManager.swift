@@ -11,13 +11,13 @@ import CoreData
 import UIKit
 
 class StorageManager<StorageObject:NSManagedObject>:NSObject,IStorageManager{
-    
     private var appDelegate = UIApplication.shared.delegate as! AppDelegate
-    lazy private var dataObjects = [StorageObject]()
     private var context: NSManagedObjectContext
-    
+    var dataObjects: [NSManagedObject]
+
     override init() {
         context = appDelegate.persistentContainer.viewContext
+        dataObjects = []
         super.init()
     }
     
@@ -25,7 +25,7 @@ class StorageManager<StorageObject:NSManagedObject>:NSObject,IStorageManager{
     /// Adds Object to Core Data which is configured for IStorageDefaults
     ///
     /// - Parameter storageDefaults: Storage Dafaults of Object
-    func addObject(from storageDefaults: IStorageDefaults) {
+    func addObject(from storageDefaults: IStorageDefaults) -> NSManagedObject {
         let entity = NSEntityDescription.entity(forEntityName: String(describing : StorageObject.self), in: context)
         let item = StorageObject(entity: entity!, insertInto: context)
 
@@ -35,14 +35,14 @@ class StorageManager<StorageObject:NSManagedObject>:NSObject,IStorageManager{
         
         dataObjects.append(item)
         appDelegate.saveContext()
-        
+        return item
     }
     
     
     /// Fetches Object from Core Data
     ///
     /// - Returns: Standard NSManagedObject which is casted to specific storage object later
-    func fetchObjects() -> [NSManagedObject] {
+    func fetchObjects(fromDisk : Bool) -> [NSManagedObject]{
 
         do{
             dataObjects = try context.fetch(StorageObject.fetchRequest()) as! [StorageObject]

@@ -12,9 +12,11 @@ import CoreData
 
 protocol IStorageManager {
     
-    func addObject(from storageDefaults: IStorageDefaults)
+    var dataObjects:[NSManagedObject] {get}
+
+    func addObject(from storageDefaults: IStorageDefaults) -> NSManagedObject
     
-    func fetchObjects() -> [NSManagedObject]
+    func fetchObjects(fromDisk : Bool) -> [NSManagedObject]
     
     func deleteObject(index : Int)
     

@@ -41,7 +41,7 @@ class TabSession:NSObject{
     
     convenience init(data : Data) {
         let sessionData = JSONParser.deserialize(data: data)
-        let urls = sessionData["urls"] as? [URL] ?? []
+        let urls = (sessionData["urls"] as? [String])!.map{ $0.convertToURL() }
         let currentPage = sessionData["currentPage"] as! Int
         self.init(urls: urls, currentPage: currentPage)
     }
@@ -65,9 +65,9 @@ extension TabSession:TabSessionDelegate{
 // MARK: - Blank Session for New Tab
 extension TabSession{
     
-    static var data:Data{
+    static var defaultData:Data{
         let dict:[String : Any] =  [
-            "urls" : [BrowserStrings.NewTab],
+            "urls" : [BrowserStrings.NewTabURL],
             "currentPage" : 0
             ]
         return JSONParser.serialize(dict: dict)

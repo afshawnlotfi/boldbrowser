@@ -17,10 +17,9 @@ protocol TabDelegate {
 
 class Tab:NSObject{
     private var configuration: WKWebViewConfiguration?
-    var savedTab:SavedTab?
     var webView:WKWebView?
     var tabDelegate:TabDelegate?
-
+    var tabSession:TabSession?
     var displayTitle: String {
         if let title = webView?.title, !title.isEmpty {
             return title
@@ -44,9 +43,7 @@ class Tab:NSObject{
     func assignWebview(){
         
         if webView == nil {
-
             let webView = TabWebView(frame: CGRect.zero, configuration: configuration!)
-            
             restoreWebview(webView)
             tabDelegate?.tab(self, didCreateWebView: webView)
             self.webView = webView
@@ -56,15 +53,15 @@ class Tab:NSObject{
     
     
     func restoreWebview(_ webView: WKWebView) {
-
         
-        let lastURL = URL(string: (savedTab?.title)!)
-        let request = URLRequest(url: lastURL!)
-        webView.load(request)
-
+        if let tabSession = self.tabSession{
+            let savedURL = tabSession.urls[tabSession.currentPage]
+            let request = URLRequest(url: savedURL)
+            webView.load(request)
+        }
     }
   
-    
+
  
  
     

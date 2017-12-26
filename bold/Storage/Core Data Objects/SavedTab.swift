@@ -21,9 +21,6 @@ extension SavedTab {
         return NSFetchRequest<SavedTab>(entityName: "SavedTab")
     }
     
-    convenience init(sessionData : NSData) {
-        self.init()
-    }
     
     @NSManaged public var faviconURL: String?
     @NSManaged public var isSelected: Bool

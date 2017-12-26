@@ -1,4 +1,4 @@
 {
-    name : "finder"
-    handler : "findTextManager"
+    "name" : "finder"
+    "handler" : "findTextManager"
 }

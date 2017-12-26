@@ -17,6 +17,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BrowserViewController" customModule="bold" customModuleProvider="target">
             <connections>
+                <outlet property="addTabBtn" destination="Yt7-HB-Bkw" id="WY7-mp-I3Z"/>
                 <outlet property="backgroundImageView" destination="323-gd-0Uv" id="tQr-JV-H95"/>
                 <outlet property="tabStack" destination="IQ4-AO-9aJ" id="P5h-ZL-JZK"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
