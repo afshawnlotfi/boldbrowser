@@ -18,6 +18,7 @@ class GContainerCell: UICollectionViewCell {
         super.awakeFromNib()
         titleBtn.setTitleColor(ColorConfiguration.SystemLight, for: .normal)
         blurView.effect = ColorConfiguration.SystemBlur
+        
     }
     
     

@@ -25,60 +25,50 @@ class BrowserViewController: UIViewController {
         self.tabManager.tabManagerDelegates.append(self)
         self.tabManager.restoreTabs()
         self.addTabBtn.addTarget(self, action: #selector(addTabToDisk), for: .touchDown)
-
     }
-    
     @objc func addTabToDisk(){
         
         self.tabManager.addTab(atIndex: nil, configuration: nil, restoreFrom: nil)
         
     }
-   
-
 
 }
 
-extension BrowserViewController:TabDelegate, TabManagerDelegate{
-    func tabManager(_ tabManager: TabManager, addTab at: IndexPath) {
-        tabManager.tabs[at.row - 1].tabDelegate = self
-    }
-    
-    func tabManager(_ tabManager: TabManager, removeTab at: IndexPath) {
+extension BrowserViewController:TabManagerDelegate{
+    func tabManager(didAddTab atIndex: IndexPath, tab: Tab) {
+        
+        tab.tabDelegate = self
         
     }
     
-    func tabManager(_ tabManager: TabManager, selectedTab at: IndexPath) {
+    func tabManager(didRemoveTab atIndex: IndexPath, tab: Tab) {
         
     }
     
-    func tab(_ tab: Tab, didCreateWebView webView: WKWebView) {
-        webView.addObserver(self, forKeyPath: BrowserStrings.TitleObserver, options: .new, context: nil)
+    func tabManager(didSelectTab atIndex: IndexPath, tab: Tab) {
+        
     }
+    
+    func tabManager(didUpdateTitle atIndex: IndexPath, tab: Tab) {
+        tab.webView?.evaluateJavaScript("main()")
+    }
+}
 
-    func tab(_ tab: Tab, willDeleteWebView webView: WKWebView) {
 
-    }
-    
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        let webview = object as! WKWebView
-        if let key = keyPath{
-            switch key {
-            case BrowserStrings.EstimatedProgressObserver:
-                break
-            case BrowserStrings.TitleObserver:
-                break
-            case BrowserStrings.URLObserver:
-                break
-            default:
-                break
-            }
-        }
+extension BrowserViewController:TabDelegate{
+    func tab(_ tab: Tab, didCreateWebview webView: TabWebView) {
+        self.tabManager.addObserver(tab: tab, observerKeys: [BrowserStrings.EstimatedProgressObserver, BrowserStrings.TitleObserver])
         
+        let faviconConfig = PluginScriptConfiguration(pluginName: "favicon")
+        let faviconManager = FaviconManager(pluginConfig: faviconConfig)
+        
+        self.tabManager.addTabPluginScripts(tab: tab, tabScripts: [faviconManager])
         
     }
     
- 
+   
 
+    
 }
 
 

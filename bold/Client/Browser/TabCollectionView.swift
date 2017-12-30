@@ -25,21 +25,33 @@ class TabCollectionView: GCollectionView,TabManagerDelegate {
         self.reloadData()
     }
     
-    func tabManager(_ tabManager: TabManager, addTab at : IndexPath) {
+    func tabManager(didAddTab atIndex: IndexPath, tab: Tab) {
+        self.reloadData()
+
+    }
+    
+    func tabManager(didRemoveTab atIndex: IndexPath, tab: Tab) {
         self.reloadData()
     }
     
-    func tabManager(_ tabManager: TabManager, selectedTab at: IndexPath) {
+    func tabManager(didSelectTab atIndex: IndexPath, tab: Tab) {
         UIView.animate(withDuration: 0.1, animations: {
-            self.contentOffset.x = UIScreen.main.bounds.width * CGFloat(at.row)
+                self.contentOffset.x = UIScreen.main.bounds.width * CGFloat(atIndex.row)
         })
     }
     
-    func tabManager(_ tabManager: TabManager, removeTab at: IndexPath) {
-        self.reloadData()
+    func tabManager(didUpdateTitle atIndex: IndexPath, tab: Tab) {
+        if let cell = self.cellForItem(at: atIndex) as? GContainerCell{
+            
+            cell.setCellTitle(title: tab.displayTitle)
+        }
+
     }
     
     
+   
+    
+
     required convenience init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

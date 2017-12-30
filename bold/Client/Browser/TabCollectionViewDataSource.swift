@@ -26,7 +26,8 @@ class TabCollectionViewDataSource: NSObject, UICollectionViewDataSource{
                                      cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let tab = tabManager.tabs[indexPath.row]
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! GContainerCell
-        tab.assignWebview()
+        tab.createWebview()
+        tab.webView?.tag = indexPath.row
         cell.setContentView(view: tab.webView!)
         cell.setCellTitle(title: tab.displayTitle)
         return cell

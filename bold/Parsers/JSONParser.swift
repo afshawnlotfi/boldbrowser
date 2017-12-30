@@ -15,7 +15,7 @@ class JSONParser{
         var jsonDict = [String:AnyObject]()
 
         do{
-            jsonDict = try JSONSerialization.jsonObject(with: data, options: []) as! [String:AnyObject]
+            jsonDict = try JSONSerialization.jsonObject(with: data, options: [.allowFragments]) as! [String:AnyObject]
         
         } catch let error as NSError {
             print(error)

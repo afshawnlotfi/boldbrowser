@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 import UIKit
 
-class StorageManager<StorageObject:NSManagedObject>:NSObject,IStorageManager{
+class StorageManager<StorageObject:NSManagedObject>:NSObject{
     private var appDelegate = UIApplication.shared.delegate as! AppDelegate
     private var context: NSManagedObjectContext
     var dataObjects: [NSManagedObject]
@@ -51,6 +51,10 @@ class StorageManager<StorageObject:NSManagedObject>:NSObject,IStorageManager{
             print(error, ErrorStrings.FetchError)
         }
         return dataObjects
+    }
+    
+    func updateObject(key : String, toVal : Any){
+       
     }
     
     

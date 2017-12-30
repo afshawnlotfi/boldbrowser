@@ -11,15 +11,16 @@ import WebKit
 
 
 protocol TabDelegate {
-    func tab(_ tab: Tab, didCreateWebView webView: WKWebView)
-    func tab(_ tab: Tab, willDeleteWebView webView: WKWebView)
+    func tab(_ tab: Tab, didCreateWebview webView: TabWebView)
 }
 
 class Tab:NSObject{
     private var configuration: WKWebViewConfiguration?
+    private(set) var tabScriptManager = TabScriptManager()
     var webView:WKWebView?
     var tabDelegate:TabDelegate?
     var tabSession:TabSession?
+    var lastSavedTitle:String?
     var displayTitle: String {
         if let title = webView?.title, !title.isEmpty {
             return title
@@ -40,13 +41,14 @@ class Tab:NSObject{
         self.configuration = configuration
     }
     
-    func assignWebview(){
+    func createWebview(){
         
         if webView == nil {
             let webView = TabWebView(frame: CGRect.zero, configuration: configuration!)
             restoreWebview(webView)
-            tabDelegate?.tab(self, didCreateWebView: webView)
             self.webView = webView
+            tabDelegate?.tab(self, didCreateWebview: webView)
+            
         }
         
     }
@@ -59,6 +61,24 @@ class Tab:NSObject{
             let request = URLRequest(url: savedURL)
             webView.load(request)
         }
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if let webview = object as? TabWebView{
+            if let key = keyPath{
+                switch key {
+                case BrowserStrings.EstimatedProgressObserver:
+                    webview.progressBarUpdated()
+                case BrowserStrings.TitleObserver:
+                    break
+                case BrowserStrings.URLObserver:
+                    break
+                default:
+                    break
+                }
+            }
+        }
+        
     }
   
 

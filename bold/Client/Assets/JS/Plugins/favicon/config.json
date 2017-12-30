@@ -1,5 +1,5 @@
 {
-    "name" : "favicon"
+    "name" : "favicon",
     "handler" : "faviconHandler"
     
 }

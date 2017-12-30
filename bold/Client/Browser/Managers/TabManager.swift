@@ -10,9 +10,12 @@ import Foundation
 import WebKit
 
 protocol TabManagerDelegate{
-    func tabManager(_ tabManager: TabManager, addTab at : IndexPath)
-    func tabManager(_ tabManager: TabManager, removeTab at : IndexPath)
-    func tabManager(_ tabManager: TabManager, selectedTab at : IndexPath)
+    
+    func tabManager(didAddTab atIndex : IndexPath, tab: Tab)
+    func tabManager(didRemoveTab atIndex : IndexPath, tab: Tab)
+    func tabManager(didSelectTab atIndex : IndexPath, tab: Tab)
+    func tabManager(didUpdateTitle atIndex : IndexPath, tab : Tab)
+
 
 }
 
@@ -24,7 +27,6 @@ class TabManager:NSObject{
     var tabManagerDelegates = [TabManagerDelegate]()
     
     override init() {
-
         super.init()
     }
     
@@ -53,9 +55,39 @@ class TabManager:NSObject{
         if atIndex == nil{
             tabs.append(tab)
             let tabIndex = IndexPath(item: tabs.count, section: 1)
-            tabManagerDelegates.forEach{$0.tabManager(self, addTab: tabIndex); $0.tabManager(self, selectedTab: tabIndex)}
+            tabManagerDelegates.forEach{$0.tabManager(didAddTab: tabIndex, tab:tab); $0.tabManager(didSelectTab: tabIndex, tab:tab)}
         }
         
+    }
+    
+    func storeChanges(atIndex : Int){
+        
+        
+        
+    }
+    
+    
+
+    /// Adds KVO observers to tabs
+    ///
+    /// - Parameters:
+    ///   - tab: Tabs you want to add observers
+    ///   - observerKeys: Observer Keys
+    func addObserver(tab : Tab, observerKeys : [String]){
+        observerKeys.forEach{
+            tab.webView?.addObserver(self, forKeyPath: $0, options: .new, context: nil)
+        }
+    }
+    
+    /// Adds scripts to tabs
+    ///
+    /// - Parameters:
+    ///   - tab: Tabs you want to add scripts
+    ///   - tabScripts: Scripts you want to inject
+    func addTabPluginScripts(tab : Tab, tabScripts : [ITabPluginScript]){
+        tabScripts.forEach{
+            tab.tabScriptManager.addTabScript(tabScript: $0, atTab: tab)
+        }
     }
     
     
@@ -75,11 +107,24 @@ class TabManager:NSObject{
         
        
     }
-        
-        
-        
     
     
- 
     
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if let webview = object as? TabWebView{
+            if let key = keyPath{
+                switch key {
+                case BrowserStrings.EstimatedProgressObserver:
+                    webview.progressBarUpdated()
+                case BrowserStrings.TitleObserver:
+                    tabManagerDelegates.forEach{$0.tabManager(didUpdateTitle: IndexPath(row: webview.tag, section: 0) , tab: tabs[webview.tag])}
+                case BrowserStrings.URLObserver:
+                    break
+                default:
+                    break
+                }
+            }
+        }
+        
+    }
 }

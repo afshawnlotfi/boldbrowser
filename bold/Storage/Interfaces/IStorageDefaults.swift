@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 protocol IStorageDefaults{
-    var title:String {get}
+
 }
 
 extension IStorageDefaults{
