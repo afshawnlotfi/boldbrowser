@@ -30,8 +30,13 @@ class TabCollectionViewDataSource: NSObject, UICollectionViewDataSource{
         tab.webView?.tag = indexPath.row
         cell.setContentView(view: tab.webView!)
         cell.setCellTitle(title: tab.displayTitle)
+        if let faviconImage = UIImage(data : (tab.favicon?.faviconData)!){
+                cell.setCellImage(image: faviconImage)
+        }
+        
         return cell
     }
+    
     
     
     func collectionView(_ collectionView: UICollectionView,

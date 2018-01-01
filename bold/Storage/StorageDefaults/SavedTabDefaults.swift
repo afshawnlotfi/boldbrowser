@@ -10,6 +10,6 @@ import Foundation
 
 struct SavedTabDefaults:IStorageDefaults{
     var title:String = BrowserStrings.NoTitle
-    var faviconURL:String = BrowserStrings.NoTitle
-    var sessionData:Data = TabSession.defaultData
+    var faviconURL:String = String()
+    var tabSession:Data = TabSession.defaultData
 }

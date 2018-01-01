@@ -40,10 +40,15 @@ class TabSession:NSObject{
     }
     
     convenience init(data : Data) {
-        let sessionData = JSONParser.deserialize(data: data)
-        let urls = (sessionData["urls"] as? [String])!.map{ $0.convertToURL() }
-        let currentPage = sessionData["currentPage"] as! Int
+        let tabSession = JSONParser.deserialize(data: data)
+        let urls = (tabSession["urls"] as? [String])!.map{ $0.convertToURL() }
+        let currentPage = tabSession["currentPage"] as! Int
         self.init(urls: urls, currentPage: currentPage)
+    }
+    
+    func updateSession(urls : [URL], currentPage : Int){
+        self.urls = urls
+        self.currentPage = currentPage
     }
     
 }

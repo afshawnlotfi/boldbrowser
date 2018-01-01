@@ -53,8 +53,11 @@ class StorageManager<StorageObject:NSManagedObject>:NSObject{
         return dataObjects
     }
     
-    func updateObject(key : String, toVal : Any){
-       
+    func updateObject(updatedValues : [String:Any], object : StorageObject){
+        for updatedValue in updatedValues{
+            object.setValue(updatedValue.value, forKey: updatedValue.key)
+        }
+        appDelegate.saveContext()
     }
     
     

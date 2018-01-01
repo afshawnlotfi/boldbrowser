@@ -13,10 +13,12 @@ class GContainerCell: UICollectionViewCell {
     @IBOutlet private weak var blurView: UIVisualEffectView!
     @IBOutlet private weak var contentStack: UIStackView!
     @IBOutlet private weak var optionStack: UIStackView!
-    @IBOutlet private weak var titleBtn: UIButton!
+
+    @IBOutlet weak var faviconBtn: UIButton!
+    @IBOutlet weak var urlTextField: UITextField!
     override func awakeFromNib() {
         super.awakeFromNib()
-        titleBtn.setTitleColor(ColorConfiguration.SystemLight, for: .normal)
+        urlTextField.textColor = ColorConfiguration.SystemLight
         blurView.effect = ColorConfiguration.SystemBlur
         
     }
@@ -26,7 +28,7 @@ class GContainerCell: UICollectionViewCell {
     ///
     /// - Parameter title: Name of title
     public func setCellTitle(title : String){
-        titleBtn.setTitle(title, for: .normal)
+        urlTextField.text = title
     }
     
     
@@ -34,7 +36,7 @@ class GContainerCell: UICollectionViewCell {
     ///
     /// - Parameter image: Image of container
     public func setCellImage(image : UIImage){
-        titleBtn.setImage(image, for: .normal)
+        faviconBtn.setImage(image, for: .normal) 
     }
     
     

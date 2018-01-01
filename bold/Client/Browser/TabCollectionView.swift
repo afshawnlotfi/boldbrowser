@@ -9,7 +9,6 @@
 import UIKit
 
 class TabCollectionView: GCollectionView,TabManagerDelegate {
-
     
     private let identifier =  "GContainerCell"
     private var tabManager:TabManager
@@ -19,41 +18,45 @@ class TabCollectionView: GCollectionView,TabManagerDelegate {
         super.init(identifier: identifier)
         self.dataSource = tabDataSource
         self.delegate = tabFlowLayout
+        self.tabManager.tabManagerDelegates.append(self)
         self.horizontalScroll(true)
         self.isPagingEnabled = true
-        tabManager.tabManagerDelegates.append(self)
+    }
+    
+    required convenience init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    func tabManager(_ tabManager: TabManager, didAddTab atIndex: IndexPath, tab: Tab) {
         self.reloadData()
     }
     
-    func tabManager(didAddTab atIndex: IndexPath, tab: Tab) {
-        self.reloadData()
-
-    }
-    
-    func tabManager(didRemoveTab atIndex: IndexPath, tab: Tab) {
+    func tabManager(_ tabManager: TabManager, didRemoveTab atIndex: IndexPath, tab: Tab) {
         self.reloadData()
     }
     
-    func tabManager(didSelectTab atIndex: IndexPath, tab: Tab) {
+    func tabManager(_ tabManager: TabManager, didSelectTab atIndex: IndexPath, tab: Tab) {
         UIView.animate(withDuration: 0.1, animations: {
-                self.contentOffset.x = UIScreen.main.bounds.width * CGFloat(atIndex.row)
+            self.contentOffset.x = UIScreen.main.bounds.width * CGFloat(atIndex.row)
         })
     }
     
-    func tabManager(didUpdateTitle atIndex: IndexPath, tab: Tab) {
+    func tabManager(_ tabManager: TabManager, didUpdateTitle atIndex: IndexPath, title: String) {
         if let cell = self.cellForItem(at: atIndex) as? GContainerCell{
-            
-            cell.setCellTitle(title: tab.displayTitle)
+            cell.setCellTitle(title: title)
         }
-
     }
     
     
-   
-    
-
-    required convenience init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    func tabManager(_ tabManager: TabManager, didUpdateFaviconURL atIndex: IndexPath, faviconURL: String) {
+        if let cell = self.cellForItem(at: atIndex) as? GContainerCell{
+            if let data =  FaviconManager.retrieveFavicon(forUrl: faviconURL).faviconData{
+                if let faviconImage = UIImage(data : data){
+                    cell.setCellImage(image: faviconImage)
+                }
+            }
+        }
     }
     
     private lazy var tabDataSource: TabCollectionViewDataSource = {

@@ -12,18 +12,18 @@ import WebKit
 
 class TabScriptManager: NSObject, WKScriptMessageHandler {
     
-    private var scriptPool = [String : ITabPluginScript]()
+    private var scriptPool = [String : TabPluginScript]()
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         //Search for plugin identifier
         for script in scriptPool.values {
             if script.pluginDescriptor.isValid == true && script.pluginDescriptor.messageHandlerName == message.name {
-                script.userContentController(userContentController, didReceive: message)
+                script.manager.userContentController(userContentController, didReceive: message)
                 break
             }
         }
     }
     
-    func addTabScript(tabScript : ITabPluginScript , atTab tab : Tab){
+    func addTabScript(tabScript : TabPluginScript , atTab tab : Tab){
         if tabScript.pluginDescriptor.isValid == true{
             //Add tabScript to dictionary
             scriptPool[tabScript.pluginDescriptor.messageHandlerName] = tabScript
@@ -35,7 +35,7 @@ class TabScriptManager: NSObject, WKScriptMessageHandler {
     }
     
     
-    func retrieveTabScript(handlerMessageName name: String) -> ITabPluginScript? {
+    func retrieveTabScript(handlerMessageName name: String) -> TabPluginScript? {
         return scriptPool[name]
     }
     

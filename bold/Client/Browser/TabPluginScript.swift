@@ -23,30 +23,28 @@ class PluginScriptDescriptor{
 }
 
 
-protocol ITabPluginScript{
-    var pluginDescriptor:PluginScriptDescriptor {get}
-    var scriptContents:WKUserScript {get}
-    init(pluginConfig : PluginScriptConfiguration)
+
+protocol ITabPluginManager{
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage)
-    
 }
 
 
-/// Class that validates scripts config
-class PluginScriptConfiguration{
+/// Class that validates and configures scripts
+class TabPluginScript:NSObject{
     private(set) var pluginDescriptor:PluginScriptDescriptor
     private(set) var scriptContents:WKUserScript
+    private(set) var manager:ITabPluginManager
 
     /// Function that validates plugin config
     ///
     /// - Parameter pluginName: Name of the Plugin
     /// - Returns: Script Object
-    init(pluginName : String){
+    init(pluginName : String, manager : ITabPluginManager){
         var scriptName = String()
         var messageHandler = String()
         var isValid = false
         var sScript = String()
-
+        self.manager = manager
         let configPath = Bundle.main.path(forResource: "config", ofType: "json", inDirectory: "JS/Plugins/" + pluginName)
         do {
             let data = try Data(contentsOf: URL(fileURLWithPath: configPath!), options: .mappedIfSafe)
@@ -74,8 +72,12 @@ class PluginScriptConfiguration{
         
         pluginDescriptor = PluginScriptDescriptor(scriptName: scriptName, messageHandlerName: messageHandler, isValid: isValid)
         scriptContents = WKUserScript(source: sScript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+        super.init()
 
     }
+
+    
+    
 }
 
 

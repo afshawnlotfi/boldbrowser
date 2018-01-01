@@ -14,6 +14,7 @@ class TabWebView:WKWebView{
     
     private var progressBar = UIProgressView()
     private var progressConstraints:[NSLayoutConstraint] = []
+    @objc public var faviconURL:String?
     override init(frame: CGRect, configuration: WKWebViewConfiguration) {
         super.init(frame: frame, configuration:  configuration)
         self.translatesAutoresizingMaskIntoConstraints = false

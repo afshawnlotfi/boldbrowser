@@ -35,41 +35,54 @@ class BrowserViewController: UIViewController {
 }
 
 extension BrowserViewController:TabManagerDelegate{
-    func tabManager(didAddTab atIndex: IndexPath, tab: Tab) {
-        
+    
+    
+    func tabManager(_ tabManager: TabManager, didAddTab atIndex: IndexPath, tab: Tab) {
         tab.tabDelegate = self
-        
-    }
-    
-    func tabManager(didRemoveTab atIndex: IndexPath, tab: Tab) {
-        
-    }
-    
-    func tabManager(didSelectTab atIndex: IndexPath, tab: Tab) {
-        
-    }
-    
-    func tabManager(didUpdateTitle atIndex: IndexPath, tab: Tab) {
-        tab.webView?.evaluateJavaScript("main()")
-    }
-}
 
+    }
+    
+    func tabManager(_ tabManager: TabManager, didRemoveTab atIndex: IndexPath, tab: Tab) {
+        
+    }
+    
+    func tabManager(_ tabManager: TabManager, didSelectTab atIndex: IndexPath, tab: Tab) {
+        
+    }
+    
+    func tabManager(_ tabManager: TabManager, didUpdateTitle atIndex: IndexPath, title: String) {
+        tabManager.tabs[atIndex.row].webView?.evaluateJavaScript("main()")
 
-extension BrowserViewController:TabDelegate{
-    func tab(_ tab: Tab, didCreateWebview webView: TabWebView) {
-        self.tabManager.addObserver(tab: tab, observerKeys: [BrowserStrings.EstimatedProgressObserver, BrowserStrings.TitleObserver])
-        
-        let faviconConfig = PluginScriptConfiguration(pluginName: "favicon")
-        let faviconManager = FaviconManager(pluginConfig: faviconConfig)
-        
-        self.tabManager.addTabPluginScripts(tab: tab, tabScripts: [faviconManager])
+    }
+    
+    func tabManager(_ tabManager: TabManager, didUpdateFaviconURL atIndex: IndexPath, faviconURL: String) {
         
     }
     
    
 
+}
+
+
+extension BrowserViewController:TabDelegate{
+    func tab(_ tab: Tab, didCreateWebview webView: TabWebView, atIndex : IndexPath) {
+        let faviconManager = FaviconManager()
+        let faviconPlugin = TabPluginScript(pluginName: "favicon", manager: faviconManager)
+
+        self.tabManager.addObserver(tab: tab, observerKeys: [ObserverStrings.EstimatedProgressObserver,ObserverStrings.TitleObserver,ObserverStrings.FaviconObserver, ObserverStrings.URLObserver])
+        
+        
+        self.tabManager.addTabPluginScripts(tab: tab, tabScripts: [faviconPlugin])
+
+    }
+    
+    @objc func gooz(){
+        
+    }
     
 }
+
+
 
 
 
