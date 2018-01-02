@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="GContainerCell" id="gTV-IL-0wX" customClass="GCollectionContainerCell" customModule="bold" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="463" height="729"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="463" height="729"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Zpx-lB-Rlm">
+                        <rect key="frame" x="0.0" y="0.0" width="576" height="776"/>
+                        <subviews>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LpX-iu-Tfi">
+                                <rect key="frame" x="0.0" y="0.0" width="463" height="55"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="mC7-QP-OYu">
+                                    <rect key="frame" x="0.0" y="0.0" width="463" height="55"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="kL0-4c-hgI">
+                                            <rect key="frame" x="0.0" y="0.0" width="463" height="55"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3PC-eX-NH9" userLabel="ImageStack">
+                                                    <rect key="frame" x="0.0" y="0.0" width="34" height="55"/>
+                                                    <subviews>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f7n-cp-khb">
+                                                            <rect key="frame" x="10" y="30" width="24" height="15"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" secondItem="f7n-cp-khb" secondAttribute="height" multiplier="1:1" id="0Yp-k2-4yH"/>
+                                                            </constraints>
+                                                            <state key="normal" image="webpage"/>
+                                                        </button>
+                                                    </subviews>
+                                                    <edgeInsets key="layoutMargins" top="10" left="10" bottom="10" right="0.0"/>
+                                                </stackView>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oW5-DB-Bqc">
+                                                    <rect key="frame" x="36" y="0.0" width="270.5" height="55"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <nil key="textColor"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
+                                                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y8K-fA-HzS">
+                                                    <rect key="frame" x="308.5" y="0.0" width="154.5" height="55"/>
+                                                </stackView>
+                                            </subviews>
+                                        </stackView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="kL0-4c-hgI" secondAttribute="trailing" id="3F0-z7-va2"/>
+                                        <constraint firstItem="kL0-4c-hgI" firstAttribute="top" secondItem="mC7-QP-OYu" secondAttribute="top" id="KQw-ry-QIn"/>
+                                        <constraint firstItem="kL0-4c-hgI" firstAttribute="leading" secondItem="mC7-QP-OYu" secondAttribute="leading" id="sJ1-WZ-af1"/>
+                                        <constraint firstAttribute="bottom" secondItem="kL0-4c-hgI" secondAttribute="bottom" id="vjY-I8-UCG"/>
+                                    </constraints>
+                                </view>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="55" id="MzR-5L-K4J"/>
+                                </constraints>
+                                <blurEffect style="dark"/>
+                            </visualEffectView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Rcf-Ei-GYl">
+                                <rect key="frame" x="0.0" y="55" width="463" height="674"/>
+                            </stackView>
+                        </subviews>
+                    </stackView>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstItem="Zpx-lB-Rlm" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="2r7-VK-oSQ"/>
+                <constraint firstItem="Zpx-lB-Rlm" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="UPH-IO-uX8"/>
+                <constraint firstAttribute="trailing" secondItem="Zpx-lB-Rlm" secondAttribute="trailing" id="ZnH-lT-RTT"/>
+                <constraint firstAttribute="bottom" secondItem="Zpx-lB-Rlm" secondAttribute="bottom" id="mAM-Md-b8y"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <size key="customSize" width="463" height="729"/>
+            <connections>
+                <outlet property="blurView" destination="LpX-iu-Tfi" id="U3i-P1-FJ6"/>
+                <outlet property="blurViewHeight" destination="MzR-5L-K4J" id="W6G-C9-ZnO"/>
+                <outlet property="contentStack" destination="Rcf-Ei-GYl" id="pOA-O2-OCK"/>
+                <outlet property="faviconBtn" destination="f7n-cp-khb" id="TRS-A1-VAb"/>
+                <outlet property="optionStack" destination="y8K-fA-HzS" id="slA-K0-7lF"/>
+                <outlet property="urlField" destination="oW5-DB-Bqc" id="vKM-i5-SxJ"/>
+            </connections>
+            <point key="canvasLocation" x="-1154" y="-725"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="webpage" width="24" height="24"/>
+    </resources>
+</document>
