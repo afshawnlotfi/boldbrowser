@@ -15,7 +15,7 @@ class FaviconManager:ITabPluginManager{
  
  
     init() {
-        _ = FaviconManager.storageManager.fetchObjects(fromDisk: true)
+        FaviconManager.storageManager.fetchObjects(fromDisk: true)
     }
     
    
@@ -47,10 +47,10 @@ class FaviconManager:ITabPluginManager{
                 let matchingIndecies = ((FaviconManager.storageManager.dataObjects as! [Favicon]).filter{ $0.faviconURL == faviconURL})
 
                 if matchingIndecies.count == 0{
-                    _ = FaviconManager.storageManager.addObject(from: storageDefaults)
+                    FaviconManager.storageManager.addObject(from: storageDefaults)
                 }else{
                     FaviconManager.storageManager.updateObject(updatedValues: ["faviconData" : storageDefaults.faviconData], object: matchingIndecies[0])
-
+                    
                 }
                     
                 webView.setValue(faviconURL, forKey: KVOConstants.faviconURL)

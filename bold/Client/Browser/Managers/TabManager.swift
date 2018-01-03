@@ -9,14 +9,11 @@
 import Foundation
 import WebKit
 
-protocol TabManagerDelegate{
+@objc protocol TabManagerDelegate{
     
-    func tabManager(_ tabManager : TabManager, didAddTab atIndex : IndexPath, tab: Tab)
-    func tabManager(_ tabManager : TabManager, didRemoveTab atIndex : IndexPath, tab: Tab)
-    func tabManager(_ tabManager : TabManager, didSelectTab atIndex : IndexPath, tab: Tab)
-    func tabManager(_ tabManager : TabManager, didFinishLoading tab: Tab)
-    func tabManager(_ tabManager : TabManager, didUpdateTitle atIndex : IndexPath, title : String)
-    func tabManager(_ tabManager : TabManager, didUpdateFavicon atIndex : IndexPath, favicon : Favicon)
+    func tabManager(_ tabManager : TabManager, didAddTab tab: Tab , atIndex : Int)
+    func tabManager(_ tabManager : TabManager, didRemoveTab tab: Tab, atIndex : Int)
+    func tabManager(_ tabManager : TabManager, didSelectTab tab: Tab, atIndex : Int)
 
 }
 
@@ -47,26 +44,38 @@ class TabManager:NSObject{
         let tab = Tab(configuration: configuration)
         
         if restoreFrom == nil{
-            let savedTabDefaults = SavedTabDefaults()
+            let savedTabDefaults = SavedTabDefaults(startIndex: tabs.count)
             savedTab = storageManager.addObject(from: savedTabDefaults) as! SavedTab
         }else{
             savedTab = restoreFrom!
         }
         
-        tab.lastTitle = savedTab.title
-        if let faviconURL = (savedTab.faviconURL){
-            tab.favicon =  FaviconManager.retrieveFavicon(forUrl: faviconURL)
-        }
-        tab.tabSession = TabSession(data: savedTab.sessionData! as Data)
-
+        configureTab(tab: tab, savedTab: savedTab)
         
         if atIndex == nil{
+            let tabIndex = tabs.count
             tabs.append(tab)
-            let tabIndex = IndexPath(item: tabs.count, section: 0)
-            tabManagerDelegates.forEach{$0.tabManager(self, didAddTab: tabIndex, tab:tab); $0.tabManager(self, didSelectTab: tabIndex, tab:tab)}
+            tabManagerDelegates.forEach{$0.tabManager(self, didAddTab: tab, atIndex : tabIndex); $0.tabManager(self, didSelectTab: tab, atIndex : tabIndex)}
         }
         
 
+    }
+    
+    /// Updates tab position in storage and in "tabs"
+    ///
+    /// - Parameters:
+    ///   - current: current index
+    ///   - final: final index
+    func updateIndecies(current : Int , final : Int){
+        //If tab webview is loaded update its observer index stored in tag used to index it in "observeValue"
+        let currentTab = tabs[current]
+        tabs.remove(at: current)
+        tabs.insert(currentTab, at: final)
+        for (index,tab) in tabs.enumerated(){
+            tab.webView?.tag = index
+        }
+//        self.storageManager.updateIndecies(current: current, final: final)
+        
     }
     
 
@@ -78,6 +87,7 @@ class TabManager:NSObject{
     ///   - savedTab: Saved Tab to restore from
     func configureTab(tab : Tab, savedTab : SavedTab){
         tab.lastTitle = savedTab.title
+        print(savedTab.index)
         if let faviconURL = (savedTab.faviconURL){
             tab.favicon =  FaviconManager.retrieveFavicon(forUrl: faviconURL)
         }
@@ -92,7 +102,7 @@ class TabManager:NSObject{
     ///   - observerKeys: Observer Keys
     func addObserver(tab : Tab, observerKeys : [String]){
         observerKeys.forEach{
-            tab.webView?.addObserver(self, forKeyPath: $0, options: [.new,.old], context: nil)
+            tab.webView?.addObserver(self, forKeyPath: $0, options: .new, context: nil)
         }
     }
     
@@ -126,39 +136,40 @@ class TabManager:NSObject{
     }
     
     
+    
+    
+    
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if let webview = object as? TabWebView{
+        if let webView = object as? TabWebView{
+            let index = webView.tag
+            let tab = tabs[index]
+            let savedTab = (storageManager.dataObjects as! [SavedTab])[index]
+            let newValue = change?[NSKeyValueChangeKey(rawValue: "new")]
             if let key = keyPath{
                 switch key {
                 case KVOConstants.estimatedProgress:
-                    webview.progressBarUpdated()
+                    webView.progressBarUpdated()
                 case KVOConstants.title:
-                    if let title = change?[NSKeyValueChangeKey(rawValue: "new")] as? String{
-                        storageManager.updateObject(updatedValues: [KVOConstants.title:title], object: (storageManager.dataObjects as! [SavedTab])[webview.tag])
-                        tabManagerDelegates.forEach{$0.tabManager(self, didUpdateTitle: IndexPath(row: webview.tag, section: 0) , title: title)}
+                    if let title = newValue as? String{
+                        storageManager.updateObject(updatedValues: [KVOConstants.title:title], object: savedTab)
+                        tab.tabDelegate?.tab(tab, didUpdateTitle: title, atIndex: index)
                     }
 
                 case KVOConstants.URL:
-                    if let currentURL = change?[NSKeyValueChangeKey(rawValue: "new")] as? URL{
-                        if let oldURL = change?[NSKeyValueChangeKey(rawValue: "old")] as? URL{
-                            let backList = webview.backForwardList.backList.map{$0.url}
-                            let forwardList = webview.backForwardList.forwardList.map{$0.url}
-                            tabs[webview.tag].tabSession?.updateSession(urls: backList + [oldURL, currentURL] + forwardList, currentPage: backList.count + 1)
-                            storageManager.updateObject(updatedValues: [ "sessionData" : tabs[webview.tag].tabSession?.data ?? TabSession.defaultData], object: (storageManager.dataObjects as! [SavedTab])[webview.tag])
-                        }
-                    }
+                    break
                 case KVOConstants.faviconURL:
-                    if let faviconURL = change?[NSKeyValueChangeKey(rawValue: "new")] as? String{
-                        
-                        storageManager.updateObject(updatedValues: [KVOConstants.faviconURL:faviconURL], object: (storageManager.dataObjects as! [SavedTab])[webview.tag])
-                        tabs[webview.tag].favicon = FaviconManager.retrieveFavicon(forUrl: faviconURL)
-                        tabManagerDelegates.forEach{$0.tabManager(self, didUpdateFavicon: IndexPath(row: webview.tag, section: 0), favicon: tabs[webview.tag].favicon!)}
+                    if let faviconURL = newValue as? String{
+                        storageManager.updateObject(updatedValues: [KVOConstants.faviconURL:faviconURL], object: savedTab)
+                        let favicon = FaviconManager.retrieveFavicon(forUrl: faviconURL)
+                        tab.favicon = favicon
+                        tab.tabDelegate?.tab(tab, didUpdateFavicon: favicon, atIndex: index)
                     }
                 case KVOConstants.loading:
-                    if let isLoading = change?[NSKeyValueChangeKey(rawValue: "new")] as? Bool{
-                        print(isLoading)
+                    if let isLoading = newValue as? Bool{
                         if isLoading == false{
-                            tabManagerDelegates.forEach{$0.tabManager(self, didFinishLoading:  tabs[webview.tag])}
+                            tab.tabDelegate?.tab(tab, didFinishLoading: index)
+                            tab.tabSession?.updateSession(tab: tab)
+                            storageManager.updateObject(updatedValues: ["sessionData" : tab.tabSession?.data ?? TabSession.defaultData], object: savedTab)
                         }
                     }
                 default:

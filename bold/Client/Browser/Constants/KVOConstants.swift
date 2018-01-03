@@ -10,7 +10,7 @@ import Foundation
 
 struct KVOConstants{
     static let loading = "loading"
-    static var estimatedProgress = "estimatedProgress"
+    static let estimatedProgress = "estimatedProgress"
     static let URL = "URL"
     static let title = "title"
     static let faviconURL = "faviconURL"

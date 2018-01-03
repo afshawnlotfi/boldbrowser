@@ -8,11 +8,12 @@
 
 import UIKit
 
-class TabCollectionView: GCollectionView,TabManagerDelegate,GCollectionViewMoveDelegate {
+class TabCollectionView: GCollectionView {
     
     
     private let identifier =  "GContainerCell"
     private var tabManager:TabManager
+    private var startIndexPath:IndexPath?
 
     init(tabManager : TabManager) {
         self.tabManager = tabManager
@@ -29,59 +30,7 @@ class TabCollectionView: GCollectionView,TabManagerDelegate,GCollectionViewMoveD
         fatalError("init(coder:) has not been implemented")
     }
     
-    
-    func gCollectionview(_ gCollectionview: GCollectionView, didSelectCell cell: UICollectionViewCell, atIndex : IndexPath) {
-        
-        tabFlowLayout.isZoomedOut = true
-        self.horizontalScroll(false)
-        self.isPagingEnabled = false
-        if let gCell = cell as? GCollectionContainerCell{
-            gCell.minimizeCell()
-        }
-//        self.scrollToItem(at: atIndex, at: [.centeredHorizontally,.centeredVertically], animated: true)
 
-    }
-    
-    func gCollectionview(_ gCollectionview: GCollectionView, didMoveCell cell: UICollectionViewCell) {
-        
-    }
-    
-    func gCollectionview(_ gCollectionview: GCollectionView, didReleaseCell cell: UICollectionViewCell) {
-        
-    }
-    
-    
-    func tabManager(_ tabManager: TabManager, didAddTab atIndex: IndexPath, tab: Tab) {
-        self.reloadData()
-
-    }
-    
-    func tabManager(_ tabManager: TabManager, didRemoveTab atIndex: IndexPath, tab: Tab) {
-        self.reloadData()
-    }
-    
-    func tabManager(_ tabManager: TabManager, didSelectTab atIndex: IndexPath, tab: Tab) {
-        UIView.animate(withDuration: 0.1, animations: {
-            self.contentOffset.x = UIScreen.main.bounds.width * CGFloat(atIndex.row)
-        })
-    }
-    
-    func tabManager(_ tabManager: TabManager, didUpdateTitle atIndex: IndexPath, title: String) {
-        if let cell = self.cellForItem(at: atIndex) as? GCollectionContainerCell{
-            cell.setCellTitle(title: title)
-        }
-    }
-    
-    func tabManager(_ tabManager: TabManager, didFinishLoading tab: Tab) {
-        
-    }
-    
-    
-    func tabManager(_ tabManager: TabManager, didUpdateFavicon atIndex: IndexPath, favicon: Favicon) {
-        if let cell = self.cellForItem(at: atIndex) as? GCollectionContainerCell{
-            cell.setCellImage(image: UIImage(data: favicon.faviconData!)! )
-        }
-    }
     
     private lazy var tabDataSource: TabCollectionViewDataSource = {
         return  TabCollectionViewDataSource(identifier: identifier, tabManager: tabManager)
@@ -92,4 +41,80 @@ class TabCollectionView: GCollectionView,TabManagerDelegate,GCollectionViewMoveD
     }()
         
 }
+extension TabCollectionView:GCollectionViewMoveDelegate{
+    func gCollectionview(_ gCollectionview: GCollectionView, didSelectCell cell: UICollectionViewCell, atIndexPath : IndexPath) {
+        startIndexPath = atIndexPath
+        tabFlowLayout.isZoomedOut = true
+        self.horizontalScroll(false)
+        self.isPagingEnabled = false
+        if let gCell = cell as? GCollectionContainerCell{
+            gCell.minimizeCell()
+        }
+    }
+    
+    func gCollectionview(_ gCollectionview: GCollectionView, didMoveCell cell: UICollectionViewCell, atIndexPath : IndexPath) {
+        
+    }
+    
+    func gCollectionview(_ gCollectionview: GCollectionView, didReleaseCell cell: UICollectionViewCell, atIndexPath : IndexPath) {
+        self.tabManager.updateIndecies(current: (startIndexPath?.row)!, final: atIndexPath.row)
+    }
+    
+
+}
+
+
+extension TabCollectionView:TabManagerDelegate{
+    
+    func tabManager(_ tabManager: TabManager, didAddTab tab: Tab, atIndex: Int) {
+        tabManager.tabs[atIndex].tabDelegate = self
+        self.reloadData()
+        
+    }
+    
+    func tabManager(_ tabManager: TabManager, didRemoveTab tab: Tab, atIndex: Int) {
+        self.reloadData()
+    }
+    
+    func tabManager(_ tabManager: TabManager, didSelectTab tab: Tab, atIndex: Int) {
+        UIView.animate(withDuration: 0.1, animations: {
+            self.contentOffset.x = UIScreen.main.bounds.width * CGFloat(atIndex)
+        })
+    }
+    
+}
+
+
+extension TabCollectionView:TabDelegate{
+    
+    func tab(_ tab: Tab, didCreateWebview webView: TabWebView, atIndex: Int) {
+        
+        let faviconManager = FaviconManager()
+        let faviconPlugin = TabPluginScript(pluginName: "favicon", manager: faviconManager)
+        
+        self.tabManager.addObserver(tab: tab, observerKeys: [KVOConstants.estimatedProgress,KVOConstants.title,KVOConstants.faviconURL, KVOConstants.URL, KVOConstants.loading])
+        
+        
+        self.tabManager.addTabPluginScripts(tab: tab, tabScripts: [faviconPlugin])
+        tab.restoreWebview(webView)
+    }
+    
+    func tab(_ tab: Tab, didFinishLoading atIndex: Int) {
+        tab.webView?.evaluateJavaScript("getFavicons()")
+    }
+    
+    func tab(_ tab: Tab, didUpdateTitle title: String, atIndex: Int) {
+        if let cell = self.cellForItem(at: IndexPath(row: atIndex, section: 0)) as? GCollectionContainerCell{
+            cell.setCellTitle(title: title)
+        }
+    }
+    
+    func tab(_ tab: Tab, didUpdateFavicon favicon: Favicon, atIndex: Int) {
+        if let cell = self.cellForItem(at: IndexPath(row: atIndex, section: 0)) as? GCollectionContainerCell{
+            cell.setCellImage(image: UIImage(data: favicon.faviconData!)! )
+        }
+    }
+}
+    
+
 

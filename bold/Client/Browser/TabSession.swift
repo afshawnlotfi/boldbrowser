@@ -8,10 +8,8 @@
 
 import Foundation
 
-
 protocol TabSessionDelegate: class {
-    func tabSession(_ tabSession: TabSession, didUpdateBackList backList: Tab)
-    func tabSession(_ tabSession: TabSession, didUpdateForwardList forwardList: Tab)
+    func tabSession(_ tabSession: TabSession, didUpdateSession backList: Tab)
 }
 
 
@@ -51,20 +49,29 @@ class TabSession:NSObject{
         self.currentPage = currentPage
     }
     
+    func updateSession(tab : Tab){
+            if let webView = tab.webView{
+                
+                let backList = webView.backForwardList.backList.map{$0.url}
+                let forwardList = webView.backForwardList.forwardList.map{$0.url}
+                var currentURLList:[URL]{
+                    if let currentURL = webView.backForwardList.currentItem?.initialURL{
+                        return [currentURL]
+                    }else{
+                        if self.urls.count > 0{
+                            return [self.urls[currentPage]]
+                        }else{
+                            return []
+                        }
+                    }
+                }
+                
+                self.updateSession(urls: backList + currentURLList + forwardList, currentPage: backList.count)
+            }
+    }
 }
 
 
-// MARK: - Updated TabSession object when Tab switches pages
-extension TabSession:TabSessionDelegate{
-    func tabSession(_ tabSession: TabSession, didUpdateBackList backList: Tab) {
-        
-    }
-    
-    func tabSession(_ tabSession: TabSession, didUpdateForwardList forwardList: Tab) {
-        
-    }
-    
-}
 
 
 // MARK: - Blank Session for New Tab

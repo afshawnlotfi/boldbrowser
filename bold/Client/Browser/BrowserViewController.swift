@@ -22,7 +22,6 @@ class BrowserViewController: UIViewController {
         self.tabManager = TabManager()
         self.tabCollectionView = TabCollectionView(tabManager: tabManager)
         self.tabStack.addArrangedSubview(self.tabCollectionView)
-        self.tabManager.tabManagerDelegates.append(self)
         self.tabManager.restoreTabs()
         self.addTabBtn.addTarget(self, action: #selector(addTabToDisk), for: .touchDown)
     }
@@ -33,58 +32,5 @@ class BrowserViewController: UIViewController {
     }
 
 }
-
-extension BrowserViewController:TabManagerDelegate{
-    
-    
-    func tabManager(_ tabManager: TabManager, didAddTab atIndex: IndexPath, tab: Tab) {
-        tab.tabDelegate = self
-
-    }
-    
-    func tabManager(_ tabManager: TabManager, didRemoveTab atIndex: IndexPath, tab: Tab) {
-        
-    }
-    
-    func tabManager(_ tabManager: TabManager, didSelectTab atIndex: IndexPath, tab: Tab) {
-        
-    }
-    func tabManager(_ tabManager: TabManager, didFinishLoading tab: Tab) {
-        tab.webView?.evaluateJavaScript("getFavicons()")
-    }
-    
-    func tabManager(_ tabManager: TabManager, didUpdateTitle atIndex: IndexPath, title: String) {
-
-    }
-    
-    func tabManager(_ tabManager: TabManager, didUpdateFavicon atIndex: IndexPath, favicon: Favicon) {
-        
-    }
-    
-   
-
-}
-
-
-extension BrowserViewController:TabDelegate{
-    func tab(_ tab: Tab, didCreateWebview webView: TabWebView, atIndex : IndexPath) {
-        let faviconManager = FaviconManager()
-        let faviconPlugin = TabPluginScript(pluginName: "favicon", manager: faviconManager)
-
-        self.tabManager.addObserver(tab: tab, observerKeys: [KVOConstants.estimatedProgress,KVOConstants.title,KVOConstants.faviconURL, KVOConstants.URL, KVOConstants.loading])
-        
-        
-        self.tabManager.addTabPluginScripts(tab: tab, tabScripts: [faviconPlugin])
-        tab.restoreWebview(webView)
-
-        
-
-    }
-    
-    
-}
-
-
-
 
 

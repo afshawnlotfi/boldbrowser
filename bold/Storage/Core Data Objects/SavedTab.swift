@@ -24,6 +24,7 @@ extension SavedTab {
     
     @NSManaged public var faviconURL: String?
     @NSManaged public var isSelected: Bool
+    @NSManaged public var index: Int64
     @NSManaged public var screenshotUUID: UUID?
     @NSManaged public var sessionData: NSData?
     @NSManaged public var title: String?

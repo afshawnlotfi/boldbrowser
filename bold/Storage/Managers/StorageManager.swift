@@ -25,7 +25,7 @@ class StorageManager<StorageObject:NSManagedObject>:NSObject{
     /// Adds Object to Core Data which is configured for IStorageDefaults
     ///
     /// - Parameter storageDefaults: Storage Dafaults of Object
-    func addObject(from storageDefaults: IStorageDefaults) -> NSManagedObject {
+    @discardableResult func addObject(from storageDefaults: IStorageDefaults) -> NSManagedObject {
         let entity = NSEntityDescription.entity(forEntityName: String(describing : StorageObject.self), in: context)
         let item = StorageObject(entity: entity!, insertInto: context)
 
@@ -34,16 +34,25 @@ class StorageManager<StorageObject:NSManagedObject>:NSObject{
         }
         
         dataObjects.append(item)
-        appDelegate.saveContext()
+        self.saveContext()
         return item
     }
     
     
+    func saveContext(){
+        do{
+            try context.save()
+        }catch{
+            print("Failed to save to core data")
+        }
+        
+    }
+    
     /// Fetches Object from Core Data
     ///
     /// - Returns: Standard NSManagedObject which is casted to specific storage object later
-    func fetchObjects(fromDisk : Bool) -> [NSManagedObject]{
-
+    @discardableResult func fetchObjects(fromDisk : Bool) -> [NSManagedObject]{
+        
         do{
             dataObjects = try context.fetch(StorageObject.fetchRequest()) as! [StorageObject]
         }catch let error as NSError{
@@ -53,20 +62,24 @@ class StorageManager<StorageObject:NSManagedObject>:NSObject{
         return dataObjects
     }
     
+    func updateObjects(updatedValues : [[String:Any]], objects : [StorageObject]){
+        for (index,object) in objects.enumerated(){
+            updateObject(updatedValues: updatedValues[index], object: object)
+        }
+        self.saveContext()
+    }
+    
+   
     func updateObject(updatedValues : [String:Any], object : StorageObject){
         for updatedValue in updatedValues{
             object.setValue(updatedValue.value, forKey: updatedValue.key)
         }
-        appDelegate.saveContext()
-    }
-    
-    
-    func updateIndecies(current: Int, final: Int) {
-        
     }
     
     func deleteObject(index: Int) {
-        
+        context.delete(dataObjects[index])
+        dataObjects.remove(at: index)
+        self.saveContext()
     }
     
 }

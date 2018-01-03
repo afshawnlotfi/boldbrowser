@@ -11,7 +11,10 @@ import WebKit
 
 
 protocol TabDelegate {
-    func tab(_ tab: Tab, didCreateWebview webView: TabWebView, atIndex : IndexPath)
+    func tab(_ tab: Tab, didCreateWebview webView: TabWebView, atIndex : Int)
+    func tab(_ tab : Tab, didFinishLoading atIndex : Int)
+    func tab(_ tab : Tab, didUpdateTitle title : String, atIndex : Int)
+    func tab(_ tab : Tab, didUpdateFavicon favicon : Favicon, atIndex : Int)
 }
 
 class Tab:NSObject{
@@ -47,7 +50,7 @@ class Tab:NSObject{
         
         if webView == nil {
             self.webView = TabWebView(frame: CGRect.zero, configuration: configuration!)
-            tabDelegate?.tab(self, didCreateWebview: webView!, atIndex : IndexPath(row: (self.webView?.tag)!, section: 0))
+            tabDelegate?.tab(self, didCreateWebview: webView!, atIndex : (self.webView?.tag)!)
           
         }
     }
@@ -56,9 +59,11 @@ class Tab:NSObject{
     func restoreWebview(_ webView: WKWebView) {
         
         if let tabSession = self.tabSession{
-            let savedURL = tabSession.urls[tabSession.currentPage]
-            let request = URLRequest(url: savedURL)
-            webView.load(request)
+            if tabSession.urls.count > 0{
+                let savedURL = tabSession.urls[tabSession.currentPage]
+                let request = URLRequest(url: savedURL)
+                webView.load(request)
+            }
         }
     }
     
