@@ -1,5 +1,5 @@
 //
-//  SavedTab+CoreDataClass.swift
+//  SavedTab.swift
 //  bold
 //
 //  Created by Afshawn Lotfi on 12/23/17.
@@ -11,7 +11,7 @@ import Foundation
 import CoreData
 
 
-public class SavedTab: NSManagedObject {
+public class SavedTab: OrderedObject {
     
 }
 
@@ -24,7 +24,6 @@ extension SavedTab {
     
     @NSManaged public var faviconURL: String?
     @NSManaged public var isSelected: Bool
-    @NSManaged public var index: Int64
     @NSManaged public var screenshotUUID: UUID?
     @NSManaged public var sessionData: NSData?
     @NSManaged public var title: String?

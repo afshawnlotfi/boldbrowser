@@ -9,7 +9,7 @@
 import Foundation
 
 protocol TabSessionDelegate: class {
-    func tabSession(_ tabSession: TabSession, didUpdateSession backList: Tab)
+    func tabSession(_ tabSession: TabSession, didUpdateSession tab: Tab)
 }
 
 

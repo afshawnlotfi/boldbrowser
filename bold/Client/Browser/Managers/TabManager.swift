@@ -66,15 +66,15 @@ class TabManager:NSObject{
     /// - Parameters:
     ///   - current: current index
     ///   - final: final index
-    func updateIndecies(current : Int , final : Int){
+    func moveTab(current : Int , final : Int){
         //If tab webview is loaded update its observer index stored in tag used to index it in "observeValue"
-        let currentTab = tabs[current]
-        tabs.remove(at: current)
+
+        let currentTab = tabs.remove(at: current)
         tabs.insert(currentTab, at: final)
         for (index,tab) in tabs.enumerated(){
             tab.webView?.tag = index
         }
-//        self.storageManager.updateIndecies(current: current, final: final)
+        self.storageManager.updatePosition(current: current, final: final)
         
     }
     

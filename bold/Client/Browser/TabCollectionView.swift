@@ -57,7 +57,7 @@ extension TabCollectionView:GCollectionViewMoveDelegate{
     }
     
     func gCollectionview(_ gCollectionview: GCollectionView, didReleaseCell cell: UICollectionViewCell, atIndexPath : IndexPath) {
-        self.tabManager.updateIndecies(current: (startIndexPath?.row)!, final: atIndexPath.row)
+        self.tabManager.moveTab(current: (startIndexPath?.row)!, final: atIndexPath.row)
     }
     
 

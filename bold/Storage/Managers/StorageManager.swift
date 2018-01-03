@@ -59,20 +59,39 @@ class StorageManager<StorageObject:NSManagedObject>:NSObject{
             dataObjects = []
             print(error, ErrorStrings.FetchError)
         }
+        
+        if let orderedObjects = dataObjects as? [OrderedObject]{
+            dataObjects = orderedObjects.sorted { $0.index < $1.index }
+        }
+        
         return dataObjects
     }
     
-    func updateObjects(updatedValues : [[String:Any]], objects : [StorageObject]){
-        for (index,object) in objects.enumerated(){
-            updateObject(updatedValues: updatedValues[index], object: object)
+    
+   
+    func updateObject(updatedValues : [String:Any], object : NSManagedObject){
+        for updatedValue in updatedValues{
+            object.setValue(updatedValue.value, forKey: updatedValue.key)
         }
         self.saveContext()
     }
     
-   
-    func updateObject(updatedValues : [String:Any], object : StorageObject){
-        for updatedValue in updatedValues{
-            object.setValue(updatedValue.value, forKey: updatedValue.key)
+    func updateIndecies(range : CountableClosedRange<Int>){
+        for index in range {
+            if let orderedObject =  dataObjects[index] as? OrderedObject{
+                self.updateObject(updatedValues: ["index" : index], object: orderedObject)
+            }
+        }
+    }
+    
+    func updatePosition(current : Int, final : Int){
+        let currentObject = dataObjects.remove(at: current)
+        dataObjects.insert(currentObject, at: final)
+        print(dataObjects)
+        if current < final{
+            updateIndecies(range: current...final)
+        }else{
+            updateIndecies(range: final...current)
         }
     }
     
