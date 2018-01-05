@@ -19,7 +19,9 @@
             <connections>
                 <outlet property="addTabBtn" destination="Yt7-HB-Bkw" id="WY7-mp-I3Z"/>
                 <outlet property="backgroundImageView" destination="323-gd-0Uv" id="tQr-JV-H95"/>
+                <outlet property="showTabsBtn" destination="E7r-zN-tVV" id="8Xe-n1-2qA"/>
                 <outlet property="tabStack" destination="IQ4-AO-9aJ" id="P5h-ZL-JZK"/>
+                <outlet property="topMenu" destination="vRf-3D-SEj" id="k7s-d4-EHw"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -31,7 +33,7 @@
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background-image" translatesAutoresizingMaskIntoConstraints="NO" id="323-gd-0Uv">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                 </imageView>
-                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="hTw-dS-0hZ">
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="hTw-dS-0hZ">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                     <subviews>
                         <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vRf-3D-SEj">
@@ -75,7 +77,7 @@
                             <blurEffect style="dark"/>
                         </visualEffectView>
                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IQ4-AO-9aJ">
-                            <rect key="frame" x="0.0" y="96" width="375" height="571"/>
+                            <rect key="frame" x="0.0" y="116" width="375" height="551"/>
                         </stackView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -93,7 +95,7 @@
                 <constraint firstAttribute="trailing" secondItem="323-gd-0Uv" secondAttribute="trailing" id="mcE-1Q-O40"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
-            <point key="canvasLocation" x="-372.5" y="-690.5"/>
+            <point key="canvasLocation" x="-708" y="-787"/>
         </view>
     </objects>
     <resources>

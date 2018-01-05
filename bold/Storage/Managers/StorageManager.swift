@@ -60,6 +60,7 @@ class StorageManager<StorageObject:NSManagedObject>:NSObject{
             print(error, ErrorStrings.FetchError)
         }
         
+        //Order objects if it is a OrderObject
         if let orderedObjects = dataObjects as? [OrderedObject]{
             dataObjects = orderedObjects.sorted { $0.index < $1.index }
         }
@@ -76,6 +77,10 @@ class StorageManager<StorageObject:NSManagedObject>:NSObject{
         self.saveContext()
     }
     
+    ///Reindexes objects within range
+
+    ///
+    /// - Parameter range: Range to index
     func updateIndecies(range : CountableClosedRange<Int>){
         for index in range {
             if let orderedObject =  dataObjects[index] as? OrderedObject{
@@ -84,7 +89,13 @@ class StorageManager<StorageObject:NSManagedObject>:NSObject{
         }
     }
     
+    /// Updates new postion of object
+    ///
+    /// - Parameters:
+    ///   - current: Previous Index
+    ///   - final: Final Index
     func updatePosition(current : Int, final : Int){
+        //Updates pos
         let currentObject = dataObjects.remove(at: current)
         dataObjects.insert(currentObject, at: final)
         print(dataObjects)

@@ -7,13 +7,15 @@
 //
 
 import Foundation
+import UIKit
 
 struct SavedTabDefaults:IStorageDefaults{
     var index: Int
     init(startIndex : Int) {
         index = startIndex
     }
-    var title:String = BrowserStrings.NoTitle
+    var title:String = BrowserStrings.NewTab
     var faviconURL:String = String()
     var sessionData:Data = TabSession.defaultData
+    var screenshotData:Data = UIImagePNGRepresentation(UIImage.blockImage(color: .white, size: SizeConstants.MinimizedTab))!
 }

@@ -20,7 +20,11 @@ class FaviconManager:ITabPluginManager{
     
    
     
-    class func retrieveFavicon(forUrl : String) -> Favicon{
+    /// Fetches favicon for url
+    ///
+    /// - Parameter forUrl: url to search favicon for
+    /// - Returns: returns resulting favicon data
+    class func fetchFavicon(forUrl : String) -> Favicon{
         let favicons = storageManager.fetchObjects(fromDisk: false)  as! [Favicon]
         let matchingFavicons = (favicons.filter{ $0.faviconURL == forUrl})
         if matchingFavicons.count == 0{

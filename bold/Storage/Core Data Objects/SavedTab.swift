@@ -27,5 +27,6 @@ extension SavedTab {
     @NSManaged public var screenshotUUID: UUID?
     @NSManaged public var sessionData: NSData?
     @NSManaged public var title: String?
+    @NSManaged public var screenshotData: NSData?
     
 }

@@ -33,10 +33,10 @@
                                             <rect key="frame" x="0.0" y="0.0" width="463" height="55"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3PC-eX-NH9" userLabel="ImageStack">
-                                                    <rect key="frame" x="0.0" y="0.0" width="34" height="55"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="25" height="55"/>
                                                     <subviews>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f7n-cp-khb">
-                                                            <rect key="frame" x="10" y="30" width="24" height="15"/>
+                                                            <rect key="frame" x="10" y="30" width="15" height="15"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="f7n-cp-khb" secondAttribute="height" multiplier="1:1" id="0Yp-k2-4yH"/>
                                                             </constraints>
@@ -46,10 +46,10 @@
                                                     <edgeInsets key="layoutMargins" top="10" left="10" bottom="10" right="0.0"/>
                                                 </stackView>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oW5-DB-Bqc">
-                                                    <rect key="frame" x="36" y="0.0" width="270.5" height="55"/>
+                                                    <rect key="frame" x="27" y="0.0" width="279.5" height="55"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <nil key="textColor"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
                                                 <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y8K-fA-HzS">

@@ -14,14 +14,15 @@ import WebKit
     func tabManager(_ tabManager : TabManager, didAddTab tab: Tab , atIndex : Int)
     func tabManager(_ tabManager : TabManager, didRemoveTab tab: Tab, atIndex : Int)
     func tabManager(_ tabManager : TabManager, didSelectTab tab: Tab, atIndex : Int)
-
+    
 }
 
 
 
 class TabManager:NSObject{
     
-     var tabs:[Tab] = []
+    var tabs:[Tab] = []
+    var tabScrollManager:TabScrollManager?
     private var storageManager = StorageManager<SavedTab>()
     private(set) var tabScriptManager = TabScriptManager()
     var tabManagerDelegates = [TabManagerDelegate]()
@@ -51,7 +52,7 @@ class TabManager:NSObject{
         }
         
         configureTab(tab: tab, savedTab: savedTab)
-        
+
         if atIndex == nil{
             let tabIndex = tabs.count
             tabs.append(tab)
@@ -87,9 +88,12 @@ class TabManager:NSObject{
     ///   - savedTab: Saved Tab to restore from
     func configureTab(tab : Tab, savedTab : SavedTab){
         tab.lastTitle = savedTab.title
+        if let screenshotData = savedTab.screenshotData as Data?{
+            tab.screenshotImage = UIImage(data :screenshotData)
+        }
         print(savedTab.index)
         if let faviconURL = (savedTab.faviconURL){
-            tab.favicon =  FaviconManager.retrieveFavicon(forUrl: faviconURL)
+            tab.favicon =  FaviconManager.fetchFavicon(forUrl: faviconURL)
         }
         tab.tabSession = TabSession(data: savedTab.sessionData! as Data)
     
@@ -116,6 +120,39 @@ class TabManager:NSObject{
         tabScripts.forEach{
             tabScriptManager.addTabScript(tabScript: $0, atTab: tab)
         }
+    }
+    
+    
+    /// Takes screenshots of tab's current webview when loaded
+    ///
+    /// - Parameters:
+    ///   - tab: tab to update screenshot
+    ///   - atIndex: index of tab
+    func updateTabScreenshot(tab : Tab, atIndex : Int){
+        //Takes screenshot with small delay to allow page to fully load
+        Timer.scheduledTimer(withTimeInterval: AnimationTimeConstants.screenShot, repeats: false) { (timer) in
+            if let snapshot = tab.webView?.screenshot(){
+                if let data = UIImagePNGRepresentation(snapshot){
+                    self.storageManager.updateObject(updatedValues: ["screenshotData":data], object: self.storageManager.dataObjects[atIndex])
+                    tab.screenshotImage = snapshot
+                }
+            }
+        }
+       
+    }
+    
+    func configureWebview(tab : Tab){
+        
+        let faviconManager = FaviconManager()
+        let faviconPlugin = TabPluginScript(pluginName: "favicon", manager: faviconManager)
+        
+        self.addObserver(tab: tab, observerKeys: [KVOConstants.estimatedProgress,KVOConstants.title,KVOConstants.faviconURL, KVOConstants.URL, KVOConstants.loading])
+        
+        
+        self.addTabPluginScripts(tab: tab, tabScripts: [faviconPlugin])
+        tab.restoreWebview()
+        tab.webView?.scrollView.panGestureRecognizer.addTarget(tabScrollManager!, action: #selector(tabScrollManager?.tabScrollUpdated(_:) ))
+        tab.webView?.scrollView.contentInset.bottom = SizeConstants.TabTitleHeight
     }
     
     
@@ -148,28 +185,32 @@ class TabManager:NSObject{
             if let key = keyPath{
                 switch key {
                 case KVOConstants.estimatedProgress:
+                    //Updates webView progress bar
                     webView.progressBarUpdated()
+                    tab.tabDelegate?.tab(tab, didUpdateProgress: webView, atIndex: index)
                 case KVOConstants.title:
                     if let title = newValue as? String{
                         storageManager.updateObject(updatedValues: [KVOConstants.title:title], object: savedTab)
                         tab.tabDelegate?.tab(tab, didUpdateTitle: title, atIndex: index)
                     }
-
                 case KVOConstants.URL:
                     break
                 case KVOConstants.faviconURL:
                     if let faviconURL = newValue as? String{
                         storageManager.updateObject(updatedValues: [KVOConstants.faviconURL:faviconURL], object: savedTab)
-                        let favicon = FaviconManager.retrieveFavicon(forUrl: faviconURL)
+                        let favicon = FaviconManager.fetchFavicon(forUrl: faviconURL)
+                        //Updates Tab Favicon
                         tab.favicon = favicon
                         tab.tabDelegate?.tab(tab, didUpdateFavicon: favicon, atIndex: index)
                     }
                 case KVOConstants.loading:
                     if let isLoading = newValue as? Bool{
                         if isLoading == false{
-                            tab.tabDelegate?.tab(tab, didFinishLoading: index)
                             tab.tabSession?.updateSession(tab: tab)
                             storageManager.updateObject(updatedValues: ["sessionData" : tab.tabSession?.data ?? TabSession.defaultData], object: savedTab)
+                            tab.webView?.evaluateJavaScript("getFavicons()")
+                            self.updateTabScreenshot(tab: tab, atIndex: index)
+                            tab.tabDelegate?.tab(tab, didFinishLoading: index)
                         }
                     }
                 default:

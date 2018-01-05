@@ -21,7 +21,7 @@ class GCollectionView:UICollectionView {
    
     private(set) var collectionIdentifier:String!
     public var isMovable = true
-    private(set) var loadWebviews:Bool = true
+    private(set) var isMovingCell:Bool = false
     private let collectionLayout = UICollectionViewFlowLayout()
     public var moveDelegate:GCollectionViewMoveDelegate?
     init(identifier : String){
@@ -54,40 +54,41 @@ class GCollectionView:UICollectionView {
     ///
     /// - Parameter gesture: Gesture used to move cell
     @objc private func moveCell(_ gesture: UILongPressGestureRecognizer) {
-        
-            switch(gesture.state) {
-            case .began:
-                if let indexPath = self.indexPathForItem(at: gesture.location(in: self)) {
-                    print(indexPath)
-                    if let cell = self.cellForItem(at: indexPath) as? GCollectionContainerCell{
-                        moveDelegate?.gCollectionview(self, didSelectCell: cell, atIndexPath : indexPath)
-                        loadWebviews = false
-                        self.scrollToItem(at: indexPath, at: .right, animated: false)
-                        self.beginInteractiveMovementForItem(at: indexPath)
+        if isMovable{
+                switch(gesture.state) {
+                case .began:
+                    if let indexPath = self.indexPathForItem(at: gesture.location(in: self)) {
+                        print(indexPath)
+                        if let cell = self.cellForItem(at: indexPath) as? GCollectionContainerCell{
+                            moveDelegate?.gCollectionview(self, didSelectCell: cell, atIndexPath : indexPath)
+                            self.scrollToItem(at: indexPath, at: .right, animated: false)
+                            self.beginInteractiveMovementForItem(at: indexPath)
+                            isMovingCell = true
 
+                        }
                     }
-                }
-            case UIGestureRecognizerState.changed:
-                
-                self.updateInteractiveMovementTargetPosition(gesture.location(in: gesture.view))
-                if let indexPath = self.indexPathForItem(at: gesture.location(in: self)) {
-                    if let cell = self.cellForItem(at: indexPath) as? GCollectionContainerCell{
-                        moveDelegate?.gCollectionview(self, didMoveCell: cell, atIndexPath : indexPath)
+                case UIGestureRecognizerState.changed:
+                    
+                    self.updateInteractiveMovementTargetPosition(gesture.location(in: gesture.view))
+                    if let indexPath = self.indexPathForItem(at: gesture.location(in: self)) {
+                        if let cell = self.cellForItem(at: indexPath) as? GCollectionContainerCell{
+                            moveDelegate?.gCollectionview(self, didMoveCell: cell, atIndexPath : indexPath)
+                        }
                     }
-                }
-            case UIGestureRecognizerState.ended:
-                if let indexPath = self.indexPathForItem(at: gesture.location(in: self)) {
-                    if let cell = self.cellForItem(at: indexPath) as? GCollectionContainerCell{
-                        moveDelegate?.gCollectionview(self, didReleaseCell: cell, atIndexPath : indexPath)
+                case UIGestureRecognizerState.ended:
+                    if let indexPath = self.indexPathForItem(at: gesture.location(in: self)) {
+                        if let cell = self.cellForItem(at: indexPath) as? GCollectionContainerCell{
+                            moveDelegate?.gCollectionview(self, didReleaseCell: cell, atIndexPath : indexPath)
+                        }
                     }
-                }
-                self.endInteractiveMovement()
+                    self.endInteractiveMovement()
+                    isMovingCell = false
 
-            default:
-                cancelInteractiveMovement()
-            }
+                default:
+                    cancelInteractiveMovement()
+                }
+        }
     }
-    
 
     
     

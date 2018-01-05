@@ -33,22 +33,23 @@ class TabCollectionViewDataSource: NSObject, UICollectionViewDataSource{
         let tab = tabManager.tabs[indexPath.row]
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! GCollectionContainerCell
         
-        if let gCollectionView = collectionView as? GCollectionView{
+        if let gCollectionView = collectionView as? TabCollectionView{
             
-            if gCollectionView.loadWebviews == false{
-                cell.minimizeCell()
+            if gCollectionView.tabFlowLayout.isMinimized == true{
+                cell.screenshotView.image = tab.screenshotImage
+                cell.minimizeCell(with: cell.screenshotView)
+            }else{
+                tab.createWebview()
+                tab.webView?.tag = indexPath.row
+                cell.maximizeCell(with: tab.webView!)
             }
             
         }
         
-        tab.createWebview()
-        tab.webView?.tag = indexPath.row
-        cell.setContentView(view: tab.webView!)
         cell.setCellTitle(title: tab.displayTitle)
         if let faviconImage = UIImage(data : (tab.favicon?.faviconData)!){
-                cell.setCellImage(image: faviconImage)
+            cell.setCellImage(image: faviconImage)
         }
-            
         
         if indexPath.row == tabManager.tabs.count - 1{
             cell.alpha = 0

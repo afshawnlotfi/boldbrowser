@@ -15,6 +15,9 @@ class GCollectionContainerCell: UICollectionViewCell {
     @IBOutlet private weak var contentStack: UIStackView!
     @IBOutlet private weak var optionStack: UIStackView!
     @IBOutlet private weak var faviconBtn: UIButton!
+    private(set) var screenshotView = UIImageView()
+
+    
     @IBOutlet weak var urlField: UITextField!
     private var previousViews:[UIView] = []
     override func awakeFromNib() {
@@ -23,8 +26,10 @@ class GCollectionContainerCell: UICollectionViewCell {
         blurView.effect = UIBlurEffect(style: .dark)
         urlField.isEnabled = false
         faviconBtn.imageView?.contentMode = .scaleAspectFit
-//        titleField.addTarget(self, action: #selector(searchMenu(_:)), for: .editingDidBegin)
-//        titleField.addTarget(self, action: #selector(searchMenu(_:)), for: .editingChanged)
+        screenshotView.contentMode = UIViewContentMode.scaleAspectFill
+        screenshotView.clipsToBounds = true
+        screenshotView.isUserInteractionEnabled = false
+
 
     }
     
@@ -34,13 +39,26 @@ class GCollectionContainerCell: UICollectionViewCell {
         textfield.text = String()
     }
     
-    public func minimizeCell(){
-        UIView.animate(withDuration: 0.1, animations: {
-            self.layer.cornerRadius = 10
+    public func minimizeCell(with contentView : UIView){
+        UIView.animate(withDuration: AnimationTimeConstants.fast, animations: {
+            self.layer.cornerRadius = CurveRadii.standard
             self.blurViewHeight.constant = 45
+            self.urlField.font = .systemFont(ofSize: 14)
             self.layoutIfNeeded()
         })
+        self.setContentView(view: contentView)
     }
+    
+    public func maximizeCell(with contentView : UIView){
+        UIView.animate(withDuration: AnimationTimeConstants.fast, animations: {
+            self.blurViewHeight.constant = 55
+            self.urlField.font = .systemFont(ofSize: 17)
+            self.layoutIfNeeded()
+        })
+        self.setContentView(view: contentView)
+    }
+    
+
     
     
     /// Set the cells container title
@@ -64,7 +82,7 @@ class GCollectionContainerCell: UICollectionViewCell {
     /// - Parameter view: View to transition to
     public func transitionTo(view : UIView){
         view.alpha = 0
-        UIView.animate(withDuration: 0.2, animations: {
+        UIView.animate(withDuration: AnimationTimeConstants.fast, animations: {
             self.contentStack.arrangedSubviews.forEach{ $0.alpha = 0}
             self.setContentView(view: view)
             view.alpha = 1

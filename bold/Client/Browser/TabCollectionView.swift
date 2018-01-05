@@ -8,13 +8,23 @@
 
 import UIKit
 
+
+protocol TabCollectionDelegate {
+    func tabCollection(_ tabCollection: TabCollectionView, didMinmizeCells atIndexPath: IndexPath)
+    func tabCollection(_ tabCollection: TabCollectionView, didMaximizeCells atIndexPath: IndexPath)
+}
+
+
+
+
 class TabCollectionView: GCollectionView {
     
     
     private let identifier =  "GContainerCell"
     private var tabManager:TabManager
     private var startIndexPath:IndexPath?
-
+    var tabCollectionDelegate:TabCollectionDelegate?
+    private(set) lazy var tabFlowLayout: TabCollectionViewFlowLayout = TabCollectionViewFlowLayout()
     init(tabManager : TabManager) {
         self.tabManager = tabManager
         super.init(identifier: identifier)
@@ -36,20 +46,19 @@ class TabCollectionView: GCollectionView {
         return  TabCollectionViewDataSource(identifier: identifier, tabManager: tabManager)
     }()
     
-    private lazy var tabFlowLayout: TabCollectionViewFlowLayout = {
-        return  TabCollectionViewFlowLayout()
-    }()
+    
         
 }
+
+
 extension TabCollectionView:GCollectionViewMoveDelegate{
     func gCollectionview(_ gCollectionview: GCollectionView, didSelectCell cell: UICollectionViewCell, atIndexPath : IndexPath) {
         startIndexPath = atIndexPath
-        tabFlowLayout.isZoomedOut = true
-        self.horizontalScroll(false)
-        self.isPagingEnabled = false
         if let gCell = cell as? GCollectionContainerCell{
-            gCell.minimizeCell()
+            gCell.screenshotView.image = tabManager.tabs[atIndexPath.row].screenshotImage!
+            gCell.minimizeCell(with: gCell.screenshotView)
         }
+        tabCollectionDelegate?.tabCollection(self, didMinmizeCells: atIndexPath)
     }
     
     func gCollectionview(_ gCollectionview: GCollectionView, didMoveCell cell: UICollectionViewCell, atIndexPath : IndexPath) {
@@ -89,18 +98,11 @@ extension TabCollectionView:TabDelegate{
     
     func tab(_ tab: Tab, didCreateWebview webView: TabWebView, atIndex: Int) {
         
-        let faviconManager = FaviconManager()
-        let faviconPlugin = TabPluginScript(pluginName: "favicon", manager: faviconManager)
-        
-        self.tabManager.addObserver(tab: tab, observerKeys: [KVOConstants.estimatedProgress,KVOConstants.title,KVOConstants.faviconURL, KVOConstants.URL, KVOConstants.loading])
-        
-        
-        self.tabManager.addTabPluginScripts(tab: tab, tabScripts: [faviconPlugin])
-        tab.restoreWebview(webView)
+        self.tabManager.configureWebview(tab: tab)
     }
     
     func tab(_ tab: Tab, didFinishLoading atIndex: Int) {
-        tab.webView?.evaluateJavaScript("getFavicons()")
+
     }
     
     func tab(_ tab: Tab, didUpdateTitle title: String, atIndex: Int) {
@@ -114,6 +116,11 @@ extension TabCollectionView:TabDelegate{
             cell.setCellImage(image: UIImage(data: favicon.faviconData!)! )
         }
     }
+    
+    func tab(_ tab: Tab, didUpdateProgress webView: TabWebView, atIndex: Int) {
+
+    }
+    
 }
     
 

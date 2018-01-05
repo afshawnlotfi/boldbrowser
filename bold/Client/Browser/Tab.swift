@@ -15,6 +15,8 @@ protocol TabDelegate {
     func tab(_ tab : Tab, didFinishLoading atIndex : Int)
     func tab(_ tab : Tab, didUpdateTitle title : String, atIndex : Int)
     func tab(_ tab : Tab, didUpdateFavicon favicon : Favicon, atIndex : Int)
+    func tab(_ tab : Tab, didUpdateProgress webView : TabWebView, atIndex : Int)
+
 }
 
 class Tab:NSObject{
@@ -24,6 +26,7 @@ class Tab:NSObject{
     var tabSession:TabSession?
     var favicon:Favicon?
     var lastTitle:String?
+    var screenshotImage:UIImage?
     var displayTitle: String {
         if let title = webView?.title, !title.isEmpty {
             return title
@@ -56,13 +59,13 @@ class Tab:NSObject{
     }
     
     
-    func restoreWebview(_ webView: WKWebView) {
+    func restoreWebview() {
         
         if let tabSession = self.tabSession{
             if tabSession.urls.count > 0{
                 let savedURL = tabSession.urls[tabSession.currentPage]
                 let request = URLRequest(url: savedURL)
-                webView.load(request)
+                self.webView?.load(request)
             }
         }
     }

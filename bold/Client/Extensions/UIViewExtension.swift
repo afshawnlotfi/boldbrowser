@@ -10,6 +10,23 @@ import Foundation
 import UIKit
 
 
+extension UIView{
+    
+    func screenshot() -> UIImage{
+        
+        UIGraphicsBeginImageContextWithOptions(self.bounds.size , true, 1.0);
+        self.drawHierarchy(in: self.bounds, afterScreenUpdates: true)
+        let webViewSnapShot = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        if let snapshot = webViewSnapShot{
+            return snapshot
+        }else{
+            return UIImage()
+        }
+        
+    }
+}
 
 
 
