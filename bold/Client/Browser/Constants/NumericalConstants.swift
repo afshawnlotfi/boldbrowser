@@ -19,11 +19,12 @@ struct SizeConstants{
     }
     
 }
-struct AnimationTimeConstants{
+struct TimeConstants{
     
-    static let fast:Double = 0.1
+    static let animation:Double = 0.2
     static let screenShot:Double = 0.3
-    
+    static let timeout:Double = 0.2
+
 }
 
 

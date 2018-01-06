@@ -29,24 +29,24 @@
                                     <rect key="frame" x="0.0" y="0.0" width="463" height="55"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="kL0-4c-hgI">
+                                        <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kL0-4c-hgI">
                                             <rect key="frame" x="0.0" y="0.0" width="463" height="55"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3PC-eX-NH9" userLabel="ImageStack">
-                                                    <rect key="frame" x="0.0" y="0.0" width="25" height="55"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="15" height="55"/>
                                                     <subviews>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f7n-cp-khb">
-                                                            <rect key="frame" x="10" y="30" width="15" height="15"/>
+                                                            <rect key="frame" x="10" y="35" width="5" height="5"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="f7n-cp-khb" secondAttribute="height" multiplier="1:1" id="0Yp-k2-4yH"/>
                                                             </constraints>
                                                             <state key="normal" image="webpage"/>
                                                         </button>
                                                     </subviews>
-                                                    <edgeInsets key="layoutMargins" top="10" left="10" bottom="10" right="0.0"/>
+                                                    <edgeInsets key="layoutMargins" top="15" left="10" bottom="15" right="0.0"/>
                                                 </stackView>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oW5-DB-Bqc">
-                                                    <rect key="frame" x="27" y="0.0" width="279.5" height="55"/>
+                                                    <rect key="frame" x="15" y="0.0" width="293.5" height="55"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -70,6 +70,9 @@
                                 </constraints>
                                 <blurEffect style="dark"/>
                             </visualEffectView>
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Cl9-cf-pep">
+                                <rect key="frame" x="0.0" y="55" width="463" height="0.0"/>
+                            </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Rcf-Ei-GYl">
                                 <rect key="frame" x="0.0" y="55" width="463" height="674"/>
                             </stackView>
@@ -86,11 +89,12 @@
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <size key="customSize" width="463" height="729"/>
             <connections>
-                <outlet property="blurView" destination="LpX-iu-Tfi" id="U3i-P1-FJ6"/>
                 <outlet property="blurViewHeight" destination="MzR-5L-K4J" id="W6G-C9-ZnO"/>
                 <outlet property="contentStack" destination="Rcf-Ei-GYl" id="pOA-O2-OCK"/>
                 <outlet property="faviconBtn" destination="f7n-cp-khb" id="TRS-A1-VAb"/>
                 <outlet property="optionStack" destination="y8K-fA-HzS" id="slA-K0-7lF"/>
+                <outlet property="screenshotView" destination="Cl9-cf-pep" id="7b9-um-Gdq"/>
+                <outlet property="titleMenu" destination="LpX-iu-Tfi" id="U3i-P1-FJ6"/>
                 <outlet property="urlField" destination="oW5-DB-Bqc" id="vKM-i5-SxJ"/>
             </connections>
             <point key="canvasLocation" x="-1154" y="-725"/>

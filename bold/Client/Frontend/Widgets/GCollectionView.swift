@@ -9,10 +9,10 @@
 import UIKit
 
 protocol GCollectionViewMoveDelegate {
-    func gCollectionview(_ gCollectionview : GCollectionView, didSelectCell cell : UICollectionViewCell, atIndexPath : IndexPath )
-    func gCollectionview(_ gCollectionview : GCollectionView, didMoveCell cell : UICollectionViewCell, atIndexPath : IndexPath )
-    func gCollectionview(_ gCollectionview : GCollectionView, didReleaseCell cell : UICollectionViewCell, atIndexPath : IndexPath )
-
+     func gCollectionview(_ gCollectionview : GCollectionView, didSelectCell cell : UICollectionViewCell, atIndexPath : IndexPath )
+     func gCollectionview(_ gCollectionview : GCollectionView, didMoveCell cell : UICollectionViewCell, atIndexPath : IndexPath )
+     func gCollectionview(_ gCollectionview : GCollectionView, didReleaseCell cell : UICollectionViewCell, atIndexPath : IndexPath )
+     func gCollectionview(_ gCollectionview : GCollectionView, willSelectCell cell : UICollectionViewCell, atIndexPath : IndexPath )
 }
 
 
@@ -58,11 +58,11 @@ class GCollectionView:UICollectionView {
                 switch(gesture.state) {
                 case .began:
                     if let indexPath = self.indexPathForItem(at: gesture.location(in: self)) {
-                        print(indexPath)
                         if let cell = self.cellForItem(at: indexPath) as? GCollectionContainerCell{
-                            moveDelegate?.gCollectionview(self, didSelectCell: cell, atIndexPath : indexPath)
+                            moveDelegate?.gCollectionview(self, willSelectCell: cell, atIndexPath : indexPath)
                             self.scrollToItem(at: indexPath, at: .right, animated: false)
                             self.beginInteractiveMovementForItem(at: indexPath)
+                            moveDelegate?.gCollectionview(self, didSelectCell: cell, atIndexPath : indexPath)
                             isMovingCell = true
 
                         }

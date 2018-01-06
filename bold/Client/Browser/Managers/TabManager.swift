@@ -91,7 +91,6 @@ class TabManager:NSObject{
         if let screenshotData = savedTab.screenshotData as Data?{
             tab.screenshotImage = UIImage(data :screenshotData)
         }
-        print(savedTab.index)
         if let faviconURL = (savedTab.faviconURL){
             tab.favicon =  FaviconManager.fetchFavicon(forUrl: faviconURL)
         }
@@ -128,18 +127,32 @@ class TabManager:NSObject{
     /// - Parameters:
     ///   - tab: tab to update screenshot
     ///   - atIndex: index of tab
-    func updateTabScreenshot(tab : Tab, atIndex : Int){
-        //Takes screenshot with small delay to allow page to fully load
-        Timer.scheduledTimer(withTimeInterval: AnimationTimeConstants.screenShot, repeats: false) { (timer) in
-            if let snapshot = tab.webView?.screenshot(){
+    func updateTabScreenshot(atIndex : Int, withDelay : Bool  = true){
+        
+        func invoke(){
+            let tab = self.tabs[atIndex]
+            if let screenshot = tab.webView?.screenshot(){
+                print(screenshot.size.height)
+                let snapshot = UIImage.cropImage(image: screenshot, size: CGSize(width: screenshot.size.width, height: screenshot.size.width - SizeConstants.TabTitleHeight))
                 if let data = UIImagePNGRepresentation(snapshot){
-                    self.storageManager.updateObject(updatedValues: ["screenshotData":data], object: self.storageManager.dataObjects[atIndex])
                     tab.screenshotImage = snapshot
+                    self.storageManager.updateObject(updatedValues: ["screenshotData":data], object: self.storageManager.dataObjects[atIndex])
                 }
             }
         }
+        
+        if withDelay{
+            //Takes screenshot with small delay to allow page to fully load
+            DispatchQueue.main.asyncAfter(deadline:  DispatchTime.now()  + TimeConstants.screenShot){
+                invoke()
+            }
+        }else{
+            invoke()
+        }
        
+
     }
+    
     
     func configureWebview(tab : Tab){
         
@@ -152,6 +165,7 @@ class TabManager:NSObject{
         self.addTabPluginScripts(tab: tab, tabScripts: [faviconPlugin])
         tab.restoreWebview()
         tab.webView?.scrollView.panGestureRecognizer.addTarget(tabScrollManager!, action: #selector(tabScrollManager?.tabScrollUpdated(_:) ))
+        //Accounts for extra tab length for showing and hiding title menu
         tab.webView?.scrollView.contentInset.bottom = SizeConstants.TabTitleHeight
     }
     
@@ -209,7 +223,7 @@ class TabManager:NSObject{
                             tab.tabSession?.updateSession(tab: tab)
                             storageManager.updateObject(updatedValues: ["sessionData" : tab.tabSession?.data ?? TabSession.defaultData], object: savedTab)
                             tab.webView?.evaluateJavaScript("getFavicons()")
-                            self.updateTabScreenshot(tab: tab, atIndex: index)
+                            self.updateTabScreenshot(atIndex: index)
                             tab.tabDelegate?.tab(tab, didFinishLoading: index)
                         }
                     }

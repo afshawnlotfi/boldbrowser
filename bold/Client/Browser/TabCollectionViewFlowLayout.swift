@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class TabCollectionViewFlowLayout:NSObject,UICollectionViewDelegateFlowLayout {
-    
+    var tabCollectionViewDelegate:TabCollectionViewDelegate?
     private(set) var isMinimized:Bool = false
     private(set) var isTopMenuVisible:Bool = false
     private(set) var isTitleMenuVisible:Bool = true
@@ -58,6 +58,13 @@ class TabCollectionViewFlowLayout:NSObject,UICollectionViewDelegateFlowLayout {
 
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let tabCollectionView = collectionView as? TabCollectionView{
+            tabCollectionViewDelegate?.tabCollectionView(tabCollectionView, didMaximizeCells: indexPath)
+        }
+    }
+    
+    
     
     private func tabSize(sizeRatio:CGFloat) -> CGSize{
         if isMinimized{
@@ -67,6 +74,12 @@ class TabCollectionViewFlowLayout:NSObject,UICollectionViewDelegateFlowLayout {
             return CGSize(width: UIScreen.main.bounds.width * sizeRatio, height: UIScreen.main.bounds.height + SizeConstants.TabTitleHeight*2)
         }
     }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        cell.isSelected = false
+    }
+    
     
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
@@ -94,3 +107,7 @@ class TabCollectionViewFlowLayout:NSObject,UICollectionViewDelegateFlowLayout {
     
     
 }
+
+
+
+

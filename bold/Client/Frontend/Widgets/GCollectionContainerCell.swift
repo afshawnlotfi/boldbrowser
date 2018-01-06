@@ -10,26 +10,26 @@ import UIKit
 
 class GCollectionContainerCell: UICollectionViewCell {
 
-    @IBOutlet weak var blurViewHeight: NSLayoutConstraint!
-    @IBOutlet private weak var blurView: UIVisualEffectView!
+    @IBOutlet private weak var blurViewHeight: NSLayoutConstraint!
+    @IBOutlet private(set) weak var titleMenu: UIVisualEffectView!
     @IBOutlet private weak var contentStack: UIStackView!
     @IBOutlet private weak var optionStack: UIStackView!
     @IBOutlet private weak var faviconBtn: UIButton!
-    private(set) var screenshotView = UIImageView()
-
-    
+    public var indexPath:IndexPath?
+    @IBOutlet weak var screenshotView: UIImageView!
     @IBOutlet weak var urlField: UITextField!
     private var previousViews:[UIView] = []
     override func awakeFromNib() {
         super.awakeFromNib()
         urlField.textColor = UIColor.System.Light
-        blurView.effect = UIBlurEffect(style: .dark)
+        titleMenu.effect = UIBlurEffect(style: .dark)
         urlField.isEnabled = false
         faviconBtn.imageView?.contentMode = .scaleAspectFit
-        screenshotView.contentMode = UIViewContentMode.scaleAspectFill
+        screenshotView.contentMode = .scaleAspectFill
         screenshotView.clipsToBounds = true
         screenshotView.isUserInteractionEnabled = false
-
+        screenshotView.backgroundColor = .red
+        self.isSelected = false
 
     }
     
@@ -39,23 +39,40 @@ class GCollectionContainerCell: UICollectionViewCell {
         textfield.text = String()
     }
     
-    public func minimizeCell(with contentView : UIView){
-        UIView.animate(withDuration: AnimationTimeConstants.fast, animations: {
+    public func minimizeCell(){
+
+        UIView.animate(withDuration: TimeConstants.animation, animations: {
             self.layer.cornerRadius = CurveRadii.standard
             self.blurViewHeight.constant = 45
             self.urlField.font = .systemFont(ofSize: 14)
             self.layoutIfNeeded()
         })
-        self.setContentView(view: contentView)
+
+        
+        screenshotView.isHidden = false
+        contentStack.isHidden = true
+
     }
     
-    public func maximizeCell(with contentView : UIView){
-        UIView.animate(withDuration: AnimationTimeConstants.fast, animations: {
+    public func maximizeCell(view : UIView? = nil, withCurves: Bool){
+        UIView.animate(withDuration: TimeConstants.animation, animations: {
             self.blurViewHeight.constant = 55
+            if withCurves{
+                self.layer.cornerRadius = CurveRadii.standard
+            }else{
+                self.layer.cornerRadius = 0
+            }
             self.urlField.font = .systemFont(ofSize: 17)
             self.layoutIfNeeded()
         })
-        self.setContentView(view: contentView)
+        screenshotView.isHidden = true
+        contentStack.isHidden = false
+
+        if view != nil{
+            self.setContentView(view: view!)
+        }
+        
+        
     }
     
 
@@ -82,7 +99,7 @@ class GCollectionContainerCell: UICollectionViewCell {
     /// - Parameter view: View to transition to
     public func transitionTo(view : UIView){
         view.alpha = 0
-        UIView.animate(withDuration: AnimationTimeConstants.fast, animations: {
+        UIView.animate(withDuration: TimeConstants.animation, animations: {
             self.contentStack.arrangedSubviews.forEach{ $0.alpha = 0}
             self.setContentView(view: view)
             view.alpha = 1

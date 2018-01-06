@@ -98,7 +98,6 @@ class StorageManager<StorageObject:NSManagedObject>:NSObject{
         //Updates pos
         let currentObject = dataObjects.remove(at: current)
         dataObjects.insert(currentObject, at: final)
-        print(dataObjects)
         if current < final{
             updateIndecies(range: current...final)
         }else{

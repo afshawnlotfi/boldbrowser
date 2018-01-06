@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 
 class TabCollectionViewDataSource: NSObject, UICollectionViewDataSource{
-  
     private(set) var identifier: String
     private(set) var tabManager: TabManager!
     init(identifier : String, tabManager: TabManager) {
@@ -20,11 +19,11 @@ class TabCollectionViewDataSource: NSObject, UICollectionViewDataSource{
         
     
     }
+  
     func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         
         
     }
-    
     
     func collectionView(_ collectionView: UICollectionView,
                                      cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -33,15 +32,23 @@ class TabCollectionViewDataSource: NSObject, UICollectionViewDataSource{
         let tab = tabManager.tabs[indexPath.row]
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! GCollectionContainerCell
         
+       cell.isSelected = true
+       cell.indexPath = indexPath
+        
         if let gCollectionView = collectionView as? TabCollectionView{
             
             if gCollectionView.tabFlowLayout.isMinimized == true{
                 cell.screenshotView.image = tab.screenshotImage
-                cell.minimizeCell(with: cell.screenshotView)
+                cell.titleMenu.isHidden = false
+                cell.minimizeCell()
             }else{
                 tab.createWebview()
                 tab.webView?.tag = indexPath.row
-                cell.maximizeCell(with: tab.webView!)
+                var withCurves = false
+                if gCollectionView.tabFlowLayout.isTopMenuVisible{
+                    withCurves = true
+                }
+                cell.maximizeCell(view: tab.webView, withCurves : withCurves)
             }
             
         }

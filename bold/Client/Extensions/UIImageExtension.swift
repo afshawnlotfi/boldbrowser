@@ -25,12 +25,15 @@ extension UIImage{
         }
     }
     
-    
-    
+
     class func cropImage(image:UIImage, size : CGSize) -> UIImage{
-        let imageRect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        if let cgImage = image.cgImage!.cropping(to: imageRect){
-            return UIImage(cgImage:cgImage)
+        let imageRect = CGRect(x: 0, y:  0, width: size.width, height: size.height)
+        if let cgImage = image.cgImage{
+            if let cropped = cgImage.cropping(to: imageRect){
+                return UIImage(cgImage:cropped)
+            }else{
+                return image
+            }
         }else{
             return image
         }

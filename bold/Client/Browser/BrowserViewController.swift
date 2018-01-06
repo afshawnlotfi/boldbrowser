@@ -28,7 +28,7 @@ class BrowserViewController: UIViewController {
         self.showTabsBtn.addTarget(self, action: #selector(showAllTabs), for: .touchDown)
         self.tabScrollManager.tabScrollDelegate = self
         self.tabManager.tabScrollManager = tabScrollManager
-        self.tabCollectionView.tabCollectionDelegate = self
+        self.tabCollectionView.tabFlowLayout.tabCollectionViewDelegate = self
         topMenu.isHidden = true
         UIApplication.shared.isStatusBarHidden = true
 
@@ -39,97 +39,158 @@ class BrowserViewController: UIViewController {
         
     }
     
+    private func getSelectedIndexPath(from tabCollectionView : TabCollectionView) -> IndexPath{
+        
+        let selectedCells = self.tabCollectionView.visibleCells.filter{$0.isSelected == true}
+        if selectedCells.count > 0{
+            if let cell = (selectedCells[0] as? GCollectionContainerCell){
+                if let indexPath = cell.indexPath{
+                    return indexPath
+                }else if let indexPath = tabCollectionView.indexPath(for: cell){
+                    return indexPath
+
+                }else{
+                    return IndexPath(row: 0, section: 0)
+                }
+            }else{
+                return IndexPath(row: 0, section: 0)
+            }
+        }else{
+            return IndexPath(row: 0, section: 0)
+        }
+    }
+    
+    
     @objc func showAllTabs(){
+        
+        let indexPath = getSelectedIndexPath(from: tabCollectionView)
         if tabCollectionView.tabFlowLayout.isMinimized == false{
-            tabCollection(self.tabCollectionView, didMinmizeCells : IndexPath(row: 0, section: 0))
+            tabCollectionView(self.tabCollectionView, didMinmizeCells : indexPath)
             tabCollectionView.reloadData()
         }else{
-            tabCollection(self.tabCollectionView, didMaximizeCells : IndexPath(row: 0, section: 0))
-            tabCollectionView.reloadData()
+            tabCollectionView(self.tabCollectionView, didMaximizeCells : indexPath)
         }
 
-
+                
+        
     }
+    
+        
+    
+    
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        if UIDevice.current.orientation.isLandscape {
-            print("Landscape")
-        } else {
-            print("Portrait")
+        tabCollectionView.collectionViewLayout.invalidateLayout()
+        let indexPath = self.getSelectedIndexPath(from: self.tabCollectionView)
+
+        
+        DispatchQueue.main.asyncAfter(deadline:  DispatchTime.now()  + TimeConstants.timeout){
+            self.tabCollectionView.scrollToItem(at:  indexPath, at: .right, animated: false)
         }
     }
-
+    
 }
+    
 
-
-extension BrowserViewController:TabCollectionDelegate{
-    func tabCollection(_ tabCollection: TabCollectionView, didMinmizeCells atIndexPath: IndexPath) {
-        tabCollection.horizontalScroll(false)
-        tabCollection.isPagingEnabled = false
-        self.tabScrollManager(tabScrollManager, didShowTopMenu: UIPanGestureRecognizer())
-        tabCollection.tabFlowLayout.updateCollectionViewInsets(isMinimized: true)
-        tabScrollManager.dismissTimer.invalidate()
+extension BrowserViewController:TabCollectionViewDelegate{
+    
+    func tabCollectionView(_ tabCollectionView: TabCollectionView, didMaximizeCells atIndexPath: IndexPath) {
+        
+            tabCollectionView.tabFlowLayout.updateCollectionViewInsets(isMinimized: false)
+            tabCollectionView.horizontalScroll(true)
+            tabCollectionView.isPagingEnabled = true
+            invokeTopMenu(showTopMenu: false)
+            invokeTitleMenu(showTitleMenu: true)
+            tabScrollManager.dismissTimer.invalidate()
+            tabCollectionView.scrollToItem(at:  atIndexPath, at: [.centeredHorizontally,.centeredVertically], animated: false)
+            tabCollectionView.reloadData()
     }
     
-    func tabCollection(_ tabCollection: TabCollectionView, didMaximizeCells atIndexPath: IndexPath) {
-        tabCollection.horizontalScroll(true)
-        tabCollection.isPagingEnabled = true
-        tabCollection.tabFlowLayout.updateCollectionViewInsets(isMinimized: false)
-        tabScrollManager.dismissTimer.invalidate()
-    }
+    func tabCollectionView(_ tabCollectionView: TabCollectionView, didMinmizeCells atIndexPath: IndexPath) {
+        
+        if tabCollectionView.tabFlowLayout.isMinimized == false{
+            tabManager.updateTabScreenshot(atIndex: atIndexPath.row, withDelay: false)
+            tabCollectionView.horizontalScroll(false)
+            tabCollectionView.isPagingEnabled = false
+            tabCollectionView.tabFlowLayout.updateCollectionViewInsets(isMinimized: true)
+            invokeTopMenu(showTopMenu: true)
+            tabScrollManager.dismissTimer.invalidate()
+            tabCollectionView.scrollToItem(at:  atIndexPath, at: [.centeredHorizontally,.centeredVertically], animated: false)
 
+        }
+    }
+    
+    
+    
 }
 
 
 
 extension BrowserViewController:TabScrollManagerDelegate{
-    func tabScrollManager(_ tabScrollManager: TabScrollManager, didShowTopMenu gesture: UIPanGestureRecognizer) {
+    
+    func invokeTopMenu(showTopMenu : Bool){
+        let selectedCells = self.tabCollectionView.visibleCells
 
-        if self.topMenu.isHidden == true{
-            UIApplication.shared.isStatusBarHidden = false
-            self.tabCollectionView.tabFlowLayout.updateCollectionViewInsets(isMinimized: false, isTopMenuVisible: true)
+        if self.topMenu.isHidden == showTopMenu{
+            UIApplication.shared.isStatusBarHidden = !showTopMenu
+            self.tabCollectionView.tabFlowLayout.updateCollectionViewInsets(isMinimized: self.tabCollectionView.tabFlowLayout.isMinimized, isTopMenuVisible: showTopMenu)
             self.tabCollectionView.collectionViewLayout.invalidateLayout()
-            UIView.animate(withDuration: 0.2, animations: {
-                self.topMenu.isHidden = false
-                self.topMenu.alpha = 1
+            if self.tabCollectionView.tabFlowLayout.isMinimized == false{
+                for cell in selectedCells{
+                    if let tabCell = cell as? GCollectionContainerCell{
+                        tabCell.maximizeCell(withCurves: showTopMenu)
+                    }
+
+                }
+            }
+            UIView.animate(withDuration: TimeConstants.animation, animations: {
+                self.topMenu.isHidden = !showTopMenu
             })
             
         }
+    }
+    
+    
+    
+    
+    
+    
+    func invokeTitleMenu(showTitleMenu : Bool){
+        let selectedCells = self.tabCollectionView.visibleCells.filter{$0.isSelected == true}
+
+        if tabCollectionView.tabFlowLayout.isTitleMenuVisible == !showTitleMenu{
+            self.tabCollectionView.tabFlowLayout.updateCollectionViewInsets(isTitleMenuVisible: showTitleMenu)
+            self.tabCollectionView.collectionViewLayout.invalidateLayout()
+            for cell in selectedCells{
+                if let tabCell = cell as? GCollectionContainerCell{
+                    UIView.animate(withDuration: TimeConstants.animation, animations: {
+                        tabCell.titleMenu.isHidden = !showTitleMenu
+                    })
+                }
+            }
+        }
+    }
+    
+    func tabScrollManager(_ tabScrollManager: TabScrollManager, didShowTopMenu gesture: UIPanGestureRecognizer) {
+
+        invokeTopMenu(showTopMenu: true)
 
     }
     
     func tabScrollManager(_ tabScrollManager: TabScrollManager, didHideTopMenu gesture: UIPanGestureRecognizer) {
 
-//        print("didHideTopMenu")
+        invokeTopMenu(showTopMenu: false)
 
-        if self.topMenu.isHidden == false{
-            UIApplication.shared.isStatusBarHidden = true
-            self.tabCollectionView.tabFlowLayout.updateCollectionViewInsets(isMinimized: false, isTopMenuVisible: false)
-            self.tabCollectionView.collectionViewLayout.invalidateLayout()
-
-            UIView.animate(withDuration: 0.2, animations: {
-                self.topMenu.isHidden = true
-                self.topMenu.alpha = 0
-            })
-
-        }
     }
     
     func tabScrollManager(_ tabScrollManager: TabScrollManager, didShowTitleMenu gesture: UIPanGestureRecognizer) {
-        print("didShowTitleMenu")
-        if tabCollectionView.tabFlowLayout.isTitleMenuVisible == false{
-            self.tabCollectionView.tabFlowLayout.updateCollectionViewInsets(isTitleMenuVisible: true)
-            self.tabCollectionView.collectionViewLayout.invalidateLayout()
-        }
+        invokeTitleMenu(showTitleMenu: true)
 
     }
     
     func tabScrollManager(_ tabScrollManager: TabScrollManager, didHideTitleMenu gesture: UIPanGestureRecognizer) {
-        print("didHideTitleMenu")
-        if tabCollectionView.tabFlowLayout.isTitleMenuVisible == true{
-            self.tabCollectionView.tabFlowLayout.updateCollectionViewInsets(isTitleMenuVisible: false)
-            self.tabCollectionView.collectionViewLayout.invalidateLayout()
-        }
+        invokeTitleMenu(showTitleMenu: false)
+
     }
     
 

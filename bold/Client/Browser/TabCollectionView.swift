@@ -9,9 +9,9 @@
 import UIKit
 
 
-protocol TabCollectionDelegate {
-    func tabCollection(_ tabCollection: TabCollectionView, didMinmizeCells atIndexPath: IndexPath)
-    func tabCollection(_ tabCollection: TabCollectionView, didMaximizeCells atIndexPath: IndexPath)
+protocol TabCollectionViewDelegate {
+    func tabCollectionView(_ tabCollectionView: TabCollectionView, didMaximizeCells atIndexPath: IndexPath)
+    func tabCollectionView(_ tabCollectionView: TabCollectionView, didMinmizeCells atIndexPath: IndexPath)
 }
 
 
@@ -23,7 +23,6 @@ class TabCollectionView: GCollectionView {
     private let identifier =  "GContainerCell"
     private var tabManager:TabManager
     private var startIndexPath:IndexPath?
-    var tabCollectionDelegate:TabCollectionDelegate?
     private(set) lazy var tabFlowLayout: TabCollectionViewFlowLayout = TabCollectionViewFlowLayout()
     init(tabManager : TabManager) {
         self.tabManager = tabManager
@@ -51,14 +50,27 @@ class TabCollectionView: GCollectionView {
 }
 
 
+
+
+
 extension TabCollectionView:GCollectionViewMoveDelegate{
-    func gCollectionview(_ gCollectionview: GCollectionView, didSelectCell cell: UICollectionViewCell, atIndexPath : IndexPath) {
+    
+    
+
+    func gCollectionview(_ gCollectionview: GCollectionView, willSelectCell cell: UICollectionViewCell, atIndexPath: IndexPath) {
+
         startIndexPath = atIndexPath
+        tabFlowLayout.tabCollectionViewDelegate?.tabCollectionView(self, didMinmizeCells: atIndexPath)
+
         if let gCell = cell as? GCollectionContainerCell{
-            gCell.screenshotView.image = tabManager.tabs[atIndexPath.row].screenshotImage!
-            gCell.minimizeCell(with: gCell.screenshotView)
+            gCell.screenshotView.image = tabManager.tabs[atIndexPath.row].screenshotImage
+            gCell.minimizeCell()
         }
-        tabCollectionDelegate?.tabCollection(self, didMinmizeCells: atIndexPath)
+    }
+    
+    func gCollectionview(_ gCollectionview: GCollectionView, didSelectCell cell: UICollectionViewCell, atIndexPath : IndexPath) {
+       
+        
     }
     
     func gCollectionview(_ gCollectionview: GCollectionView, didMoveCell cell: UICollectionViewCell, atIndexPath : IndexPath) {
@@ -86,9 +98,7 @@ extension TabCollectionView:TabManagerDelegate{
     }
     
     func tabManager(_ tabManager: TabManager, didSelectTab tab: Tab, atIndex: Int) {
-        UIView.animate(withDuration: 0.1, animations: {
-            self.contentOffset.x = UIScreen.main.bounds.width * CGFloat(atIndex)
-        })
+        self.scrollToItem(at: IndexPath(row: atIndex, section: 0), at: .right, animated: false)
     }
     
 }
