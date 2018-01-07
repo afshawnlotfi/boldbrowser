@@ -11,7 +11,7 @@ import UIKit
 
 class TabCollectionViewDataSource: NSObject, UICollectionViewDataSource{
     private(set) var identifier: String
-    private(set) var tabManager: TabManager!
+    private var tabManager: TabManager!
     init(identifier : String, tabManager: TabManager) {
         self.identifier = identifier
         super.init()
@@ -19,11 +19,15 @@ class TabCollectionViewDataSource: NSObject, UICollectionViewDataSource{
         
     
     }
-  
+    
+    
     func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         
         
     }
+    
+    
+
     
     func collectionView(_ collectionView: UICollectionView,
                                      cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -49,6 +53,9 @@ class TabCollectionViewDataSource: NSObject, UICollectionViewDataSource{
                     withCurves = true
                 }
                 cell.maximizeCell(view: tab.webView, withCurves : withCurves)
+                
+                gCollectionView.updateTabBookmark(tab: tab, atIndex: indexPath.row)
+
             }
             
         }

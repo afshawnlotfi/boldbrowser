@@ -26,6 +26,7 @@ class Tab:NSObject{
     var tabSession:TabSession?
     var favicon:Favicon?
     var lastTitle:String?
+    var lastURL:URL?
     var screenshotImage:UIImage?
     var displayTitle: String {
         if let title = webView?.title, !title.isEmpty {
@@ -40,7 +41,13 @@ class Tab:NSObject{
     }
 
     var displayURL: URL? {
-        return webView?.url
+        if let url = webView?.url{
+            return url
+        }else if let url = lastURL{
+            return url
+        }else{
+            return URL.empty
+        }
     }
     
     

@@ -11,11 +11,11 @@ import WebKit
 
 class FaviconManager:ITabPluginManager{
     
-    private static var storageManager = StorageManager<Favicon>()
+    private let storageManager = StorageManager<Favicon>()
  
  
     init() {
-        FaviconManager.storageManager.fetchObjects(fromDisk: true)
+        self.storageManager.fetchObjects(fromDisk: true)
     }
     
    
@@ -24,7 +24,7 @@ class FaviconManager:ITabPluginManager{
     ///
     /// - Parameter forUrl: url to search favicon for
     /// - Returns: returns resulting favicon data
-    class func fetchFavicon(forUrl : String) -> Favicon{
+    func fetchFavicon(forUrl : String) -> Favicon{
         let favicons = storageManager.fetchObjects(fromDisk: false)  as! [Favicon]
         let matchingFavicons = (favicons.filter{ $0.faviconURL == forUrl})
         if matchingFavicons.count == 0{
@@ -48,12 +48,12 @@ class FaviconManager:ITabPluginManager{
                     storageDefaults.faviconData = UIImagePNGRepresentation(image)!
                 }
                 
-                let matchingIndecies = ((FaviconManager.storageManager.dataObjects as! [Favicon]).filter{ $0.faviconURL == faviconURL})
+                let matchingIndecies = ((self.storageManager.dataObjects as! [Favicon]).filter{ $0.faviconURL == faviconURL})
 
                 if matchingIndecies.count == 0{
-                    FaviconManager.storageManager.addObject(from: storageDefaults)
+                    self.storageManager.addObject(from: storageDefaults)
                 }else{
-                    FaviconManager.storageManager.updateObject(updatedValues: ["faviconData" : storageDefaults.faviconData], object: matchingIndecies[0])
+                    self.storageManager.updateObject(updatedValues: ["faviconData" : storageDefaults.faviconData], object: matchingIndecies[0])
                     
                 }
                     

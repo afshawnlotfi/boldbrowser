@@ -10,6 +10,6 @@ import Foundation
 import UIKit
 
 struct FaviconDefaults:IStorageDefaults{
-    var faviconURL:String = BrowserStrings.NewTabURL
+    var faviconURL:String = String.empty
     var faviconData:Data = UIImagePNGRepresentation(#imageLiteral(resourceName: "webpage"))!
 }

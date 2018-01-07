@@ -11,6 +11,22 @@ import UIKit
 
 extension UIImage{
     
+    class func tintImage(image : UIImage, isTinted : Bool) -> UIImage{
+        var imageFinal:UIImage
+        switch isTinted{
+            case true:
+                imageFinal = image.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+            case false:
+                imageFinal = image
+                
+        }
+            
+        return imageFinal
+            
+    }
+    
+    
+    
     class func blockImage(color : UIColor, size : CGSize ) -> UIImage{
         let imageRect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         

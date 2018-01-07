@@ -81,12 +81,18 @@ class StorageManager<StorageObject:NSManagedObject>:NSObject{
 
     ///
     /// - Parameter range: Range to index
-    func updateIndecies(range : CountableClosedRange<Int>){
-        for index in range {
-            if let orderedObject =  dataObjects[index] as? OrderedObject{
-                self.updateObject(updatedValues: ["index" : index], object: orderedObject)
-            }
+    func updateIndecies(bounds : [Int]){
+        if let lowerBound = bounds.min(), let upperBound = bounds.max(){
+             let range:CountableClosedRange<Int> = lowerBound...upperBound
+                for index in range {
+                    if let orderedObject =  dataObjects[index] as? OrderedObject{
+                        self.updateObject(updatedValues: ["index" : index], object: orderedObject)
+                    }
+                }
+
+            
         }
+
     }
     
     /// Updates new postion of object
@@ -96,19 +102,17 @@ class StorageManager<StorageObject:NSManagedObject>:NSObject{
     ///   - final: Final Index
     func updatePosition(current : Int, final : Int){
         //Updates pos
-        let currentObject = dataObjects.remove(at: current)
-        dataObjects.insert(currentObject, at: final)
-        if current < final{
-            updateIndecies(range: current...final)
-        }else{
-            updateIndecies(range: final...current)
-        }
+        if current != final{
+            let currentObject = dataObjects.remove(at: current)
+            dataObjects.insert(currentObject, at: final)
+            updateIndecies(bounds: [current, final])
+            }
     }
     
-    func deleteObject(index: Int) {
-        context.delete(dataObjects[index])
-        dataObjects.remove(at: index)
+    func deleteObjects(objects: [NSManagedObject]) {
+        objects.forEach{context.delete($0)}
         self.saveContext()
+        fetchObjects(fromDisk: true)
     }
     
 }

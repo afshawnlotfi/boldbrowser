@@ -19,7 +19,7 @@ protocol TabCollectionViewDelegate {
 
 class TabCollectionView: GCollectionView {
     
-    
+    private let bookmarkManager = BookmarkManager()
     private let identifier =  "GContainerCell"
     private var tabManager:TabManager
     private var startIndexPath:IndexPath?
@@ -47,6 +47,39 @@ class TabCollectionView: GCollectionView {
     
     
         
+}
+
+
+
+extension TabCollectionView{
+    
+    func updateTabBookmark(tab : Tab, atIndex: Int){
+        var bookmarkDefault = BookmarkButtonDefaults()
+        bookmarkDefault.isSelected = bookmarkManager.isBookmark(url: (tab.displayURL?.absoluteString)!)
+        let bookmarkBtn = GMenuButton(buttonDefaults: bookmarkDefault)
+        
+        if let url = tab.displayURL?.absoluteString, let faviconURL = tab.favicon?.faviconURL{
+            bookmarkBtn.descriptorDict = [
+                
+                "title" : tab.displayTitle,
+                "url" : url,
+                "faviconURL" : faviconURL
+                
+            ]
+        }
+        bookmarkBtn.gMenuButtonDelegate = bookmarkManager
+        
+        
+        if let cell = self.cellForItem(at: IndexPath(row: atIndex, section: 0)) as? GCollectionContainerCell{
+
+            cell.setOptionButtons(buttons: [bookmarkBtn])
+            
+        }
+        
+        
+    }
+    
+    
 }
 
 
@@ -98,7 +131,7 @@ extension TabCollectionView:TabManagerDelegate{
     }
     
     func tabManager(_ tabManager: TabManager, didSelectTab tab: Tab, atIndex: Int) {
-        self.scrollToItem(at: IndexPath(row: atIndex, section: 0), at: .right, animated: false)
+        self.scrollToItem(at: IndexPath(row: atIndex, section: 0), at: [.centeredHorizontally,.centeredVertically], animated: false)
     }
     
 }
@@ -112,7 +145,7 @@ extension TabCollectionView:TabDelegate{
     }
     
     func tab(_ tab: Tab, didFinishLoading atIndex: Int) {
-
+        updateTabBookmark(tab: tab, atIndex : atIndex )
     }
     
     func tab(_ tab: Tab, didUpdateTitle title: String, atIndex: Int) {

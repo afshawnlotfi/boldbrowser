@@ -40,10 +40,10 @@ class TabPluginScript:NSObject{
     /// - Parameter pluginName: Name of the Plugin
     /// - Returns: Script Object
     init(pluginName : String, manager : ITabPluginManager){
-        var scriptName = String()
-        var messageHandler = String()
+        var scriptName = String.empty
+        var messageHandler = String.empty
         var isValid = false
-        var sScript = String()
+        var sScript = String.empty
         self.manager = manager
         let configPath = Bundle.main.path(forResource: "config", ofType: "json", inDirectory: "JS/Plugins/" + pluginName)
         do {
@@ -59,7 +59,7 @@ class TabPluginScript:NSObject{
                         do{
                             sScript = try String(contentsOf: URL(fileURLWithPath: configPath!), encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue))
                         }catch{
-                            sScript = String()
+                            sScript = String.empty
                         }
                         
                         

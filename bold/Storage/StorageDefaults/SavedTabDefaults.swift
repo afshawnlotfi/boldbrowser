@@ -15,7 +15,7 @@ struct SavedTabDefaults:IStorageDefaults{
         index = startIndex
     }
     var title:String = BrowserStrings.NewTab
-    var faviconURL:String = String()
+    var faviconURL:String = String.empty
     var sessionData:Data = TabSession.defaultData
     var screenshotData:Data = UIImagePNGRepresentation(UIImage.blockImage(color: .white, size: SizeConstants.MinimizedTab))!
 }

@@ -18,7 +18,6 @@ class GCollectionContainerCell: UICollectionViewCell {
     public var indexPath:IndexPath?
     @IBOutlet weak var screenshotView: UIImageView!
     @IBOutlet weak var urlField: UITextField!
-    private var previousViews:[UIView] = []
     override func awakeFromNib() {
         super.awakeFromNib()
         urlField.textColor = UIColor.System.Light
@@ -28,7 +27,7 @@ class GCollectionContainerCell: UICollectionViewCell {
         screenshotView.contentMode = .scaleAspectFill
         screenshotView.clipsToBounds = true
         screenshotView.isUserInteractionEnabled = false
-        screenshotView.backgroundColor = .red
+        screenshotView.backgroundColor = .white
         self.isSelected = false
 
     }
@@ -36,7 +35,7 @@ class GCollectionContainerCell: UICollectionViewCell {
     @objc func searchMenu(_ textfield : UITextField){
         let view = UIView()
         transitionTo(view: view)
-        textfield.text = String()
+        textfield.text = String.empty
     }
     
     public func minimizeCell(){
@@ -62,7 +61,7 @@ class GCollectionContainerCell: UICollectionViewCell {
             }else{
                 self.layer.cornerRadius = 0
             }
-            self.urlField.font = .systemFont(ofSize: 17)
+            self.urlField.font = .systemFont(ofSize: 15)
             self.layoutIfNeeded()
         })
         screenshotView.isHidden = true
@@ -111,10 +110,15 @@ class GCollectionContainerCell: UICollectionViewCell {
     ///
     /// - Parameter view: View inside container
     public func setContentView(view : UIView){
-        previousViews = []
-        contentStack.arrangedSubviews.forEach{previousViews.append($0); contentStack.removeArrangedSubview($0); $0.removeFromSuperview()}
+        contentStack.arrangedSubviews.forEach{contentStack.removeArrangedSubview($0); $0.removeFromSuperview()}
         contentStack.addArrangedSubview(view)
     
+    }
+    
+    public func setOptionButtons(buttons : [UIButton]){
+        optionStack.arrangedSubviews.forEach{contentStack.removeArrangedSubview($0); $0.removeFromSuperview()}
+        buttons.forEach{optionStack.addArrangedSubview($0)}
+        
     }
 
 }

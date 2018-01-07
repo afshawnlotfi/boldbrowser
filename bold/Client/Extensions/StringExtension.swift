@@ -15,5 +15,9 @@ extension String{
         return URL(string : self)!
     }
     
+    static var empty:String{
+        return String()
+    }
+    
 }
 
