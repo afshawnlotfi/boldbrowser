@@ -10,10 +10,10 @@ import Foundation
 
 
 class GSelector:NSObject{
-    private(set) var target:Any
+    private(set) var target:AnyObject
     private(set) var selector:Selector
     
-    init(target : Any, selector : Selector) {
+    init(target : AnyObject, selector : Selector) {
         self.target = target
         self.selector = selector
         super.init()

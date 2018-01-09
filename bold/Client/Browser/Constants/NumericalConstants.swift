@@ -6,7 +6,6 @@
 //  Copyright © 2018 Afshawn Lotfi. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 struct SizeConstants{
@@ -17,21 +16,31 @@ struct SizeConstants{
     static var TabTitleHeight:CGFloat{
         return 60
     }
+    static var SliderStackWidth:CGFloat{
+        return 300
+    }
     
 }
 struct TimeConstants{
     
-    static let animation:Double = 0.2
-    static let screenShot:Double = 0.3
-    static let timeout:Double = 0.2
+    static let Animation:Double = 0.2
+    static let ScreenShot:Double = 0.3
+    static let Timeout:Double = 0.2
 
 }
 
 
 struct CurveRadii{
     
-    static let standard:CGFloat = 10
+    static let Standard:CGFloat = 10
     
+}
+
+struct AlphaValues{
+    
+    
+    static let SliderStackCutoff:CGFloat = 0.8
+
 }
 
 

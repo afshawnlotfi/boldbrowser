@@ -6,7 +6,6 @@
 //  Copyright © 2017 Afshawn Lotfi. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 class TabCollectionViewDataSource: NSObject, UICollectionViewDataSource{
@@ -34,7 +33,7 @@ class TabCollectionViewDataSource: NSObject, UICollectionViewDataSource{
         
         
         let tab = tabManager.tabs[indexPath.row]
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! GCollectionContainerCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! GContainerCVCell
         
        cell.isSelected = true
        cell.indexPath = indexPath
@@ -54,7 +53,7 @@ class TabCollectionViewDataSource: NSObject, UICollectionViewDataSource{
                 }
                 cell.maximizeCell(view: tab.webView, withCurves : withCurves)
                 
-                gCollectionView.updateTabBookmark(tab: tab, atIndex: indexPath.row)
+//                gCollectionView.updateOptionButtons(tab: tab, atIndex: indexPath.row)
 
             }
             

@@ -13,7 +13,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="GContainerCell" id="gTV-IL-0wX" customClass="GCollectionContainerCell" customModule="bold" customModuleProvider="target">
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="GContainerCVCell" id="gTV-IL-0wX" customClass="GContainerCVCell" customModule="bold" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="463" height="729"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -97,7 +97,7 @@
                 <outlet property="titleMenu" destination="LpX-iu-Tfi" id="U3i-P1-FJ6"/>
                 <outlet property="urlField" destination="oW5-DB-Bqc" id="vKM-i5-SxJ"/>
             </connections>
-            <point key="canvasLocation" x="-1667" y="-727"/>
+            <point key="canvasLocation" x="-1848" y="-728"/>
         </collectionViewCell>
     </objects>
     <resources>

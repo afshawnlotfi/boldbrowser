@@ -43,7 +43,7 @@ class BrowserViewController: UIViewController {
         
         let selectedCells = self.tabCollectionView.visibleCells.filter{$0.isSelected == true}
         if selectedCells.count > 0{
-            if let cell = (selectedCells[0] as? GCollectionContainerCell){
+            if let cell = (selectedCells[0] as? GContainerCVCell){
                 if let indexPath = cell.indexPath{
                     return indexPath
                 }else if let indexPath = tabCollectionView.indexPath(for: cell){
@@ -84,7 +84,7 @@ class BrowserViewController: UIViewController {
         let indexPath = self.getSelectedIndexPath(from: self.tabCollectionView)
 
         
-        DispatchQueue.main.asyncAfter(deadline:  DispatchTime.now()  + TimeConstants.timeout){
+        DispatchQueue.main.asyncAfter(deadline:  DispatchTime.now()  + TimeConstants.Timeout){
             self.tabCollectionView.scrollToItem(at:  indexPath, at: .right, animated: false)
         }
     }
@@ -137,13 +137,13 @@ extension BrowserViewController:TabScrollManagerDelegate{
             self.tabCollectionView.collectionViewLayout.invalidateLayout()
             if self.tabCollectionView.tabFlowLayout.isMinimized == false{
                 for cell in selectedCells{
-                    if let tabCell = cell as? GCollectionContainerCell{
+                    if let tabCell = cell as? GContainerCVCell{
                         tabCell.maximizeCell(withCurves: showTopMenu)
                     }
 
                 }
             }
-            UIView.animate(withDuration: TimeConstants.animation, animations: {
+            UIView.animate(withDuration: TimeConstants.Animation, animations: {
                 self.topMenu.isHidden = !showTopMenu
             })
             
@@ -162,8 +162,8 @@ extension BrowserViewController:TabScrollManagerDelegate{
             self.tabCollectionView.tabFlowLayout.updateCollectionViewInsets(isTitleMenuVisible: showTitleMenu)
             self.tabCollectionView.collectionViewLayout.invalidateLayout()
             for cell in selectedCells{
-                if let tabCell = cell as? GCollectionContainerCell{
-                    UIView.animate(withDuration: TimeConstants.animation, animations: {
+                if let tabCell = cell as? GContainerCVCell{
+                    UIView.animate(withDuration: TimeConstants.Animation, animations: {
                         tabCell.titleMenu.isHidden = !showTitleMenu
                     })
                 }

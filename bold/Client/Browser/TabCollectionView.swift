@@ -18,9 +18,8 @@ protocol TabCollectionViewDelegate {
 
 
 class TabCollectionView: GCollectionView {
-    
-    private let bookmarkManager = BookmarkManager()
-    private let identifier =  "GContainerCell"
+    private let optionButtonManager = OptionButtonManager()
+    private let identifier =  "GContainerCVCell"
     private var tabManager:TabManager
     private var startIndexPath:IndexPath?
     private(set) lazy var tabFlowLayout: TabCollectionViewFlowLayout = TabCollectionViewFlowLayout()
@@ -51,38 +50,6 @@ class TabCollectionView: GCollectionView {
 
 
 
-extension TabCollectionView{
-    
-    func updateTabBookmark(tab : Tab, atIndex: Int){
-        var bookmarkDefault = BookmarkButtonDefaults()
-        bookmarkDefault.isSelected = bookmarkManager.isBookmark(url: (tab.displayURL?.absoluteString)!)
-        let bookmarkBtn = GMenuButton(buttonDefaults: bookmarkDefault)
-        
-        if let url = tab.displayURL?.absoluteString, let faviconURL = tab.favicon?.faviconURL{
-            bookmarkBtn.descriptorDict = [
-                
-                "title" : tab.displayTitle,
-                "url" : url,
-                "faviconURL" : faviconURL
-                
-            ]
-        }
-        bookmarkBtn.gMenuButtonDelegate = bookmarkManager
-        
-        
-        if let cell = self.cellForItem(at: IndexPath(row: atIndex, section: 0)) as? GCollectionContainerCell{
-
-            cell.setOptionButtons(buttons: [bookmarkBtn])
-            
-        }
-        
-        
-    }
-    
-    
-}
-
-
 
 
 
@@ -95,7 +62,7 @@ extension TabCollectionView:GCollectionViewMoveDelegate{
         startIndexPath = atIndexPath
         tabFlowLayout.tabCollectionViewDelegate?.tabCollectionView(self, didMinmizeCells: atIndexPath)
 
-        if let gCell = cell as? GCollectionContainerCell{
+        if let gCell = cell as? GContainerCVCell{
             gCell.screenshotView.image = tabManager.tabs[atIndexPath.row].screenshotImage
             gCell.minimizeCell()
         }
@@ -145,17 +112,19 @@ extension TabCollectionView:TabDelegate{
     }
     
     func tab(_ tab: Tab, didFinishLoading atIndex: Int) {
-        updateTabBookmark(tab: tab, atIndex : atIndex )
+        if let cell = self.cellForItem(at: IndexPath(row: atIndex, section: 0)) as? GContainerCVCell{
+            optionButtonManager.updateOptionButtons(gCell: cell, tab: tab)
+        }
     }
     
     func tab(_ tab: Tab, didUpdateTitle title: String, atIndex: Int) {
-        if let cell = self.cellForItem(at: IndexPath(row: atIndex, section: 0)) as? GCollectionContainerCell{
+        if let cell = self.cellForItem(at: IndexPath(row: atIndex, section: 0)) as? GContainerCVCell{
             cell.setCellTitle(title: title)
         }
     }
     
     func tab(_ tab: Tab, didUpdateFavicon favicon: Favicon, atIndex: Int) {
-        if let cell = self.cellForItem(at: IndexPath(row: atIndex, section: 0)) as? GCollectionContainerCell{
+        if let cell = self.cellForItem(at: IndexPath(row: atIndex, section: 0)) as? GContainerCVCell{
             cell.setCellImage(image: UIImage(data: favicon.faviconData!)! )
         }
     }

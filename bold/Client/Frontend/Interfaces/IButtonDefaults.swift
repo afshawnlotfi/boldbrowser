@@ -6,7 +6,6 @@
 //  Copyright © 2018 Afshawn Lotfi. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 protocol IButtonDefaults{

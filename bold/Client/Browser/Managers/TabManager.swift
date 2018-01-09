@@ -144,7 +144,7 @@ class TabManager:NSObject{
         
         if withDelay{
             //Takes screenshot with small delay to allow page to fully load
-            DispatchQueue.main.asyncAfter(deadline:  DispatchTime.now()  + TimeConstants.screenShot){
+            DispatchQueue.main.asyncAfter(deadline:  DispatchTime.now()  + TimeConstants.ScreenShot){
                 invokeScreenshot()
             }
         }else{

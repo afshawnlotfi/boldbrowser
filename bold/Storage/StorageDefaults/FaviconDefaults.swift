@@ -6,7 +6,6 @@
 //  Copyright © 2017 Afshawn Lotfi. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 struct FaviconDefaults:IStorageDefaults{

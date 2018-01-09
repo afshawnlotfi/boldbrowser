@@ -6,7 +6,6 @@
 //  Copyright © 2017 Afshawn Lotfi. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 
@@ -34,21 +33,18 @@ extension UIView{
 extension UIView{
     
     
-    func addSubview(view : UIView, attributes : [NSLayoutAttribute]) -> [NSLayoutConstraint]{
+    @discardableResult func addSubview(view : UIView, attributes : [NSLayoutAttribute]) -> [NSLayoutConstraint]{
         var layoutConstraints = [NSLayoutConstraint]()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(view)
         for attribute in attributes{
             let constaint = NSLayoutConstraint(item: view, attribute: attribute, relatedBy: .equal, toItem: self, attribute: attribute, multiplier: 1.0, constant: 0.0)
             layoutConstraints.append(constaint)
         }
         self.addConstraints(layoutConstraints)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(view)
+
         return layoutConstraints
     }
-    
-    
-    
-    
     
     
 }

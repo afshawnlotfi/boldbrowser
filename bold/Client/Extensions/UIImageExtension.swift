@@ -11,15 +11,10 @@ import UIKit
 
 extension UIImage{
     
-    class func tintImage(image : UIImage, isTinted : Bool) -> UIImage{
+    class func tintImage(image : UIImage) -> UIImage{
         var imageFinal:UIImage
-        switch isTinted{
-            case true:
-                imageFinal = image.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-            case false:
-                imageFinal = image
-                
-        }
+        imageFinal = image.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+
             
         return imageFinal
             

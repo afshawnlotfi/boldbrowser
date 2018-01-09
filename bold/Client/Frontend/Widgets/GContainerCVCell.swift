@@ -1,14 +1,15 @@
 //
-//  GContainerCell.swift
+//  GContainerCVCell.swift
 //  bold
 //
-//  Created by Afshawn Lotfi on 12/19/17.
-//  Copyright © 2017 Afshawn Lotfi. All rights reserved.
+//  Created by Afshawn Lotfi on 1/7/18.
+//  Copyright © 2018 Afshawn Lotfi. All rights reserved.
 //
 
 import UIKit
 
-class GCollectionContainerCell: UICollectionViewCell {
+class GContainerCVCell:UICollectionViewCell{
+    
 
     @IBOutlet private weak var blurViewHeight: NSLayoutConstraint!
     @IBOutlet private(set) weak var titleMenu: UIVisualEffectView!
@@ -18,8 +19,10 @@ class GCollectionContainerCell: UICollectionViewCell {
     public var indexPath:IndexPath?
     @IBOutlet weak var screenshotView: UIImageView!
     @IBOutlet weak var urlField: UITextField!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
+
         urlField.textColor = UIColor.System.Light
         titleMenu.effect = UIBlurEffect(style: .dark)
         urlField.isEnabled = false
@@ -29,35 +32,30 @@ class GCollectionContainerCell: UICollectionViewCell {
         screenshotView.isUserInteractionEnabled = false
         screenshotView.backgroundColor = .white
         self.isSelected = false
+    }
 
-    }
     
-    @objc func searchMenu(_ textfield : UITextField){
-        let view = UIView()
-        transitionTo(view: view)
-        textfield.text = String.empty
-    }
     
     public func minimizeCell(){
-
-        UIView.animate(withDuration: TimeConstants.animation, animations: {
-            self.layer.cornerRadius = CurveRadii.standard
+        
+        UIView.animate(withDuration: TimeConstants.Animation, animations: {
+            self.layer.cornerRadius = CurveRadii.Standard
             self.blurViewHeight.constant = 45
             self.urlField.font = .systemFont(ofSize: 14)
             self.layoutIfNeeded()
         })
-
+        
         
         screenshotView.isHidden = false
         contentStack.isHidden = true
-
+        
     }
     
     public func maximizeCell(view : UIView? = nil, withCurves: Bool){
-        UIView.animate(withDuration: TimeConstants.animation, animations: {
+        UIView.animate(withDuration: TimeConstants.Animation, animations: {
             self.blurViewHeight.constant = 55
             if withCurves{
-                self.layer.cornerRadius = CurveRadii.standard
+                self.layer.cornerRadius = CurveRadii.Standard
             }else{
                 self.layer.cornerRadius = 0
             }
@@ -66,7 +64,7 @@ class GCollectionContainerCell: UICollectionViewCell {
         })
         screenshotView.isHidden = true
         contentStack.isHidden = false
-
+        
         if view != nil{
             self.setContentView(view: view!)
         }
@@ -74,7 +72,6 @@ class GCollectionContainerCell: UICollectionViewCell {
         
     }
     
-
     
     
     /// Set the cells container title
@@ -89,7 +86,7 @@ class GCollectionContainerCell: UICollectionViewCell {
     ///
     /// - Parameter image: Image of container
     public func setCellImage(image : UIImage){
-        faviconBtn.setImage(image, for: .normal) 
+        faviconBtn.setImage(image, for: .normal)
     }
     
     
@@ -98,7 +95,7 @@ class GCollectionContainerCell: UICollectionViewCell {
     /// - Parameter view: View to transition to
     public func transitionTo(view : UIView){
         view.alpha = 0
-        UIView.animate(withDuration: TimeConstants.animation, animations: {
+        UIView.animate(withDuration: TimeConstants.Animation, animations: {
             self.contentStack.arrangedSubviews.forEach{ $0.alpha = 0}
             self.setContentView(view: view)
             view.alpha = 1
@@ -112,7 +109,7 @@ class GCollectionContainerCell: UICollectionViewCell {
     public func setContentView(view : UIView){
         contentStack.arrangedSubviews.forEach{contentStack.removeArrangedSubview($0); $0.removeFromSuperview()}
         contentStack.addArrangedSubview(view)
-    
+        
     }
     
     public func setOptionButtons(buttons : [UIButton]){
@@ -120,5 +117,7 @@ class GCollectionContainerCell: UICollectionViewCell {
         buttons.forEach{optionStack.addArrangedSubview($0)}
         
     }
-
+    
+    
+    
 }

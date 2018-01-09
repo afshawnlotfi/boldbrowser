@@ -58,7 +58,7 @@ class GCollectionView:UICollectionView {
                 switch(gesture.state) {
                 case .began:
                     if let indexPath = self.indexPathForItem(at: gesture.location(in: self)) {
-                        if let cell = self.cellForItem(at: indexPath) as? GCollectionContainerCell{
+                        if let cell = self.cellForItem(at: indexPath) as? GContainerCVCell{
                             moveDelegate?.gCollectionview(self, willSelectCell: cell, atIndexPath : indexPath)
                             self.scrollToItem(at: indexPath, at: .right, animated: false)
                             self.beginInteractiveMovementForItem(at: indexPath)
@@ -71,13 +71,13 @@ class GCollectionView:UICollectionView {
                     
                     self.updateInteractiveMovementTargetPosition(gesture.location(in: gesture.view))
                     if let indexPath = self.indexPathForItem(at: gesture.location(in: self)) {
-                        if let cell = self.cellForItem(at: indexPath) as? GCollectionContainerCell{
+                        if let cell = self.cellForItem(at: indexPath) as? GContainerCVCell{
                             moveDelegate?.gCollectionview(self, didMoveCell: cell, atIndexPath : indexPath)
                         }
                     }
                 case UIGestureRecognizerState.ended:
                     if let indexPath = self.indexPathForItem(at: gesture.location(in: self)) {
-                        if let cell = self.cellForItem(at: indexPath) as? GCollectionContainerCell{
+                        if let cell = self.cellForItem(at: indexPath) as? GContainerCVCell{
                             moveDelegate?.gCollectionview(self, didReleaseCell: cell, atIndexPath : indexPath)
                         }
                     }

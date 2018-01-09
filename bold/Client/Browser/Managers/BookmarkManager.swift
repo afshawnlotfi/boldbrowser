@@ -9,22 +9,32 @@
 import Foundation
 
 class BookmarkManager:GMenuButtonDelegate{
+    
+    func gMenuButton(didSelectButton button: GMenuButton, buttonDefaults: IButtonDefaults) {
+        if let bookmarkButtonDefault = buttonDefaults as? BookmarkButtonDefaults{
+            let tab = bookmarkButtonDefault.tab
+            addBookmark(title: tab.displayTitle,  url: tab.displayURL?.absoluteString ?? String.empty, faviconURL: tab.favicon?.faviconURL ?? String.empty)
 
+        }
+    }
+    
+    func gMenuButton(didUnselectButton button: GMenuButton, buttonDefaults: IButtonDefaults) {
+       
+        
+        if let bookmarkButtonDefault = buttonDefaults as? BookmarkButtonDefaults{
+            let tab = bookmarkButtonDefault.tab
+            if let url = tab.displayURL{
+                removeBookmark(url: url.absoluteString)
+
+            }
+        }
+    }
     
     
     private let storageManager = StorageManager<Bookmark>()
     init() {
         self.storageManager.fetchObjects(fromDisk: true)
     }
-    
-    func gMenuButton(didSelectButton button: GMenuButton, withDescriptor: [String : Any]) {
-        addBookmark(title: withDescriptor["title"] as! String, url: withDescriptor["url"] as! String, faviconURL: withDescriptor["faviconURL"] as! String)
-    }
-    
-    func gMenuButton(didUnselectButton button: GMenuButton, withDescriptor: [String : Any]) {
-        removeBookmark(url: withDescriptor["url"] as! String)
-    }
-    
     
  
     

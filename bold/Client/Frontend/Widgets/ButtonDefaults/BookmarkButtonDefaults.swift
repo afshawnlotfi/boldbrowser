@@ -6,11 +6,20 @@
 //  Copyright © 2018 Afshawn Lotfi. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 struct BookmarkButtonDefaults:IButtonDefaults{
+    
+    let buttonTab:Tab!
+    init(tab : Tab){
+        buttonTab = tab
+    }
+    
     var selectedImage: UIImage = #imageLiteral(resourceName: "bookmark-small")
     var unselectedImage: UIImage = #imageLiteral(resourceName: "remove-bookmark-small")
     var isSelected = false
+    
+    var tab:Tab{
+        return buttonTab
+    }
 }
