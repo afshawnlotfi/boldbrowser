@@ -19,22 +19,24 @@ protocol GMenuButtonDelegate{
 
 class GMenuButton:UIButton{
     public var descriptorDict = [String:Any]()
-    private(set) var buttonDefaults:IButtonDefaults
+    private(set) var buttonDefaults:IButtonDefaults = GenericButtonDefaults()
     public var gMenuButtonDelegate:GMenuButtonDelegate?
     private var widthConstraint:NSLayoutConstraint!
     public var alternateSelection = false
-    init(buttonDefaults : IButtonDefaults) {
-        
-        self.buttonDefaults = buttonDefaults
+    init(buttonDefaults defaults : IButtonDefaults? = nil) {
         super.init(frame: CGRect.zero)
 
-        if buttonDefaults.isSelected{
-            self.configureButton(image: buttonDefaults.selectedImage)
-        }else{
-            self.configureButton(image: buttonDefaults.unselectedImage)
+        if let buttonDefaults = defaults{
+            self.buttonDefaults = buttonDefaults
+
+            if buttonDefaults.isSelected{
+                self.configureButton(image: buttonDefaults.selectedImage)
+            }else{
+                self.configureButton(image: buttonDefaults.unselectedImage)
+            }
+            
+            self.isSelected = buttonDefaults.isSelected
         }
-        
-        self.isSelected = buttonDefaults.isSelected
         self.setTitleColor(UIColor.System.Light, for: .normal)
         self.tintColor = UIColor.System.Light
         self.titleLabel?.textAlignment = .center

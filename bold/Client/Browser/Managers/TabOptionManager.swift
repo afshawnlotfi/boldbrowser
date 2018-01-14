@@ -8,15 +8,25 @@
 
 import UIKit
 
+protocol SliderCotrollerDelegate{
+    
+    func requestSliderToClose()
+    
+}
 
-class TabOptionManager:NSObject{
-    
-    
+
+
+
+class TabOptionManager:NSObject, SliderCotrollerDelegate{
+  
+    func requestSliderToClose() {
+        sliderView.drawAway()
+    }
+ 
     private var findInPageOption = FindInPageOption()
     private var tabWebView:TabWebView?
     private var options:[[GMenuOption]]
     private let sliderView = SliderView()
-    
     
     override init() {
         options = [
@@ -30,9 +40,9 @@ class TabOptionManager:NSObject{
             [
                 GMenuOption(title: TabOptionStrings.NightMode, includeSwitch: true)
             ]
-            
         ]
         super.init()
+        findInPageOption.sliderControllerDelegate = self
         sliderView.tableView.dataSource = self
         sliderView.tableView.delegate = self
        

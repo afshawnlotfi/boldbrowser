@@ -33,18 +33,20 @@ protocol ITabPluginManager{
 class TabPluginScript:NSObject{
     private(set) var pluginDescriptor:PluginScriptDescriptor
     private(set) var scriptContents:WKUserScript
-    private(set) var manager:ITabPluginManager
+    private(set) var manager:ITabPluginManager?
 
     /// Function that validates plugin config
     ///
     /// - Parameter pluginName: Name of the Plugin
     /// - Returns: Script Object
-    init(pluginName : String, manager : ITabPluginManager){
+    init(pluginName : String, manager : ITabPluginManager? = nil){
         var scriptName = String.empty
         var messageHandler = String.empty
         var isValid = false
         var sScript = String.empty
-        self.manager = manager
+        if let pManager = manager{
+            self.manager = pManager
+        }
         let configPath = Bundle.main.path(forResource: "config", ofType: "json", inDirectory: "JS/Plugins/" + pluginName)
         do {
             let data = try Data(contentsOf: URL(fileURLWithPath: configPath!), options: .mappedIfSafe)

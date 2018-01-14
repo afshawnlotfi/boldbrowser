@@ -17,7 +17,7 @@ class TabScriptManager: NSObject, WKScriptMessageHandler {
         //Search for plugin identifier
         for script in scriptPool.values {
             if script.pluginDescriptor.isValid == true && script.pluginDescriptor.messageHandlerName == message.name {
-                script.manager.userContentController(userContentController, didReceive: message)
+                script.manager?.userContentController(userContentController, didReceive: message)
                 break
             }
         }

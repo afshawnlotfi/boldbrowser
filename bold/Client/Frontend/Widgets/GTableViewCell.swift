@@ -38,7 +38,7 @@ class GTableViewCell: UITableViewCell {
     }
     
     @objc func switchStateChange( _ sender : UISwitch){
-        
+
         switch sender.isOn{
             
             case true:

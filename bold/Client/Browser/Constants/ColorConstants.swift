@@ -14,6 +14,8 @@ extension UIColor{
 
         static let Dark = UIColor(white: 30/255, alpha: 0.5)
         static let Light = UIColor(white: 230/255, alpha: 0.6)
+        static let FadedWhite = UIColor(white: 230/255, alpha: 0.3)
+
         
     }
 }

@@ -158,11 +158,12 @@ class TabManager:NSObject{
     func configureWebview(tab : Tab){
         
         let faviconPlugin = TabPluginScript(pluginName: "favicon", manager: faviconManager)
-        
+        let findInPagePlugin = TabPluginScript(pluginName: "find")
+
         self.addObserver(tab: tab, observerKeys: [KVOConstants.estimatedProgress,KVOConstants.title,KVOConstants.faviconURL, KVOConstants.URL, KVOConstants.loading])
         
         
-        self.addTabPluginScripts(tab: tab, tabScripts: [faviconPlugin])
+        self.addTabPluginScripts(tab: tab, tabScripts: [faviconPlugin, findInPagePlugin])
         tab.restoreWebview()
         tab.webView?.scrollView.panGestureRecognizer.addTarget(tabScrollManager!, action: #selector(tabScrollManager?.tabScrollUpdated(_:) ))
         //Accounts for extra tab length for showing and hiding title menu
