@@ -21,13 +21,37 @@ class TabCollectionView: GCollectionView {
     private let optionButtonManager = OptionButtonManager()
     private let identifier =  "GContainerCVCell"
     private var tabManager:TabManager
+   
+    //Built In Plugins
+    private let faviconManager = FaviconManager()
+    private let downloadManager = DownloadManager()
+
+    private let tabSliderOptions = DefaultTabSliderOptions()
+    
+    private var builtInScripts = [TabPluginScript]()
     private var startIndexPath:IndexPath?
     private(set) lazy var tabFlowLayout: TabCollectionViewFlowLayout = TabCollectionViewFlowLayout()
     init(tabManager : TabManager) {
         self.tabManager = tabManager
         super.init(identifier: identifier)
+        
         self.dataSource = tabDataSource
         self.delegate = tabFlowLayout
+        
+        //Built in scripts
+        builtInScripts = [
+            TabPluginScript(pluginName: "favicon", manager: faviconManager),
+            TabPluginScript(pluginName: "download", manager: downloadManager),
+            TabPluginScript(pluginName: "find")
+        ]
+        
+        //Tab Options
+        optionButtonManager.tabOptionManager.addOptions(options: tabSliderOptions.options)
+        
+        
+        tabSliderOptions.findInPageOption.sliderControllerDelegate = optionButtonManager.tabOptionManager
+        downloadManager.downloadManagerDelegate = tabSliderOptions.downloadPageOption
+        
         self.tabManager.tabManagerDelegates.append(self)
         self.horizontalScroll(true)
         self.moveDelegate = self
@@ -89,6 +113,7 @@ extension TabCollectionView:TabManagerDelegate{
     
     func tabManager(_ tabManager: TabManager, didAddTab tab: Tab, atIndex: Int) {
         tabManager.tabs[atIndex].tabDelegate = self
+        
         self.reloadData()
         
     }
@@ -104,16 +129,26 @@ extension TabCollectionView:TabManagerDelegate{
 }
 
 
+
+
+
 extension TabCollectionView:TabDelegate{
     
     func tab(_ tab: Tab, didCreateWebview webView: TabWebView, atIndex: Int) {
         
-        self.tabManager.configureWebview(tab: tab)
+
+        
+        self.tabManager.configureWebview(tab: tab, plugins: builtInScripts)
+        
+
     }
     
     func tab(_ tab: Tab, didFinishLoading atIndex: Int) {
         if let cell = self.cellForItem(at: IndexPath(row: atIndex, section: 0)) as? GContainerCVCell{
             optionButtonManager.updateOptionButtons(gCell: cell, tab: tab)
+            
+
+
         }
     }
     
@@ -123,7 +158,12 @@ extension TabCollectionView:TabDelegate{
         }
     }
     
-    func tab(_ tab: Tab, didUpdateFavicon favicon: Favicon, atIndex: Int) {
+    func tab(_ tab: Tab, didUpdateFaviconURL faviconURL: String, atIndex: Int) {
+        
+        let favicon = faviconManager.fetchFavicon(forUrl: faviconURL)
+        
+        tab.favicon = favicon
+
         if let cell = self.cellForItem(at: IndexPath(row: atIndex, section: 0)) as? GContainerCVCell{
             cell.setCellImage(image: UIImage(data: favicon.faviconData!)! )
         }

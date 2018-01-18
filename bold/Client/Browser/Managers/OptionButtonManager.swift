@@ -13,7 +13,7 @@ class OptionButtonManager{
     
     
     private let bookmarkManager = BookmarkManager()
-    private let tabOptionManager = TabOptionManager()
+    let tabOptionManager = TabOptionManager()
 
 
     
@@ -39,6 +39,8 @@ class OptionButtonManager{
         
         
     }
+    
+    
     
     
     

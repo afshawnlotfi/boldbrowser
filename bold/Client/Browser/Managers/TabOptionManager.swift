@@ -8,31 +8,18 @@
 
 import UIKit
 
-protocol SliderCotrollerDelegate{
+
+
+class DefaultTabSliderOptions:NSObject{
     
-    func requestSliderToClose()
-    
-}
-
-
-
-
-class TabOptionManager:NSObject, SliderCotrollerDelegate{
-  
-    func requestSliderToClose() {
-        sliderView.drawAway()
-    }
- 
-    private var findInPageOption = FindInPageOption()
-    private var tabWebView:TabWebView?
-    private var options:[[GMenuOption]]
-    private let sliderView = SliderView()
-    
+    let findInPageOption = FindInPageOption()
+    let downloadPageOption = DownloadPageOption()
+    private(set) var options:[[GMenuOption]]
     override init() {
         options = [
             [
                 GMenuOption(title: TabOptionStrings.FindInPage, icon: UIImage.tintImage(image: #imageLiteral(resourceName: "findinpage")), delegate : findInPageOption),
-                GMenuOption(title: TabOptionStrings.DownloadPage, icon: UIImage.tintImage(image: #imageLiteral(resourceName: "download"))),
+                GMenuOption(title: TabOptionStrings.DownloadPage, icon: UIImage.tintImage(image: #imageLiteral(resourceName: "download")), delegate : downloadPageOption),
                 GMenuOption(title: TabOptionStrings.GeneratePDF, icon: UIImage.tintImage(image: #imageLiteral(resourceName: "generate-pdf"))),
                 GMenuOption(title: TabOptionStrings.Print, icon: UIImage.tintImage(image: #imageLiteral(resourceName: "print")))
                 
@@ -42,11 +29,47 @@ class TabOptionManager:NSObject, SliderCotrollerDelegate{
             ]
         ]
         super.init()
-        findInPageOption.sliderControllerDelegate = self
+        
+    }
+    
+}
+
+
+protocol SliderCotrollerDelegate{
+    
+    func requestSliderToClose()
+    
+}
+class TabOptionManager:NSObject, SliderCotrollerDelegate{
+  
+    func requestSliderToClose() {
+        sliderView.drawAway()
+    }
+ 
+
+    private var tabWebView:TabWebView?
+    private var options = [[GMenuOption]]()
+    private let sliderView = SliderView()
+
+    override init() {
+        super.init()
+
         sliderView.tableView.dataSource = self
         sliderView.tableView.delegate = self
        
     }
+}
+
+
+extension TabOptionManager{
+    
+    func addOptions(options : [[GMenuOption]]){
+        self.options = options
+
+    }
+    
+    
+    
 }
     
 extension TabOptionManager:GMenuButtonDelegate{

@@ -53,16 +53,13 @@ class TabCollectionViewDataSource: NSObject, UICollectionViewDataSource{
                 }
                 cell.maximizeCell(view: tab.webView, withCurves : withCurves)
                 
-//                gCollectionView.updateOptionButtons(tab: tab, atIndex: indexPath.row)
 
             }
             
         }
         
         cell.setCellTitle(title: tab.displayTitle)
-        if let faviconImage = UIImage(data : (tab.favicon?.faviconData)!){
-            cell.setCellImage(image: faviconImage)
-        }
+        
         
         if indexPath.row == tabManager.tabs.count - 1{
             cell.alpha = 0

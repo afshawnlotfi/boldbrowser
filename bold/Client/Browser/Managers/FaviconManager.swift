@@ -42,19 +42,21 @@ class FaviconManager:ITabPluginManager{
         if let webView = message.webView as? TabWebView{
 
             if let faviconURL:String = message.body as? String{
-                storageDefaults.faviconURL = faviconURL
-                if let url =  URL(string: faviconURL){
-                    let image = WebRequestManager.fetchImage(fetchURL: url)
-                    storageDefaults.faviconData = UIImagePNGRepresentation(image)!
-                }
-                
-                let matchingIndecies = ((self.storageManager.dataObjects as! [Favicon]).filter{ $0.faviconURL == faviconURL})
-
-                if matchingIndecies.count == 0{
-                    self.storageManager.addObject(from: storageDefaults)
-                }else{
-                    self.storageManager.updateObject(updatedValues: ["faviconData" : storageDefaults.faviconData], object: matchingIndecies[0])
+                if DeviceInfo.hasConnectivity(){
+                    storageDefaults.faviconURL = faviconURL
+                    if let url =  URL(string: faviconURL){
+                        let image = WebRequestManager.fetchImage(fetchURL: url)
+                        storageDefaults.faviconData = UIImagePNGRepresentation(image)!
+                    }
                     
+                    let matchingIndecies = ((self.storageManager.fetchObjects(fromDisk: false) as! [Favicon]).filter{ $0.faviconURL == faviconURL})
+
+                    if matchingIndecies.count == 0{
+                        self.storageManager.addObject(from: storageDefaults)
+                    }else{
+                        self.storageManager.updateObject(updatedValues: ["faviconData" : storageDefaults.faviconData], object: matchingIndecies[0])
+                        
+                    }
                 }
                     
                 webView.setValue(faviconURL, forKey: KVOConstants.faviconURL)

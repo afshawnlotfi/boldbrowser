@@ -9,10 +9,16 @@
 import UIKit
 import WebKit
 
+
+
+
+
 class TabWebView:WKWebView{
     
     private var progressBar = UIProgressView()
     private var progressConstraints:[NSLayoutConstraint] = []
+    private var storageManager = StorageManager<DownloadedWebsite>()
+    public var offlineLoaded = false
     @objc public var faviconURL:String = ""
     override init(frame: CGRect, configuration: WKWebViewConfiguration) {
         super.init(frame: frame, configuration:  configuration)
@@ -23,6 +29,9 @@ class TabWebView:WKWebView{
         progressBar.isHidden = true
         progressConstraints = self.addSubview(view: progressBar, attributes: [.top,.left,.right])
     }
+    
+
+    
     
     func progressBarUpdated(){
         let updatedProgress:Float = Float(self.estimatedProgress)
@@ -35,8 +44,7 @@ class TabWebView:WKWebView{
         self.progressBar.setProgress(updatedProgress, animated: true)
     }
     
-    
-    
+ 
    
     required init?(coder: NSCoder) {
         self.init()

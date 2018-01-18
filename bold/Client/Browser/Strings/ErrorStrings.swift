@@ -16,7 +16,7 @@ extension ErrorStrings{
     
     public static let PluginConfig = NSLocalizedString("PluginScriptValidator.fatalError", value: "Plugin Configuration Error ", comment: "Error when plugin configuration file formatting is invalid")
 
-    
+        public static let DownloadParse = NSLocalizedString("DownloadManager.fatalError", value: "Download Parse Error ", comment: "Error when download plugin fails to parse resource data")
 }
 
 //Errors Pertaining to Core Data

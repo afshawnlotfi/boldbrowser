@@ -13,21 +13,25 @@ class WebRequestManager{
     
     
     class func fetchData(fetchURL : URL) -> Data {
-        let semaphore = DispatchSemaphore(value: 0);
-        var webResponse = Data()
-        
-            let request = NSMutableURLRequest(url: fetchURL)
-            request.httpMethod = "GET"
-            let task = URLSession.shared.dataTask(with: request as URLRequest) { (data, response, error) in
-                webResponse = data!
-                (semaphore).signal()
-            }
+        if DeviceInfo.hasConnectivity(){
+            let semaphore = DispatchSemaphore(value: 0);
+            var webResponse = Data()
             
-            task.resume()
-            semaphore.wait()
-        
-        
-        return webResponse
+                let request = NSMutableURLRequest(url: fetchURL)
+                request.httpMethod = "GET"
+                let task = URLSession.shared.dataTask(with: request as URLRequest) { (data, response, error) in
+                    webResponse = data!
+                    (semaphore).signal()
+                }
+            
+                task.resume()
+                semaphore.wait()
+            
+            
+            return webResponse
+        }else{
+            return Data()
+        }
     }
     
     class func fetchImage(fetchURL : URL) -> UIImage {

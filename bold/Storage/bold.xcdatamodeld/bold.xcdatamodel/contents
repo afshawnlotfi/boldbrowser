@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="16G1114" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Bookmark" representedClassName="Bookmark" parentEntity="WebsiteObject" syncable="YES" codeGenerationType="class"/>
+    <entity name="DownloadedWebsite" representedClassName="DownloadedWebsite" syncable="YES" codeGenerationType="class">
+        <attribute name="data" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="Favicon" representedClassName=".Favicon" syncable="YES">
         <attribute name="faviconData" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="faviconURL" optional="YES" attributeType="String" syncable="YES"/>
@@ -21,11 +25,12 @@
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
+        <element name="Bookmark" positionX="0" positionY="36" width="128" height="45"/>
         <element name="Favicon" positionX="0" positionY="0" width="128" height="75"/>
         <element name="History" positionX="0" positionY="36" width="128" height="45"/>
         <element name="OrderedObject" positionX="0" positionY="36" width="128" height="60"/>
         <element name="SavedTab" positionX="0" positionY="0" width="128" height="105"/>
         <element name="WebsiteObject" positionX="0" positionY="27" width="128" height="90"/>
-        <element name="Bookmark" positionX="0" positionY="36" width="128" height="45"/>
+        <element name="DownloadedWebsite" positionX="0" positionY="36" width="128" height="75"/>
     </elements>
 </model>

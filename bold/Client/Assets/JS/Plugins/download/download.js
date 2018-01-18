@@ -1,11 +1,12 @@
-function main(){
+function downloadPage(){
     var scripts = document.getElementsByTagName('script')
     var styles = document.head.querySelectorAll("link[rel='stylesheet']")
     
     var jsonData = {
         html : document.documentElement.outerHTML.toString(),
         scripts : [],
-        styles : []
+        styles : [],
+        url : window.location.href
     };
     
     for (i = 0; i < scripts.length; i++) {
@@ -22,7 +23,7 @@ function main(){
     
     var response = JSON.stringify(jsonData)
     
-    window.webkit.messageHandlers.resourceHandler.postMessage(response);
+    window.webkit.messageHandlers.downloadHandler.postMessage(response);
 }
 
 

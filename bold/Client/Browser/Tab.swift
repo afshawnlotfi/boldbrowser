@@ -14,20 +14,20 @@ protocol TabDelegate {
     func tab(_ tab: Tab, didCreateWebview webView: TabWebView, atIndex : Int)
     func tab(_ tab : Tab, didFinishLoading atIndex : Int)
     func tab(_ tab : Tab, didUpdateTitle title : String, atIndex : Int)
-    func tab(_ tab : Tab, didUpdateFavicon favicon : Favicon, atIndex : Int)
+    func tab(_ tab : Tab, didUpdateFaviconURL faviconURL : String, atIndex : Int)
     func tab(_ tab : Tab, didUpdateProgress webView : TabWebView, atIndex : Int)
 
 }
 
 class Tab:NSObject{
     private var configuration: WKWebViewConfiguration?
-    var webView:TabWebView?
-    var tabDelegate:TabDelegate?
-    var tabSession:TabSession?
-    var favicon:Favicon?
-    var lastTitle:String?
-    var lastURL:URL?
-    var screenshotImage:UIImage?
+    private(set) var webView:TabWebView?
+    public var tabDelegate:TabDelegate?
+    public var tabSession:TabSession?
+    public var favicon:Favicon?
+    public var lastTitle:String?
+    public var lastURL:URL?
+    public var screenshotImage:UIImage?
     var displayTitle: String {
         if let title = webView?.title, !title.isEmpty {
             return title

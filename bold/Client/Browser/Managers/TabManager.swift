@@ -22,8 +22,8 @@ import WebKit
 class TabManager:NSObject{
     
     var tabs:[Tab] = []
-    private let faviconManager = FaviconManager()
     private(set) var tabScriptManager = TabScriptManager()
+    private var routerManager = RouterManager()
     var tabScrollManager:TabScrollManager?
     private let storageManager = StorageManager<SavedTab>()
     var tabManagerDelegates = [TabManagerDelegate]()
@@ -92,9 +92,7 @@ class TabManager:NSObject{
         if let screenshotData = savedTab.screenshotData as Data?{
             tab.screenshotImage = UIImage(data :screenshotData)
         }
-        if let faviconURL = (savedTab.faviconURL){
-            tab.favicon =  faviconManager.fetchFavicon(forUrl: faviconURL)
-        }
+       
         tab.tabSession = TabSession(data: savedTab.sessionData! as Data)
     
     }
@@ -155,15 +153,14 @@ class TabManager:NSObject{
     }
     
     
-    func configureWebview(tab : Tab){
+    func configureWebview(tab : Tab, plugins : [TabPluginScript]){
         
-        let faviconPlugin = TabPluginScript(pluginName: "favicon", manager: faviconManager)
-        let findInPagePlugin = TabPluginScript(pluginName: "find")
+
 
         self.addObserver(tab: tab, observerKeys: [KVOConstants.estimatedProgress,KVOConstants.title,KVOConstants.faviconURL, KVOConstants.URL, KVOConstants.loading])
         
         
-        self.addTabPluginScripts(tab: tab, tabScripts: [faviconPlugin, findInPagePlugin])
+        self.addTabPluginScripts(tab: tab, tabScripts: plugins)
         tab.restoreWebview()
         tab.webView?.scrollView.panGestureRecognizer.addTarget(tabScrollManager!, action: #selector(tabScrollManager?.tabScrollUpdated(_:) ))
         //Accounts for extra tab length for showing and hiding title menu
@@ -216,19 +213,24 @@ class TabManager:NSObject{
                 case KVOConstants.faviconURL:
                     if let faviconURL = newValue as? String{
                         storageManager.updateObject(updatedValues: [KVOConstants.faviconURL:faviconURL], object: savedTab)
-                        let favicon = faviconManager.fetchFavicon(forUrl: faviconURL)
+                        
                         //Updates Tab Favicon
-                        tab.favicon = favicon
-                        tab.tabDelegate?.tab(tab, didUpdateFavicon: favicon, atIndex: index)
+                        tab.tabDelegate?.tab(tab, didUpdateFaviconURL: faviconURL, atIndex: index)
+
+                        
                     }
                 case KVOConstants.loading:
                     if let isLoading = newValue as? Bool{
                         if isLoading == false{
-                            tab.tabSession?.updateSession(tab: tab)
-                            storageManager.updateObject(updatedValues: ["sessionData" : tab.tabSession?.data ?? TabSession.defaultData], object: savedTab)
-                            tab.webView?.evaluateJavaScript("getFavicons()")
+                            if webView.offlineLoaded == false{
+                                tab.tabSession?.updateSession(tab: tab)
+                                storageManager.updateObject(updatedValues: ["sessionData" : tab.tabSession?.data ?? TabSession.defaultData], object: savedTab)
+                                tab.webView?.evaluateJavaScript("getFavicons()")
+                            }
                             self.updateTabScreenshot(atIndex: index)
                             tab.tabDelegate?.tab(tab, didFinishLoading: index)
+                        }else{
+                            routerManager.route(webView: webView)
                         }
                     }
                 default:
