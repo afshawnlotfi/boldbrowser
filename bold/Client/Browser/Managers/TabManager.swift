@@ -89,6 +89,7 @@ class TabManager:NSObject{
     ///   - savedTab: Saved Tab to restore from
     func configureTab(tab : Tab, savedTab : SavedTab){
         tab.lastTitle = savedTab.title
+        tab.faviconURL = savedTab.faviconURL
         if let screenshotData = savedTab.screenshotData as Data?{
             tab.screenshotImage = UIImage(data :screenshotData)
         }

@@ -10,6 +10,8 @@ import Foundation
 
 extension String{
     
+    
+    
     func convertToURL() -> URL{
         
         return URL(string : self)!
@@ -20,4 +22,5 @@ extension String{
     }
     
 }
+
 

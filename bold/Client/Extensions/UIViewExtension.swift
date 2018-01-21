@@ -15,10 +15,10 @@ extension UIView{
         
         UIGraphicsBeginImageContextWithOptions(self.bounds.size , true, 1.0);
         self.drawHierarchy(in: self.bounds, afterScreenUpdates: true)
-        let webViewSnapShot = UIGraphicsGetImageFromCurrentImageContext();
+        let snapshot = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         
-        if let snapshot = webViewSnapShot{
+        if let snapshot = snapshot{
             return snapshot
         }else{
             return UIImage()

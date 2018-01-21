@@ -25,6 +25,7 @@ class Tab:NSObject{
     public var tabDelegate:TabDelegate?
     public var tabSession:TabSession?
     public var favicon:Favicon?
+    public var faviconURL:String?
     public var lastTitle:String?
     public var lastURL:URL?
     public var screenshotImage:UIImage?

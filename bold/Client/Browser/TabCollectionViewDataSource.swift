@@ -38,9 +38,9 @@ class TabCollectionViewDataSource: NSObject, UICollectionViewDataSource{
        cell.isSelected = true
        cell.indexPath = indexPath
         
-        if let gCollectionView = collectionView as? TabCollectionView{
+        if let tabCollectionView = collectionView as? TabCollectionView{
             
-            if gCollectionView.tabFlowLayout.isMinimized == true{
+            if tabCollectionView.tabFlowLayout.isMinimized == true{
                 cell.screenshotView.image = tab.screenshotImage
                 cell.titleMenu.isHidden = false
                 cell.minimizeCell()
@@ -48,18 +48,23 @@ class TabCollectionViewDataSource: NSObject, UICollectionViewDataSource{
                 tab.createWebview()
                 tab.webView?.tag = indexPath.row
                 var withCurves = false
-                if gCollectionView.tabFlowLayout.isTopMenuVisible{
+                if tabCollectionView.tabFlowLayout.isTopMenuVisible{
                     withCurves = true
                 }
                 cell.maximizeCell(view: tab.webView, withCurves : withCurves)
                 
 
             }
-            
+            if let faviconURL = tab.faviconURL{
+                if let data = tabCollectionView.faviconManager.fetchFavicon(forUrl: faviconURL).faviconData{
+                    if let image = UIImage(data: data){
+                        cell.setCellImage(image: image)
+                    }
+                }
+            }
         }
         
         cell.setCellTitle(title: tab.displayTitle)
-        
         
         if indexPath.row == tabManager.tabs.count - 1{
             cell.alpha = 0

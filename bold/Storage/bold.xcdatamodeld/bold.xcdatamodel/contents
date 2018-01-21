@@ -13,6 +13,11 @@
     <entity name="OrderedObject" representedClassName="OrderedObject" isAbstract="YES" syncable="YES" codeGenerationType="class">
         <attribute name="index" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
+    <entity name="PDF" representedClassName="PDF" syncable="YES" codeGenerationType="class">
+        <attribute name="data" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="SavedTab" representedClassName=".SavedTab" parentEntity="OrderedObject" syncable="YES">
         <attribute name="faviconURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="screenshotData" optional="YES" attributeType="Binary" syncable="YES"/>
@@ -26,11 +31,12 @@
     </entity>
     <elements>
         <element name="Bookmark" positionX="0" positionY="36" width="128" height="45"/>
+        <element name="DownloadedWebsite" positionX="0" positionY="36" width="128" height="75"/>
         <element name="Favicon" positionX="0" positionY="0" width="128" height="75"/>
         <element name="History" positionX="0" positionY="36" width="128" height="45"/>
         <element name="OrderedObject" positionX="0" positionY="36" width="128" height="60"/>
         <element name="SavedTab" positionX="0" positionY="0" width="128" height="105"/>
         <element name="WebsiteObject" positionX="0" positionY="27" width="128" height="90"/>
-        <element name="DownloadedWebsite" positionX="0" positionY="36" width="128" height="75"/>
+        <element name="PDF" positionX="0" positionY="36" width="128" height="90"/>
     </elements>
 </model>

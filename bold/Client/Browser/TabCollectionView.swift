@@ -23,7 +23,7 @@ class TabCollectionView: GCollectionView {
     private var tabManager:TabManager
    
     //Built In Plugins
-    private let faviconManager = FaviconManager()
+    let faviconManager = FaviconManager()
     private let downloadManager = DownloadManager()
 
     private let tabSliderOptions = DefaultTabSliderOptions()
@@ -47,9 +47,9 @@ class TabCollectionView: GCollectionView {
         
         //Tab Options
         optionButtonManager.tabOptionManager.addOptions(options: tabSliderOptions.options)
-        
-        
         tabSliderOptions.findInPageOption.sliderControllerDelegate = optionButtonManager.tabOptionManager
+        tabSliderOptions.pdfPageOption.sliderControllerDelegate = optionButtonManager.tabOptionManager
+
         downloadManager.downloadManagerDelegate = tabSliderOptions.downloadPageOption
         
         self.tabManager.tabManagerDelegates.append(self)
@@ -114,6 +114,7 @@ extension TabCollectionView:TabManagerDelegate{
     func tabManager(_ tabManager: TabManager, didAddTab tab: Tab, atIndex: Int) {
         tabManager.tabs[atIndex].tabDelegate = self
         
+
         self.reloadData()
         
     }
@@ -136,10 +137,7 @@ extension TabCollectionView:TabDelegate{
     
     func tab(_ tab: Tab, didCreateWebview webView: TabWebView, atIndex: Int) {
         
-
-        
         self.tabManager.configureWebview(tab: tab, plugins: builtInScripts)
-        
 
     }
     
@@ -161,7 +159,7 @@ extension TabCollectionView:TabDelegate{
     func tab(_ tab: Tab, didUpdateFaviconURL faviconURL: String, atIndex: Int) {
         
         let favicon = faviconManager.fetchFavicon(forUrl: faviconURL)
-        
+        tab.faviconURL = faviconURL
         tab.favicon = favicon
 
         if let cell = self.cellForItem(at: IndexPath(row: atIndex, section: 0)) as? GContainerCVCell{

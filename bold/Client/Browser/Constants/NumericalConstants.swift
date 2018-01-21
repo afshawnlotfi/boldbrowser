@@ -21,11 +21,29 @@ struct SizeConstants{
     }
     
 }
+
+
+struct PageType{
+    
+    static var A4:CGSize{
+        return CGSize(width: 595.0, height: 842.0)
+    }
+    static var B5:CGSize{
+        return CGSize(width: 516.0, height: 729.0)
+
+    }
+}
+
+    
+
+
+
 struct TimeConstants{
     
     static let Animation:Double = 0.2
     static let ScreenShot:Double = 0.3
     static let Timeout:Double = 0.2
+    static let Delay:Double = 1.0
 
 }
 

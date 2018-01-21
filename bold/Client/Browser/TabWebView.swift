@@ -26,6 +26,8 @@ class TabWebView:WKWebView{
         self.backgroundColor = .black
         self.allowsBackForwardNavigationGestures = true
         self.allowsLinkPreview = false
+        self.scrollView.layer.masksToBounds = false
+
         progressBar.isHidden = true
         progressConstraints = self.addSubview(view: progressBar, attributes: [.top,.left,.right])
     }

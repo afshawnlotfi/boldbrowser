@@ -27,6 +27,13 @@ class GToastView:UIVisualEffectView{
         removeFromViewBtn.configureButton(image: #imageLiteral(resourceName: "close-circled"), isTinted: true, selector: GSelector(target: self, selector: #selector(dismissFromScreen)))
     }
     
+    
+    func setSpacing(spacing : CGFloat){
+        
+        optionStack.spacing = spacing
+        
+    }
+    
     func addOptions(options : [UIView]){
         
         self.optionStack.arrangedSubviews.forEach{
@@ -49,15 +56,11 @@ class GToastView:UIVisualEffectView{
         descriptorIcon.configureButton(image: image, isTinted: true)
     }
     
-    func showToast(view : UIView,fromBottom : Bool){
+    func showToast(view : UIView){
         
-        let attribute:NSLayoutAttribute!
-        
-        if fromBottom{
-            attribute = NSLayoutAttribute.bottom
-        }else{
-            attribute = NSLayoutAttribute.top
-        }
+        let attribute = NSLayoutAttribute.top
+
+      
         self.alpha = 0
         view.addSubview(view: self, attributes: [.left,.right,attribute])
         UIView.animate(withDuration: 0.25, animations: {

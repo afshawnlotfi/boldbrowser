@@ -86,7 +86,7 @@ class FindInPageOption:NSObject,TabOption,TabOptionDelegate,UITextFieldDelegate{
     func activateOption() {
         sliderControllerDelegate?.requestSliderToClose()
         if let webView = self.webView{
-            toastView.showToast(view: webView, fromBottom: false)
+            toastView.showToast(view: webView)
         }
         textfield.becomeFirstResponder()
         toastView.addOptions(options: [textfield, backwardBtn, forwardBtn])

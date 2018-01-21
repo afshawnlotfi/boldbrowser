@@ -14,13 +14,15 @@ class DefaultTabSliderOptions:NSObject{
     
     let findInPageOption = FindInPageOption()
     let downloadPageOption = DownloadPageOption()
+    let pdfPageOption = PDFPagePageOption()
+
     private(set) var options:[[GMenuOption]]
     override init() {
         options = [
             [
                 GMenuOption(title: TabOptionStrings.FindInPage, icon: UIImage.tintImage(image: #imageLiteral(resourceName: "findinpage")), delegate : findInPageOption),
                 GMenuOption(title: TabOptionStrings.DownloadPage, icon: UIImage.tintImage(image: #imageLiteral(resourceName: "download")), delegate : downloadPageOption),
-                GMenuOption(title: TabOptionStrings.GeneratePDF, icon: UIImage.tintImage(image: #imageLiteral(resourceName: "generate-pdf"))),
+                GMenuOption(title: TabOptionStrings.GeneratePDF, icon: UIImage.tintImage(image: #imageLiteral(resourceName: "generate-pdf")), delegate : pdfPageOption),
                 GMenuOption(title: TabOptionStrings.Print, icon: UIImage.tintImage(image: #imageLiteral(resourceName: "print")))
                 
             ],
