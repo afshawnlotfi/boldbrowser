@@ -8,6 +8,16 @@
 
 import Foundation
 
+//Tag Strings
+extension BrowserStrings{
+    
+    public static let TagSymbol = NSLocalizedString("UIButton", value: "#", comment: "Symbol for tags")
+    public static let SearchPlaceholder = NSLocalizedString("UITextfield", value: "Search Hashtags", comment: "Tag Search Placeholder")
+
+    
+}
+
+
 struct BrowserStrings{}
 
 //Strings Pertaining to Browser Tab Bar

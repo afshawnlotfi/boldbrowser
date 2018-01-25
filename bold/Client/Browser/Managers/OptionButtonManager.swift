@@ -27,7 +27,7 @@ class OptionButtonManager{
         let bookmarkBtn = GMenuButton(buttonDefaults: bookmarkDefault)
         bookmarkBtn.alternateSelection = true
         bookmarkBtn.gMenuButtonDelegate = bookmarkManager
-
+        
         let optionsDefault = OptionButtonDefaults(tab: tab)
         let optionViewBtn = GMenuButton(buttonDefaults: optionsDefault)
         optionViewBtn.gMenuButtonDelegate = tabOptionManager

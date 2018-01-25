@@ -15,28 +15,30 @@ protocol GCollectionViewMoveDelegate {
      func gCollectionview(_ gCollectionview : GCollectionView, willSelectCell cell : UICollectionViewCell, atIndexPath : IndexPath )
 }
 
-
-
 class GCollectionView:UICollectionView {
    
     private(set) var collectionIdentifier:String!
     public var isMovable = true
+    private(set) var identifier: String
     private(set) var isMovingCell:Bool = false
     private let collectionLayout = UICollectionViewFlowLayout()
     public var moveDelegate:GCollectionViewMoveDelegate?
     init(identifier : String){
+        self.identifier = identifier
         super.init(frame: CGRect.zero, collectionViewLayout: collectionLayout)
         self.backgroundColor = .clear
         self.translatesAutoresizingMaskIntoConstraints = false
         let tabMoveGesture = UILongPressGestureRecognizer(target: self, action: #selector(moveCell(_:)))
         self.addGestureRecognizer(tabMoveGesture)
-        self.register(UINib(nibName: identifier, bundle: nil), forCellWithReuseIdentifier: identifier)
+        self.register(UINib(nibName: self.identifier, bundle: nil), forCellWithReuseIdentifier: self.identifier)
         collectionIdentifier = identifier
     }
-
-    required convenience init?(coder aDecoder: NSCoder) {
-        self.init(coder: aDecoder)
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
+    
+ 
     
     /// Switches collection scroll direction
     ///

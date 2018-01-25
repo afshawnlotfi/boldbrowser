@@ -8,6 +8,13 @@
 
 import UIKit
 
+extension GIdentifierStrings{
+    
+    static let ContainerCVCell:String = "GContainerCVCell"
+    
+}
+
+
 class GContainerCVCell:UICollectionViewCell{
     
 

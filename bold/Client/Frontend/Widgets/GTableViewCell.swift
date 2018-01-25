@@ -17,6 +17,12 @@ protocol GTabelViewSwitchDelegate{
 }
 
 
+extension GIdentifierStrings{
+    
+    static let TableViewCell = "GTableViewCell"
+    
+}
+
 
 class GTableViewCell: UITableViewCell {
 

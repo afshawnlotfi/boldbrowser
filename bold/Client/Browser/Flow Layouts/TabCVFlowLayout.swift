@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TabCollectionViewFlowLayout:NSObject,UICollectionViewDelegateFlowLayout {
+class TabCVFlowLayout:NSObject,UICollectionViewDelegateFlowLayout {
     var tabCollectionViewDelegate:TabCollectionViewDelegate?
     private(set) var isMinimized:Bool = false
     private(set) var isTopMenuVisible:Bool = false
@@ -29,8 +29,6 @@ class TabCollectionViewFlowLayout:NSObject,UICollectionViewDelegateFlowLayout {
                 }else{
                     return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
                 }
-//
-//            }
 
         }
     }

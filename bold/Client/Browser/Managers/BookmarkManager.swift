@@ -6,16 +6,26 @@
 //  Copyright © 2018 Afshawn Lotfi. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 class BookmarkManager:GMenuButtonDelegate{
+    
+    
+    private var searchHashtag = SearchHashtagViewController()
     
     func gMenuButton(didSelectButton button: GMenuButton, buttonDefaults: IButtonDefaults) {
         if let bookmarkButtonDefault = buttonDefaults as? BookmarkButtonDefaults{
             let tab = bookmarkButtonDefault.tab
-            addBookmark(title: tab.displayTitle,  url: tab.displayURL?.absoluteString ?? String.empty, faviconURL: tab.favicon?.faviconURL ?? String.empty)
+            searchHashtag.modalPresentationStyle = .overCurrentContext
 
+            UIApplication.shared.keyWindow?.rootViewController?.present(searchHashtag, animated: true, completion: nil)
+
+            
+            
+//            addBookmark(title: tab.displayTitle,  url: tab.displayURL?.absoluteString ?? String.empty, faviconURL: tab.favicon?.faviconURL ?? String.empty)
         }
+        
+        
     }
     
     func gMenuButton(didUnselectButton button: GMenuButton, buttonDefaults: IButtonDefaults) {
@@ -28,6 +38,9 @@ class BookmarkManager:GMenuButtonDelegate{
 
             }
         }
+    
+    
+    
     }
     
     

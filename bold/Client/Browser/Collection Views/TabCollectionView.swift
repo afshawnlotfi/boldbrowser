@@ -19,7 +19,6 @@ protocol TabCollectionViewDelegate {
 
 class TabCollectionView: GCollectionView {
     private let optionButtonManager = OptionButtonManager()
-    private let identifier =  "GContainerCVCell"
     private var tabManager:TabManager
    
     //Built In Plugins
@@ -30,12 +29,13 @@ class TabCollectionView: GCollectionView {
     
     private var builtInScripts = [TabPluginScript]()
     private var startIndexPath:IndexPath?
-    private(set) lazy var tabFlowLayout: TabCollectionViewFlowLayout = TabCollectionViewFlowLayout()
+    private(set) lazy var tabFlowLayout: TabCVFlowLayout = TabCVFlowLayout()
     init(tabManager : TabManager) {
         self.tabManager = tabManager
-        super.init(identifier: identifier)
+        super.init(identifier: GIdentifierStrings.ContainerCVCell)
         
         self.dataSource = tabDataSource
+        
         self.delegate = tabFlowLayout
         
         //Built in scripts
@@ -46,7 +46,7 @@ class TabCollectionView: GCollectionView {
         ]
         
         //Tab Options
-        optionButtonManager.tabOptionManager.addOptions(options: tabSliderOptions.options)
+        optionButtonManager.tabOptionManager.updateOptions(options: tabSliderOptions.options)
         tabSliderOptions.findInPageOption.sliderControllerDelegate = optionButtonManager.tabOptionManager
         tabSliderOptions.pdfPageOption.sliderControllerDelegate = optionButtonManager.tabOptionManager
 
@@ -64,18 +64,11 @@ class TabCollectionView: GCollectionView {
     
 
     
-    private lazy var tabDataSource: TabCollectionViewDataSource = {
-        return  TabCollectionViewDataSource(identifier: identifier, tabManager: tabManager)
+    private lazy var tabDataSource: TabCVDataSource = {
+        return  TabCVDataSource(tabManager: tabManager)
     }()
     
-    
-        
 }
-
-
-
-
-
 
 extension TabCollectionView:GCollectionViewMoveDelegate{
     

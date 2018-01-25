@@ -97,7 +97,7 @@
                 <outlet property="titleMenu" destination="LpX-iu-Tfi" id="U3i-P1-FJ6"/>
                 <outlet property="urlField" destination="oW5-DB-Bqc" id="vKM-i5-SxJ"/>
             </connections>
-            <point key="canvasLocation" x="-1848" y="-728"/>
+            <point key="canvasLocation" x="-2351" y="-800"/>
         </collectionViewCell>
     </objects>
     <resources>

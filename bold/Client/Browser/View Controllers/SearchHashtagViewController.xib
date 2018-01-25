@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SearchHashtagViewController" customModule="bold" customModuleProvider="target">
+            <connections>
+                <outlet property="closeBtn" destination="sMU-aa-8Nu" id="LZJ-pt-EMq"/>
+                <outlet property="searchIconBtn" destination="MiH-rA-wJb" id="tRg-db-uuL"/>
+                <outlet property="searchTextField" destination="o8b-EY-okp" id="hgB-fd-KPl"/>
+                <outlet property="selectedHashTagCollectionView" destination="vBd-oB-eCj" id="eDQ-UB-87y"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E8Y-5P-FzX">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="qgk-fa-e3y">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="iKM-Mq-c6g">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dwA-OW-2tU">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="55"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MiH-rA-wJb">
+                                                <rect key="frame" x="0.0" y="0.0" width="55" height="55"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="MiH-rA-wJb" secondAttribute="height" multiplier="1:1" id="yHx-yn-7R3"/>
+                                                </constraints>
+                                                <inset key="imageEdgeInsets" minX="-15" minY="15" maxX="0.0" maxY="15"/>
+                                                <state key="normal" image="search"/>
+                                            </button>
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Search Hashtags" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="o8b-EY-okp">
+                                                <rect key="frame" x="55" y="0.0" width="265" height="55"/>
+                                                <nil key="textColor"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                            </textField>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sMU-aa-8Nu">
+                                                <rect key="frame" x="320" y="0.0" width="55" height="55"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="sMU-aa-8Nu" secondAttribute="height" multiplier="1:1" id="SJE-JZ-FDD"/>
+                                                </constraints>
+                                                <inset key="imageEdgeInsets" minX="0.0" minY="15" maxX="0.0" maxY="15"/>
+                                                <state key="normal" image="close-page"/>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="sMU-aa-8Nu" firstAttribute="width" secondItem="sMU-aa-8Nu" secondAttribute="height" multiplier="1:1" id="10R-vO-IBQ"/>
+                                            <constraint firstAttribute="height" constant="55" id="VaU-Lz-oID"/>
+                                        </constraints>
+                                    </stackView>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="vBd-oB-eCj" customClass="SelectionCollectionView" customModule="bold" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="55" width="375" height="612"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="cBc-jp-dxm">
+                                            <size key="itemSize" width="50" height="50"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        </collectionViewFlowLayout>
+                                    </collectionView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="iKM-Mq-c6g" secondAttribute="trailing" id="EcS-l7-t1I"/>
+                            <constraint firstItem="iKM-Mq-c6g" firstAttribute="leading" secondItem="qgk-fa-e3y" secondAttribute="leading" id="TT8-hZ-JmF"/>
+                            <constraint firstItem="iKM-Mq-c6g" firstAttribute="top" secondItem="qgk-fa-e3y" secondAttribute="top" id="nQS-Yb-UOs"/>
+                            <constraint firstAttribute="bottom" secondItem="iKM-Mq-c6g" secondAttribute="bottom" id="xs5-UU-tgt"/>
+                        </constraints>
+                    </view>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <blurEffect style="dark"/>
+                </visualEffectView>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="E8Y-5P-FzX" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="3vq-zc-pqC"/>
+                <constraint firstItem="E8Y-5P-FzX" firstAttribute="bottom" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="5to-cj-5DV"/>
+                <constraint firstAttribute="trailing" secondItem="E8Y-5P-FzX" secondAttribute="trailing" id="YB2-1x-N8I"/>
+                <constraint firstItem="E8Y-5P-FzX" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="lYg-K0-kuw"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <point key="canvasLocation" x="-1425" y="-83"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="close-page" width="24" height="24"/>
+        <image name="search" width="24" height="24"/>
+    </resources>
+</document>

@@ -10,7 +10,7 @@ import UIKit
 
 import UIKit
 
-class GTableView: UITableView,UITableViewDelegate {
+class GTableView: UITableView {
     
     private(set) var identifier = "GTableViewCell"
     
@@ -28,46 +28,36 @@ class GTableView: UITableView,UITableViewDelegate {
         self.init(identifier : "GTableViewCell")
     }
     
+}
+
+
+
+
+class GTVDataSource<DataObject:AnyObject>: NSObject, UITableViewDataSource{
     
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return 1
-//    }
-//
-//
-//    func numberOfSections(in tableView: UITableView) -> Int {
-//        return 10
-//    }
-//
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//
-//
-//
-//    }
+    var items = [[DataObject]]()
+    private var cellFormatter:ITVCellFormatter
     
-    
-//
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        let screenSize = UIScreen.main.bounds
-//
-//        return 0.3*screenSize.height
-//    }
-//
-    
-    
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 55
+    init(cellFormatter : ITVCellFormatter){
+        self.cellFormatter = cellFormatter
+        super.init()
     }
     
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
-//    }
-//
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//
-//    }
-//
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return items.count
+    }
     
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return items[section].count
+    }
     
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let item = items[indexPath.section][indexPath.row]
+        let cell = cellFormatter.tableView(item: item, tableView: tableView, cellForRowAt: indexPath)
+        return cell
+    }
     
 }
+
+
+

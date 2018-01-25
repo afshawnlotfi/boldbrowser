@@ -112,10 +112,6 @@ class PDFPagePageOption:NSObject,TabOption,TabOptionDelegate,PDFGenerationManage
     }
     
     
-    
-    
-
-    
     func activateOption() {
         sliderControllerDelegate?.requestSliderToClose()
     }
