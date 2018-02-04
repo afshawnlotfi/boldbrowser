@@ -24,6 +24,9 @@ extension GIdentifierStrings{
 }
 
 
+
+
+
 class GTableViewCell: UITableViewCell {
 
     private lazy var cellSwitch = UISwitch()
@@ -33,6 +36,7 @@ class GTableViewCell: UITableViewCell {
         super.awakeFromNib()
         self.textLabel?.textColor = UIColor.System.Light
         self.imageView?.tintColor = UIColor.System.Light
+        self.backgroundColor = .clear
     }
     
     func addSwitch(isOn : Bool){
@@ -41,6 +45,14 @@ class GTableViewCell: UITableViewCell {
         cellSwitch.removeTarget(nil, action: nil, for: .allEvents)
         cellSwitch.addTarget(self, action: #selector(switchStateChange(_:)), for: .valueChanged)
         cellSwitch.isOn = isOn
+    }
+    
+    func addMenuBtn(buttonDefaults : IButtonDefaults){
+        let gButton = GMenuButton(buttonDefaults: buttonDefaults)
+        gButton.alternateSelection = true
+        gButton.translatesAutoresizingMaskIntoConstraints = true
+        gButton.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+        self.accessoryView = gButton
     }
     
     @objc func switchStateChange( _ sender : UISwitch){

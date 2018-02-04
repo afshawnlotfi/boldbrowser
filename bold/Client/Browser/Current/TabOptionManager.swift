@@ -51,28 +51,31 @@ class TabOptionManager:NSObject, SliderCotrollerDelegate{
 
     private var tabWebView:TabWebView?
     private let sliderView = SliderView()
+    private var selectionManager = SelectionManager<GMenuOption>()
     private(set) var optionFormatter:OptionTVCellFormatter
     private var gTVDataSource:GTVDataSource<GMenuOption>
     override init() {
         optionFormatter = OptionTVCellFormatter()
-        gTVDataSource = GTVDataSource(cellFormatter: optionFormatter)
+        gTVDataSource = GTVDataSource(selectionManager: selectionManager, cellFormatter: optionFormatter)
         super.init()
         sliderView.tableView.dataSource = gTVDataSource
         sliderView.tableView.delegate = self
+
     }
-    
+
     public func updateOptions(options : [[GMenuOption]]){
-        self.gTVDataSource.items = options
+        selectionManager.items = options
+        
         self.sliderView.tableView.reloadData()
     }
-    
+
 }
 
 
 
 extension TabOptionManager:GMenuButtonDelegate{
 
-    func gMenuButton(didSelectButton button: GMenuButton, buttonDefaults: IButtonDefaults) {
+    func gMenuButton(didSelectButton button: GMenuButton, buttonDefaults: IButtonDefaults, index : Int) {
         if let optionButton = (buttonDefaults as? OptionButtonDefaults){
             if let webView = optionButton.tab.webView{
                 sliderView.drawMenu(parentView: webView, orientation: .right)
@@ -81,7 +84,7 @@ extension TabOptionManager:GMenuButtonDelegate{
         }
     }
     
-    func gMenuButton(didUnselectButton button: GMenuButton, buttonDefaults: IButtonDefaults) {
+    func gMenuButton(didUnselectButton button: GMenuButton, buttonDefaults: IButtonDefaults, index : Int) {
         
     }
 }
@@ -94,12 +97,12 @@ extension TabOptionManager:GMenuButtonDelegate{
 extension TabOptionManager:UITableViewDelegate{
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return UIView()
+        return UIView.empty
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
 
-        let option = gTVDataSource.items[indexPath.section][indexPath.row]
+        let option = selectionManager.items[indexPath.section][indexPath.row]
         if let gCell = tableView.cellForRow(at: indexPath) as? GTableViewCell, let webView = self.tabWebView{
             option.delegate?.tabOption(didSelectCell: gCell, webView: webView)
 

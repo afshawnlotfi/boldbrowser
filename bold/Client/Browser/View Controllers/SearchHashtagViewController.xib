@@ -14,9 +14,9 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SearchHashtagViewController" customModule="bold" customModuleProvider="target">
             <connections>
                 <outlet property="closeBtn" destination="sMU-aa-8Nu" id="LZJ-pt-EMq"/>
+                <outlet property="contentStack" destination="4gU-n3-VAE" id="myw-4e-3N7"/>
                 <outlet property="searchIconBtn" destination="MiH-rA-wJb" id="tRg-db-uuL"/>
                 <outlet property="searchTextField" destination="o8b-EY-okp" id="hgB-fd-KPl"/>
-                <outlet property="selectedHashTagCollectionView" destination="vBd-oB-eCj" id="eDQ-UB-87y"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -49,7 +49,7 @@
                                                 <rect key="frame" x="55" y="0.0" width="265" height="55"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="webSearch" keyboardAppearance="alert" returnKeyType="go" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                                             </textField>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sMU-aa-8Nu">
                                                 <rect key="frame" x="320" y="0.0" width="55" height="55"/>
@@ -65,16 +65,9 @@
                                             <constraint firstAttribute="height" constant="55" id="VaU-Lz-oID"/>
                                         </constraints>
                                     </stackView>
-                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="vBd-oB-eCj" customClass="SelectionCollectionView" customModule="bold" customModuleProvider="target">
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="4gU-n3-VAE">
                                         <rect key="frame" x="0.0" y="55" width="375" height="612"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="cBc-jp-dxm">
-                                            <size key="itemSize" width="50" height="50"/>
-                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                        </collectionViewFlowLayout>
-                                    </collectionView>
+                                    </stackView>
                                 </subviews>
                             </stackView>
                         </subviews>

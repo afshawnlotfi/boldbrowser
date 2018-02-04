@@ -9,12 +9,13 @@
 import UIKit
 
 class SelectionCollectionView : GCollectionView, GSelectionCVCellDelegate{
-    
+    private(set) var selectionManager = SelectionManager<String>()
+
     init() {
         super.init(identifier: GIdentifierStrings.SelectionCVCell)
-        
+        self.delegate = selectionFlowLayout
         self.dataSource = selectionDataSource
-        self.delegate = hashtagFlowLayout
+
     }
     
     required convenience init?(coder aDecoder: NSCoder) {
@@ -22,24 +23,29 @@ class SelectionCollectionView : GCollectionView, GSelectionCVCellDelegate{
     }
     
     private lazy var selectionDataSource: SelectionCVDataSource = {
-        return  SelectionCVDataSource()
+        return  SelectionCVDataSource(selectionManager: selectionManager)
     }()
     
-    private lazy var hashtagFlowLayout: SelectionCVFlowLayout = {
+    private lazy var selectionFlowLayout: SelectionCVFlowLayout = {
         return  SelectionCVFlowLayout()
     }()
-    
     
     func gSelectionCVCell(_ gSelectionCVCell: GSelectionCVCell, didSelectCell atIndex: Int) {
         
     }
     
     func gSelectionCVCell(_ gSelectionCVCell: GSelectionCVCell, didDeselectCell atIndex: Int) {
-        selectionDataSource.removeItem(atIndex: atIndex)
-        self.deleteItems(at: [indexPath(for: gSelectionCVCell)!])
-        for (index,visibleCell) in self.visibleCells.enumerated(){
-            visibleCell.tag = index
+        if let indexPath = self.indexPath(for: gSelectionCVCell){
+            
+            selectionDataSource.removeItem(index: indexPath.row)
+            self.deleteItems(at: [indexPath])
+
+            for (index,cell) in self.visibleCells.enumerated(){
+                cell.tag = index
+            }
+        
         }
+
     }
     
 }

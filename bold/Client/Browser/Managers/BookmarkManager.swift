@@ -13,7 +13,7 @@ class BookmarkManager:GMenuButtonDelegate{
     
     private var searchHashtag = SearchHashtagViewController()
     
-    func gMenuButton(didSelectButton button: GMenuButton, buttonDefaults: IButtonDefaults) {
+    func gMenuButton(didSelectButton button: GMenuButton, buttonDefaults: IButtonDefaults, index : Int) {
         if let bookmarkButtonDefault = buttonDefaults as? BookmarkButtonDefaults{
             let tab = bookmarkButtonDefault.tab
             searchHashtag.modalPresentationStyle = .overCurrentContext
@@ -28,7 +28,7 @@ class BookmarkManager:GMenuButtonDelegate{
         
     }
     
-    func gMenuButton(didUnselectButton button: GMenuButton, buttonDefaults: IButtonDefaults) {
+    func gMenuButton(didUnselectButton button: GMenuButton, buttonDefaults: IButtonDefaults, index : Int) {
        
         
         if let bookmarkButtonDefault = buttonDefaults as? BookmarkButtonDefaults{

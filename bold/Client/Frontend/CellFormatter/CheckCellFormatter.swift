@@ -9,24 +9,38 @@
 import UIKit
 
 
-class CheckCellFormatter:ITVCellFormatter{
+
+
+class CheckCellFormatter:NSObject, ITVCellFormatter{
+    private var selectionManager:SelectionManager<String>
+    public var checkBtnDelegate:GMenuButtonDelegate?
+    init(selectionManager : SelectionManager<String>) {
+        self.selectionManager = selectionManager
+        
+    }
+    
     func tableView(item: Any, tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        
+        
+        if let tTableCell = tableView.dequeueReusableCell(withIdentifier: GIdentifierStrings.TableViewCell, for: indexPath) as? GTableViewCell,  let title = item as? String{
+            
+            tTableCell.textLabel?.text = title
+            tTableCell.selectionStyle = .none
+            var buttonDefaults = CheckButtonDefaults()
+            for item in selectionManager.items[indexPath.section]{
+                if item == title{
+                    buttonDefaults.isSelected = true
+                    break
+                }
+            }
+            tTableCell.addMenuBtn(buttonDefaults: buttonDefaults)
 
+            return tTableCell
+        }else{
+            return UITableViewCell()
+        }
     }
-    
-    
-    func updateItems(items: [Any]) {
-        self.items = items
-    }
-    
-    var items: [Any]
 
-    
-    init(items: [Any]) {
-        self.items = items
-    }
-    
 
     
     

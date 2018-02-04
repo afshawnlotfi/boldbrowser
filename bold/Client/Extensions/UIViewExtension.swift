@@ -28,7 +28,11 @@ extension UIView{
 }
 
 
-
+extension UIView{
+    static var empty:UIView{
+        return UIView()
+    }
+}
 
 extension UIView{
     

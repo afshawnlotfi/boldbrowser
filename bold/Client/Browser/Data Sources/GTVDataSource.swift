@@ -8,7 +8,6 @@
 
 import UIKit
 
-import UIKit
 
 class GTableView: UITableView {
     
@@ -32,27 +31,27 @@ class GTableView: UITableView {
 
 
 
-
-class GTVDataSource<DataObject:AnyObject>: NSObject, UITableViewDataSource{
+class GTVDataSource<DataObject:Any>: NSObject, UITableViewDataSource{
     
-    var items = [[DataObject]]()
+    private var selectionManager:SelectionManager<DataObject>
     private var cellFormatter:ITVCellFormatter
     
-    init(cellFormatter : ITVCellFormatter){
+    init(selectionManager : SelectionManager<DataObject>, cellFormatter : ITVCellFormatter){
         self.cellFormatter = cellFormatter
+        self.selectionManager = selectionManager
         super.init()
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return items.count
+        return selectionManager.items.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items[section].count
+        return selectionManager.items[section].count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let item = items[indexPath.section][indexPath.row]
+        let item = selectionManager.items[indexPath.section][indexPath.row]
         let cell = cellFormatter.tableView(item: item, tableView: tableView, cellForRowAt: indexPath)
         return cell
     }

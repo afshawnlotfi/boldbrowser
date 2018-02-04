@@ -10,8 +10,8 @@ import UIKit
 
 protocol GMenuButtonDelegate{
     
-    func gMenuButton(didSelectButton button: GMenuButton, buttonDefaults : IButtonDefaults)
-    func gMenuButton(didUnselectButton button: GMenuButton, buttonDefaults : IButtonDefaults)
+    func gMenuButton(didSelectButton button: GMenuButton, buttonDefaults : IButtonDefaults, index : Int)
+    func gMenuButton(didUnselectButton button: GMenuButton, buttonDefaults : IButtonDefaults,  index : Int)
 
 }
 
@@ -87,17 +87,17 @@ class GMenuButton:UIButton{
         if alternateSelection{
             if self.isSelected{
                 self.isSelected = false
-                gMenuButtonDelegate?.gMenuButton(didUnselectButton: self, buttonDefaults : self.buttonDefaults)
+                gMenuButtonDelegate?.gMenuButton(didUnselectButton: self, buttonDefaults : self.buttonDefaults, index : self.tag)
                 self.configureButton(image: buttonDefaults.unselectedImage)
             }else{
                 self.isSelected = true
-                gMenuButtonDelegate?.gMenuButton(didSelectButton: self, buttonDefaults : self.buttonDefaults)
+                gMenuButtonDelegate?.gMenuButton(didSelectButton: self, buttonDefaults : self.buttonDefaults, index : self.tag)
                 self.configureButton(image: buttonDefaults.selectedImage)
                 
             }
     
         }else{
-            gMenuButtonDelegate?.gMenuButton(didSelectButton: self, buttonDefaults : self.buttonDefaults)
+            gMenuButtonDelegate?.gMenuButton(didSelectButton: self, buttonDefaults : self.buttonDefaults, index : self.tag)
         }
     }
     

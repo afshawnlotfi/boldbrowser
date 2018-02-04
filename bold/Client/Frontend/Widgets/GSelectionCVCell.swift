@@ -45,6 +45,7 @@ class GSelectionCVCell: UICollectionViewCell {
     }
     
     @objc func deselectBtn(){
+        print(self.tag)
         gSelectionCVCellDelegate?.gSelectionCVCell(self, didDeselectCell: self.tag)
     }
     

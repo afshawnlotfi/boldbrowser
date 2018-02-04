@@ -12,23 +12,17 @@ import UIKit
 
 class SelectionCVDataSource: NSObject, UICollectionViewDataSource{
 
-    private var items = [String]()
+    private var selectionManager:SelectionManager<String>
     
-    override init(){
+    
+    init(selectionManager : SelectionManager<String>) {
+        self.selectionManager = selectionManager
         super.init()
-        self.addItem(title: "yolo")
-        self.addItem(title: "yolo1")
-        self.addItem(title: "yolo2")
-        self.addItem(title: "yolo3")
-        self.addItem(title: "yolo4")
-        self.addItem(title: "yolo5")
-        self.addItem(title: "yolo6")
-
     }
     
     private func matchingIndecies(title : String) -> [Int]{
         var indecies = [Int]()
-        for (index, tag) in self.items.enumerated(){
+        for (index, tag) in self.selectionManager.items[0].enumerated(){
             if tag == title {
                 indecies.append(index)
             }
@@ -39,7 +33,7 @@ class SelectionCVDataSource: NSObject, UICollectionViewDataSource{
     public func addItem(title : String){
         let matching = matchingIndecies(title: title)
         if matching.count == 0{
-            self.items.append(title)
+            self.selectionManager.addItem(item: title, section: 0)
         }
     }
     
@@ -47,29 +41,34 @@ class SelectionCVDataSource: NSObject, UICollectionViewDataSource{
         let matching = matchingIndecies(title: title)
         if matching.count != 0{
             matching.forEach{
-                self.items.remove(at: $0)
+                self.selectionManager.removeItem(row: $0, section: 0)
             }
         }
     }
     
     
     
-    public func removeItem(atIndex : Int){
-        if self.items.count  - 1 >= atIndex{
-            self.items.remove(at: atIndex)
+    public func removeItem(index : Int){
+        if self.selectionManager.items[0].count  - 1 >= index{
+            self.selectionManager.removeItem(row: index, section: 0)
         }
     }
     
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return self.selectionManager.items.count
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return items.count
+        return self.selectionManager.items[section].count
         
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if let selectionCollectionView = collectionView as? SelectionCollectionView{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: selectionCollectionView.identifier, for: indexPath) as! GSelectionCVCell
-            cell.setTitle(title: BrowserStrings.TagSymbol + items[indexPath.row])
+            cell.setTitle(title: BrowserStrings.TagSymbol + self.selectionManager.items[indexPath.section][indexPath.row])
             cell.tag = indexPath.row
+            print(indexPath.row)
             cell.gSelectionCVCellDelegate = selectionCollectionView
             return cell
         }else{
