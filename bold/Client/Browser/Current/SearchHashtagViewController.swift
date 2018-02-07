@@ -17,6 +17,7 @@ class SearchHashtagViewController: UIViewController {
     @IBOutlet weak var closeBtn: UIButton!
     @IBOutlet private weak var searchIconBtn: UIButton!
     @IBOutlet private weak var searchTextField: UITextField!
+    private var hashtagSelectionManager = SelectionManager<String>()
     
     private var collectionHeight:NSLayoutConstraint!
     
@@ -34,11 +35,13 @@ class SearchHashtagViewController: UIViewController {
                                                              attributes: [NSAttributedStringKey.foregroundColor: UIColor.System.FadedWhite])
         
         hashTagCollectionView.selectionManager.selectionManagerDelegate = self
-        hashTagCollectionView.selectionManager.items = [["yolowag", "hello", "world","yolowag123455","yolowag212"]]
+        hashTagCollectionView.selectionManager.items = [[]]
         searchHashTagTableView.dataSource = hashtagDataSource
         searchHashTagTableView.separatorColor = UIColor.System.FadedWhite
         searchHashTagTableView.separatorInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         
+        
+        hashtagSelectionManager.items = [["yolowag", "hello", "world","yolowag123455","yolowag212"]]
         
         hashTagCollectionView.horizontalScroll(true)
         collectionHeight = hashTagCollectionView.heightAnchor.constraint(equalToConstant: 45)
@@ -53,7 +56,7 @@ class SearchHashtagViewController: UIViewController {
     
     private lazy var hashtagDataSource: GTVDataSource<String> = {
         let checkFormatter = CheckCellFormatter(selectionManager: hashTagCollectionView.selectionManager)
-        return  GTVDataSource<String>(selectionManager: hashTagCollectionView.selectionManager, cellFormatter: checkFormatter)
+        return  GTVDataSource<String>(selectionManager: hashtagSelectionManager, cellFormatter: checkFormatter)
     }()
 
     
@@ -75,11 +78,19 @@ class SearchHashtagViewController: UIViewController {
 
 extension SearchHashtagViewController:SelectionDelegate{
     func selectionManager(didAddObject: IndexPath, item: Any) {
-        self.hashTagCollectionView.reloadItems(at: [didAddObject])
+        self.hashTagCollectionView.reloadData()
+        for (index,cell) in hashTagCollectionView.visibleCells.enumerated(){
+            cell.tag = index
+        }
     }
 
     func selectionManager(didRemoveObject: IndexPath) {
-        self.searchHashTagTableView.deleteRows(at: [didRemoveObject], with: .fade)
+        self.searchHashTagTableView.reloadData()
+        self.hashTagCollectionView.deleteItems(at: [didRemoveObject])
+        for (index,cell) in hashTagCollectionView.visibleCells.enumerated(){
+            cell.tag = index
+        }
+        
     }
 
 }

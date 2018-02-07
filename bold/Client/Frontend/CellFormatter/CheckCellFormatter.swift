@@ -33,7 +33,9 @@ class CheckCellFormatter:NSObject, ITVCellFormatter{
                     break
                 }
             }
-            tTableCell.addMenuBtn(buttonDefaults: buttonDefaults)
+            buttonDefaults.identifier = title
+            tTableCell.addMenuBtn(buttonDefaults: buttonDefaults, delegate: selectionManager,index : indexPath.row)
+            
 
             return tTableCell
         }else{

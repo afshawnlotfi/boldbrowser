@@ -15,7 +15,28 @@ protocol SelectionDelegate {
 }
 
 
-class SelectionManager<DataObject:Any>:NSObject{
+class SelectionManager<DataObject:Any>:NSObject,GMenuButtonDelegate{
+    func gMenuButton(didSelectButton button: GMenuButton, buttonDefaults: IButtonDefaults, index: Int) {
+        if let checkButtonDefault = buttonDefaults as? CheckButtonDefaults{
+            if let identifier = checkButtonDefault.identifier as? DataObject{
+                self.addItem(item: identifier, section: 0)
+            }
+        }
+    }
+    
+    func gMenuButton(didUnselectButton button: GMenuButton, buttonDefaults: IButtonDefaults, index: Int) {
+        if let checkButtonDefault = buttonDefaults as? CheckButtonDefaults{
+            if let identifier = checkButtonDefault.identifier as? String{
+                for (index,item) in items[0].enumerated(){
+                    if (item as! String) == identifier{
+                        self.removeItem(row: index, section: 0)
+                    }
+                }
+            
+            }
+        }
+    }
+    
     public var selectionManagerDelegate:SelectionDelegate?
     public var items:[[DataObject]] = []
 

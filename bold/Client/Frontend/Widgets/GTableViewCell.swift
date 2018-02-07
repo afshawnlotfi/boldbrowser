@@ -47,9 +47,11 @@ class GTableViewCell: UITableViewCell {
         cellSwitch.isOn = isOn
     }
     
-    func addMenuBtn(buttonDefaults : IButtonDefaults){
+    func addMenuBtn(buttonDefaults : IButtonDefaults, delegate : GMenuButtonDelegate, index : Int){
         let gButton = GMenuButton(buttonDefaults: buttonDefaults)
         gButton.alternateSelection = true
+        gButton.tag = index
+        gButton.gMenuButtonDelegate = delegate
         gButton.translatesAutoresizingMaskIntoConstraints = true
         gButton.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
         self.accessoryView = gButton
