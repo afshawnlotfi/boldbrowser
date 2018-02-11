@@ -13,7 +13,7 @@ class SearchHashtagViewController: UIViewController {
 
     
     private var boldService = BoldWebServiceManager()
-    private var currentWebsite = String.empty
+    private var currentURL = String.empty
     @IBOutlet private weak var contentStack: UIStackView!
     private var hashTagCollectionView = SelectionCollectionView()
     private var searchHashTagTableView = GTableView()
@@ -21,8 +21,9 @@ class SearchHashtagViewController: UIViewController {
     @IBOutlet private weak var searchIconBtn: UIButton!
     @IBOutlet private weak var searchTextField: UITextField!
     private var hashtagSelectionManager = SelectionManager<String>()
-    
+    private var storageManager = StorageManager<Tag>()
     private var collectionHeight:NSLayoutConstraint!
+    
     
     override func viewDidLoad() {
 
@@ -36,8 +37,8 @@ class SearchHashtagViewController: UIViewController {
         searchTextField.attributedPlaceholder = NSAttributedString(string: BrowserStrings.SearchPlaceholder,
                                                              attributes: [NSAttributedStringKey.foregroundColor: UIColor.System.FadedWhite])
         
+        
         hashTagCollectionView.selectionManager.selectionManagerDelegate = self
-        hashTagCollectionView.selectionManager.items = [[]]
         searchHashTagTableView.dataSource = hashtagDataSource
         searchHashTagTableView.separatorColor = UIColor.System.FadedWhite
         searchHashTagTableView.separatorInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
@@ -51,17 +52,32 @@ class SearchHashtagViewController: UIViewController {
         self.contentStack.layoutMargins = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
         self.contentStack.addArrangedSubview(hashTagCollectionView)
         self.contentStack.addArrangedSubview(searchHashTagTableView)
+        
+        
+        
+        
     }
     
     
     @objc func suggestTags(_ textField : UITextField){
-        let tags = boldService.searchHashtags(fromKeyword: textField.text!, atWebsite: self.currentWebsite)
+        let tags = boldService.searchHashtags(fromKeyword: textField.text!, atWebsite: self.currentURL)
         hashtagSelectionManager.items = [tags]
         searchHashTagTableView.reloadData()
     }
     
     func presentView(forWebsite : String){
-        self.currentWebsite = forWebsite
+        self.currentURL = forWebsite
+        
+        if let tags = storageManager.fetchObjects(fromDisk: true) as? [Tag]{
+            let tags = tags.filter{
+                $0.url == self.currentURL
+            }
+            print(tags)
+            
+            hashTagCollectionView.selectionManager.items = [tags.map{$0.tagName ?? String.empty}]
+
+        }
+        
         UIApplication.shared.keyWindow?.rootViewController?.present(self, animated: true, completion: nil)
         searchTextField.becomeFirstResponder()
         
@@ -79,6 +95,7 @@ class SearchHashtagViewController: UIViewController {
     
     @objc private func closeViewController(){
         self.dismiss(animated: true, completion: nil)
+        
     }
 
 }
@@ -86,14 +103,41 @@ class SearchHashtagViewController: UIViewController {
 extension SearchHashtagViewController:SelectionDelegate{
     func selectionManager(didAddObject: IndexPath, item: Any) {
         self.hashTagCollectionView.reloadData()
+        
+        if let tag = item as? String{
+            if let tags = storageManager.fetchObjects(fromDisk: false) as? [Tag]{
+                let identifiedTags = tags.filter{
+                    $0.tagName == tag
+                }
+                if identifiedTags.count == 0{
+                    var storageDefaults = TagDefaults()
+                    storageDefaults.tagName = tag
+                    storageDefaults.url = self.currentURL
+                    storageManager.addObject(from: storageDefaults)
+                }
+            }
+        }
+        
         for (index,cell) in hashTagCollectionView.visibleCells.enumerated(){
             cell.tag = index
         }
     }
 
-    func selectionManager(didRemoveObject: IndexPath) {
+    func selectionManager(didRemoveObject: IndexPath, item: Any) {
         self.searchHashTagTableView.reloadData()
         self.hashTagCollectionView.deleteItems(at: [didRemoveObject])
+        
+        
+        if let tag = item as? String{
+            if let tags = storageManager.dataObjects as? [Tag]{
+                let identifiedTags = tags.filter{
+                    $0.tagName == tag
+                }
+                storageManager.deleteObjects(objects: identifiedTags)
+            }
+        }
+        
+        
         for (index,cell) in hashTagCollectionView.visibleCells.enumerated(){
             cell.tag = index
         }

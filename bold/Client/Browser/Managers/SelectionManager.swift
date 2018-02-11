@@ -11,7 +11,7 @@ import UIKit
 
 protocol SelectionDelegate {
     func selectionManager(didAddObject : IndexPath, item : Any)
-    func selectionManager(didRemoveObject : IndexPath)
+    func selectionManager(didRemoveObject : IndexPath, item : Any)
 }
 
 
@@ -47,8 +47,9 @@ class SelectionManager<DataObject:Any>:NSObject,GMenuButtonDelegate{
     }
     
     public func removeItem(row : Int, section : Int){
+        let item = items[section][row]
         items[section].remove(at: row)
-        selectionManagerDelegate?.selectionManager(didRemoveObject: IndexPath(row: row, section : section))
+        selectionManagerDelegate?.selectionManager(didRemoveObject: IndexPath(row: row, section : section), item : item)
 
     }
     
