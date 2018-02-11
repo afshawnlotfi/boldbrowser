@@ -47,7 +47,7 @@ class DownloadManager:ITabPluginManager{
         
         webSource.css.forEach{
             if let url = URL(string: $0){
-                let responseData = WebRequestManager.fetchData(fetchURL: url)
+                let responseData = WebRequestManager.fetchData(fetchURL: url, httpMethod: HTTPRequest.GET)
                 if let stringFromData = String(data: responseData, encoding: .utf8){
                     HTMLStyle +=  "<style>" + stringFromData + "</style>"
                 }
@@ -56,7 +56,7 @@ class DownloadManager:ITabPluginManager{
         
         webSource.js.forEach{
             if let url = URL(string: $0){
-                let responseData = WebRequestManager.fetchData(fetchURL: url)
+                let responseData = WebRequestManager.fetchData(fetchURL: url, httpMethod: HTTPRequest.GET)
                 if let stringFromData = String(data: responseData, encoding: .utf8){
                     HTMLScript +=  "<script>" + stringFromData + "</script>"
                 }

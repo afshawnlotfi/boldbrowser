@@ -24,7 +24,9 @@ class CheckCellFormatter:NSObject, ITVCellFormatter{
         
         if let tTableCell = tableView.dequeueReusableCell(withIdentifier: GIdentifierStrings.TableViewCell, for: indexPath) as? GTableViewCell,  let title = item as? String{
             
-            tTableCell.textLabel?.text = title
+            tTableCell.textLabel?.text = String(utf8String: title.cString(using: .utf8)!)
+            
+            
             tTableCell.selectionStyle = .none
             var buttonDefaults = CheckButtonDefaults()
             for item in selectionManager.items[indexPath.section]{

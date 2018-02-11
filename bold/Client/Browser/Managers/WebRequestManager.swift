@@ -12,26 +12,46 @@ import UIKit
 class WebRequestManager{
     
     
-    class func fetchData(fetchURL : URL) -> Data {
+    class func fetchData(fetchURL : URL, headers : [String : String]? = nil,  parameters : [String : Any]? = nil, httpMethod : String) -> Data {
+        var webResponse = Data()
         if DeviceInfo.hasConnectivity(){
-            let semaphore = DispatchSemaphore(value: 0);
-            var webResponse = Data()
             
-                let request = NSMutableURLRequest(url: fetchURL)
-                request.httpMethod = "GET"
-                let task = URLSession.shared.dataTask(with: request as URLRequest) { (data, response, error) in
-                    webResponse = data!
+            let semaphore = DispatchSemaphore(value: 0);
+            let request = NSMutableURLRequest(url: fetchURL, cachePolicy: .useProtocolCachePolicy,
+                                                                       timeoutInterval: 10.0)
+                
+                
+            request.httpMethod = httpMethod
+            
+            if let lheaders = headers{
+                request.allHTTPHeaderFields = lheaders
+            }
+            
+            
+            if let lparameters = parameters{
+                do{
+                    let postData = try JSONSerialization.data(withJSONObject: lparameters, options: [])
+                    request.httpBody = postData
+                }catch{
+                
+                }
+            }
+            let session = URLSession.shared
+            let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
+                if (error == nil) {
+                    if let webData = data{
+                        webResponse = webData
+                    }
                     (semaphore).signal()
                 }
+            })
             
-                task.resume()
-                semaphore.wait()
-            
-            
-            return webResponse
-        }else{
-            return Data()
+            dataTask.resume()
+            semaphore.wait()
+        
         }
+        
+        return webResponse
     }
     
     class func fetchImage(fetchURL : URL) -> UIImage {
@@ -47,6 +67,5 @@ class WebRequestManager{
 
         }
     }
-    
 }
 

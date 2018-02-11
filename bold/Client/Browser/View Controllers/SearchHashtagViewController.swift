@@ -11,6 +11,9 @@ import UIKit
 
 class SearchHashtagViewController: UIViewController {
 
+    
+    private var boldService = BoldWebServiceManager()
+    
     @IBOutlet private weak var contentStack: UIStackView!
     private var hashTagCollectionView = SelectionCollectionView()
     private var searchHashTagTableView = GTableView()
@@ -24,13 +27,12 @@ class SearchHashtagViewController: UIViewController {
     override func viewDidLoad() {
 
         super.viewDidLoad()
-        
-        
+    
         searchIconBtn.tintColor = UIColor.System.Light
         closeBtn.tintColor = UIColor.System.Light
         closeBtn.addTarget(self, action: #selector(closeViewController), for: .touchUpInside)
+        searchTextField.addTarget(self, action: #selector(suggestTags(_:)), for: .editingChanged)
         searchTextField.textColor = UIColor.System.Light
-        searchTextField.becomeFirstResponder()
         searchTextField.attributedPlaceholder = NSAttributedString(string: BrowserStrings.SearchPlaceholder,
                                                              attributes: [NSAttributedStringKey.foregroundColor: UIColor.System.FadedWhite])
         
@@ -39,10 +41,7 @@ class SearchHashtagViewController: UIViewController {
         searchHashTagTableView.dataSource = hashtagDataSource
         searchHashTagTableView.separatorColor = UIColor.System.FadedWhite
         searchHashTagTableView.separatorInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-        
-        
-        hashtagSelectionManager.items = [["yolowag", "hello", "world","yolowag123455","yolowag212"]]
-        
+        hashtagSelectionManager.items = [[]]
         hashTagCollectionView.horizontalScroll(true)
         collectionHeight = hashTagCollectionView.heightAnchor.constraint(equalToConstant: 45)
         collectionHeight.isActive = true
@@ -54,27 +53,35 @@ class SearchHashtagViewController: UIViewController {
         self.contentStack.addArrangedSubview(searchHashTagTableView)
     }
     
+    
+    @objc func suggestTags(_ textField : UITextField){
+        let tags = boldService.searchHashtags(fromKeyword: textField.text!, atWebsite: "https://www.google.com")
+        hashtagSelectionManager.items = [tags]
+        searchHashTagTableView.reloadData()
+    }
+    
+    func presentView(){
+        
+        UIApplication.shared.keyWindow?.rootViewController?.present(self, animated: true, completion: nil)
+        searchTextField.becomeFirstResponder()
+        
+    }
+    
     private lazy var hashtagDataSource: GTVDataSource<String> = {
         let checkFormatter = CheckCellFormatter(selectionManager: hashTagCollectionView.selectionManager)
         return  GTVDataSource<String>(selectionManager: hashtagSelectionManager, cellFormatter: checkFormatter)
     }()
 
     
-    
     override func awakeFromNib() {
         super.awakeFromNib()
-
     }
-    
     
     @objc private func closeViewController(){
         self.dismiss(animated: true, completion: nil)
-    
     }
-    
 
 }
-
 
 extension SearchHashtagViewController:SelectionDelegate{
     func selectionManager(didAddObject: IndexPath, item: Any) {
@@ -90,9 +97,7 @@ extension SearchHashtagViewController:SelectionDelegate{
         for (index,cell) in hashTagCollectionView.visibleCells.enumerated(){
             cell.tag = index
         }
-        
     }
-
 }
 
 

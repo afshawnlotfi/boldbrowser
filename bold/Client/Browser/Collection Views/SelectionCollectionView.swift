@@ -38,7 +38,6 @@ class SelectionCollectionView : GCollectionView, GSelectionCVCellDelegate{
         if let indexPath = self.indexPath(for: gSelectionCVCell){
             
             selectionDataSource.removeItem(index: indexPath.row)
-            self.deleteItems(at: [indexPath])
 
             for (index,cell) in self.visibleCells.enumerated(){
                 cell.tag = index
