@@ -13,7 +13,7 @@ class SearchHashtagViewController: UIViewController {
 
     
     private var boldService = BoldWebServiceManager()
-    
+    private var currentWebsite = String.empty
     @IBOutlet private weak var contentStack: UIStackView!
     private var hashTagCollectionView = SelectionCollectionView()
     private var searchHashTagTableView = GTableView()
@@ -55,13 +55,13 @@ class SearchHashtagViewController: UIViewController {
     
     
     @objc func suggestTags(_ textField : UITextField){
-        let tags = boldService.searchHashtags(fromKeyword: textField.text!, atWebsite: "https://www.google.com")
+        let tags = boldService.searchHashtags(fromKeyword: textField.text!, atWebsite: self.currentWebsite)
         hashtagSelectionManager.items = [tags]
         searchHashTagTableView.reloadData()
     }
     
-    func presentView(){
-        
+    func presentView(forWebsite : String){
+        self.currentWebsite = forWebsite
         UIApplication.shared.keyWindow?.rootViewController?.present(self, animated: true, completion: nil)
         searchTextField.becomeFirstResponder()
         

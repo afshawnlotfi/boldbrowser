@@ -26,8 +26,8 @@ class SelectionCollectionView : GCollectionView, GSelectionCVCellDelegate{
         return  SelectionCVDataSource(selectionManager: selectionManager)
     }()
     
-    private lazy var selectionFlowLayout: SelectionCVFlowLayout = {
-        return  SelectionCVFlowLayout()
+    private lazy var selectionFlowLayout: GSelectionCVFlowLayout = {
+        return  GSelectionCVFlowLayout()
     }()
     
     func gSelectionCVCell(_ gSelectionCVCell: GSelectionCVCell, didSelectCell atIndex: Int) {

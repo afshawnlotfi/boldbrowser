@@ -37,12 +37,11 @@ class GSelectionCVCell: UICollectionViewCell {
         self.isHidden = isHidden
     }
     
-    
     public func setTitle(title : String){
-    
         titleBtn.setTitle(title, for: .normal)
-    
     }
+    
+ 
     
     @objc func deselectBtn(){
         print(self.tag)
