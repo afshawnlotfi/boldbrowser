@@ -19,7 +19,7 @@ protocol GMenuButtonDelegate{
 
 class GMenuButton:UIButton{
     public var descriptorDict = [String:Any]()
-    private(set) var buttonDefaults:IButtonDefaults = GenericButtonDefaults()
+    public var buttonDefaults:IButtonDefaults = GenericButtonDefaults()
     public var gMenuButtonDelegate:GMenuButtonDelegate?
     private var widthConstraint:NSLayoutConstraint!
     public var alternateSelection = false
@@ -50,8 +50,8 @@ class GMenuButton:UIButton{
     
 
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    required convenience init?(coder aDecoder: NSCoder) {
+        self.init()
     }
     
 

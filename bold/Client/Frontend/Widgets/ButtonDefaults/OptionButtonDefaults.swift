@@ -9,15 +9,13 @@
 import UIKit
 
 struct OptionButtonDefaults:IButtonDefaults{
-    let buttonTab:Tab!
-    init(tab : Tab){
-        buttonTab = tab
+    let optionView:UIView!
+    init(webView : UIView){
+        optionView = webView
     }
     
     var selectedImage: UIImage = #imageLiteral(resourceName: "more")
     var unselectedImage: UIImage = #imageLiteral(resourceName: "more")
     var isSelected = false
-    var tab:Tab{
-        return buttonTab
-    }
+    
 }

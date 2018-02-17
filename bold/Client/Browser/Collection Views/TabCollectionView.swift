@@ -25,7 +25,7 @@ class TabCollectionView: GCollectionView {
     let faviconManager = FaviconManager()
     private let downloadManager = DownloadManager()
 
-    private let tabSliderOptions = DefaultTabSliderOptions()
+    private let tabSliderOptions = TabSliderOptions()
     
     private var builtInScripts = [TabPluginScript]()
     private var startIndexPath:IndexPath?

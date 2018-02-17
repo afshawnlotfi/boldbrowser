@@ -28,14 +28,20 @@ class OptionButtonManager{
         bookmarkBtn.alternateSelection = true
         bookmarkBtn.gMenuButtonDelegate = bookmarkManager
         
-        let optionsDefault = OptionButtonDefaults(tab: tab)
-        let optionViewBtn = GMenuButton(buttonDefaults: optionsDefault)
-        optionViewBtn.gMenuButtonDelegate = tabOptionManager
+        if let webView = tab.webView{
+            let optionsDefault = OptionButtonDefaults(webView: webView)
+            let optionViewBtn = GMenuButton(buttonDefaults: optionsDefault)
+            optionViewBtn.gMenuButtonDelegate = tabOptionManager
+            gCell.setOptionButtons(buttons: [bookmarkBtn,optionViewBtn])
+
+        }else{
+            gCell.setOptionButtons(buttons: [bookmarkBtn])
+        }
+
         
         
         
-        gCell.setOptionButtons(buttons: [bookmarkBtn,optionViewBtn])
-            
+        
         
         
     }

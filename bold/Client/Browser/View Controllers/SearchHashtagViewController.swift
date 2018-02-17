@@ -48,10 +48,10 @@ class SearchHashtagViewController: UIViewController {
         collectionHeight.isActive = true
         contentStack.spacing = 10
         hashTagCollectionView.showsHorizontalScrollIndicator = false
-        self.contentStack.isLayoutMarginsRelativeArrangement = true
-        self.contentStack.layoutMargins = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
-        self.contentStack.addArrangedSubview(hashTagCollectionView)
-        self.contentStack.addArrangedSubview(searchHashTagTableView)
+        contentStack.isLayoutMarginsRelativeArrangement = true
+        contentStack.layoutMargins = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
+        contentStack.addArrangedSubview(hashTagCollectionView)
+        contentStack.addArrangedSubview(searchHashTagTableView)
         
         
         
@@ -103,7 +103,8 @@ class SearchHashtagViewController: UIViewController {
 extension SearchHashtagViewController:SelectionDelegate{
     func selectionManager(didAddObject: IndexPath, item: Any) {
         self.hashTagCollectionView.reloadData()
-        
+
+
         if let tag = item as? String{
             if let tags = storageManager.fetchObjects(fromDisk: false) as? [Tag]{
                 let identifiedTags = tags.filter{
@@ -121,6 +122,7 @@ extension SearchHashtagViewController:SelectionDelegate{
         for (index,cell) in hashTagCollectionView.visibleCells.enumerated(){
             cell.tag = index
         }
+
     }
 
     func selectionManager(didRemoveObject: IndexPath, item: Any) {
