@@ -19,7 +19,7 @@ protocol GMenuButtonDelegate{
 
 class GMenuButton:UIButton{
     public var descriptorDict = [String:Any]()
-    public var buttonDefaults:IButtonDefaults = GenericButtonDefaults()
+    private(set) var buttonDefaults:IButtonDefaults = GenericButtonDefaults()
     public var gMenuButtonDelegate:GMenuButtonDelegate?
     private var widthConstraint:NSLayoutConstraint!
     public var alternateSelection = false
@@ -40,11 +40,11 @@ class GMenuButton:UIButton{
         self.setTitleColor(UIColor.System.Light, for: .normal)
         self.tintColor = UIColor.System.Light
         self.titleLabel?.textAlignment = .center
-        self.widthConstraint = self.widthAnchor.constraint(equalToConstant: 38.0)
+        self.widthConstraint = self.widthAnchor.constraint(equalToConstant: SizeConstants.StandardButton)
         self.widthConstraint.isActive = true
         self.translatesAutoresizingMaskIntoConstraints = false
         self.imageView?.contentMode = .scaleAspectFit
-        let selector = GSelector(target: self, selector: #selector(self.updateSelection))
+        let selector = GSelector(target: self, selector: #selector(self.updateButton))
         self.configureButton(selector: selector)
     }
     
@@ -54,10 +54,17 @@ class GMenuButton:UIButton{
         self.init()
     }
     
+    func configureButton(buttonDefaults : IButtonDefaults){
+        self.buttonDefaults = buttonDefaults
+        self.configureButton(image: self.buttonDefaults.unselectedImage)
+
+    }
 
     
-    func configureButton(title : String = String.empty, image : UIImage? = nil, isTinted : Bool = true, selector : GSelector? = nil){
-        self.setTitle(title, for: .normal)
+    func configureButton(title : String? = nil, image : UIImage? = nil, isTinted : Bool = true, selector : GSelector? = nil){
+        if title != nil{
+            self.setTitle(title, for: .normal)
+        }
         if let icon = image{
             var iconNew = icon
             if isTinted{
@@ -77,21 +84,27 @@ class GMenuButton:UIButton{
     }
     
 
-
+    @objc private func updateButton(){
+        updateSelection(withCallback : true)
+    }
     
     
     /// Updates button selection
     ///
     /// - Parameter buttonDefaults: Button Defaults to update button from
-    @objc func updateSelection(){
+    func updateSelection(withCallback : Bool){
         if alternateSelection{
             if self.isSelected{
                 self.isSelected = false
-                gMenuButtonDelegate?.gMenuButton(didUnselectButton: self, buttonDefaults : self.buttonDefaults, index : self.tag)
+                if withCallback{
+                    gMenuButtonDelegate?.gMenuButton(didUnselectButton: self, buttonDefaults : self.buttonDefaults, index : self.tag)
+                }
                 self.configureButton(image: buttonDefaults.unselectedImage)
             }else{
                 self.isSelected = true
-                gMenuButtonDelegate?.gMenuButton(didSelectButton: self, buttonDefaults : self.buttonDefaults, index : self.tag)
+                if withCallback{
+                    gMenuButtonDelegate?.gMenuButton(didSelectButton: self, buttonDefaults : self.buttonDefaults, index : self.tag)
+                }
                 self.configureButton(image: buttonDefaults.selectedImage)
                 
             }

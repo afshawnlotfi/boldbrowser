@@ -41,15 +41,15 @@ class SearchHashtagViewController: UIViewController {
         hashTagCollectionView.selectionManager.selectionManagerDelegate = self
         searchHashTagTableView.dataSource = hashtagDataSource
         searchHashTagTableView.separatorColor = UIColor.System.FadedWhite
-        searchHashTagTableView.separatorInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        searchHashTagTableView.separatorInset = UIEdgeInsets(top: 0, left: SizeConstants.Padding, bottom: 0, right: SizeConstants.Padding)
         hashtagSelectionManager.items = [[]]
         hashTagCollectionView.horizontalScroll(true)
         collectionHeight = hashTagCollectionView.heightAnchor.constraint(equalToConstant: 45)
         collectionHeight.isActive = true
-        contentStack.spacing = 10
+        contentStack.spacing = SizeConstants.Padding
         hashTagCollectionView.showsHorizontalScrollIndicator = false
         contentStack.isLayoutMarginsRelativeArrangement = true
-        contentStack.layoutMargins = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
+        contentStack.layoutMargins = UIEdgeInsets(top: SizeConstants.Padding, left: 0, bottom: SizeConstants.Padding, right: 0)
         contentStack.addArrangedSubview(hashTagCollectionView)
         contentStack.addArrangedSubview(searchHashTagTableView)
         

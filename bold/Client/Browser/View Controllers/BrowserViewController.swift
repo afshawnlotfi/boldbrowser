@@ -14,19 +14,18 @@ class BrowserViewController: UIViewController {
     @IBOutlet private var backgroundImageView: UIImageView!
     private var tabManager:TabManager!
     private var storageManager:StorageManager<Tag>!
-
     @IBOutlet weak var workspaceBtn: GMenuButton!
     private var tabCollectionView: TabCollectionView!
     @IBOutlet private var tabStack: UIStackView!
     @IBOutlet private var addTabBtn: UIButton!
     private var tabScrollManager = TabScrollManager()
     @IBOutlet private weak var showTabsBtn: UIButton!
-    private var tabOptionManager = TabOptionManager()
+    private var tabOptionManager = WorkspaceSlideManager()
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tabManager = TabManager()
         self.storageManager = StorageManager<Tag>()
-
+        
         self.tabCollectionView = TabCollectionView(tabManager: tabManager)
         self.tabStack.addArrangedSubview(self.tabCollectionView)
         self.tabManager.restoreTabs()
@@ -37,7 +36,16 @@ class BrowserViewController: UIViewController {
         self.tabCollectionView.tabFlowLayout.tabCollectionViewDelegate = self
         topMenu.isHidden = true
         UIApplication.shared.isStatusBarHidden = true
-        workspaceBtn.buttonDefaults = OptionButtonDefaults(webView: self.view)
+        
+        var buttonDefaults = OptionButtonDefaults(view: tabStack)
+        buttonDefaults.isRightSide = false
+        buttonDefaults.unselectedImage = #imageLiteral(resourceName: "arrow-right")
+        buttonDefaults.selectedImage = #imageLiteral(resourceName: "arrow-left")
+        workspaceBtn.alternateSelection = true
+
+        workspaceBtn.configureButton(buttonDefaults: buttonDefaults)
+        workspaceBtn.setTitle("Hello", for: .normal)
+        workspaceBtn.contentHorizontalAlignment = .left
         workspaceBtn.gMenuButtonDelegate = tabOptionManager
         let options = WorkspaceSliderOptions()
         tabOptionManager.updateOptions(options: options.options)

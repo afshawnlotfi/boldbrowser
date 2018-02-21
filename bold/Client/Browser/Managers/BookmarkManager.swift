@@ -15,7 +15,7 @@ class BookmarkManager:GMenuButtonDelegate{
     
     func gMenuButton(didSelectButton button: GMenuButton, buttonDefaults: IButtonDefaults, index : Int) {
         if let bookmarkButtonDefault = buttonDefaults as? BookmarkButtonDefaults{
-            let tab = bookmarkButtonDefault.tab
+//            let tab = bookmarkButtonDefault.tab
             searchHashtag.modalPresentationStyle = .overCurrentContext
             searchHashtag.presentView(forWebsite: "https://wikipedia.org")
             

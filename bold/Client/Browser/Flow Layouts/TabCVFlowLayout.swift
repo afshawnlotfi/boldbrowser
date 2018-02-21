@@ -16,7 +16,7 @@ class TabCVFlowLayout:NSObject,UICollectionViewDelegateFlowLayout {
 
     private var sectionInsets:UIEdgeInsets{
         if isMinimized == true{
-            return  UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10.0)
+            return  UIEdgeInsets(top: SizeConstants.Padding, left: SizeConstants.Padding, bottom: SizeConstants.Padding, right: SizeConstants.Padding)
 
         }else{
             var spacingInset = 0

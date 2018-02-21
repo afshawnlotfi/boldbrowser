@@ -50,7 +50,7 @@ class PDFPagePageOption:NSObject,TabOption,TabOptionDelegate,PDFGenerationManage
     private var storageManager = StorageManager<PDF>()
     private var toastView = GToastView()
     private var pdfManager = PDFGenerationManager()
-    public var sliderControllerDelegate:SliderCotrollerDelegate?
+    public var sliderControllerDelegate:SliderManagerDelegate?
     private var progressView = GProgressView()
     private var appDelegate = UIApplication.shared.delegate as! AppDelegate
 

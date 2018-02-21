@@ -20,6 +20,14 @@ struct SizeConstants{
         return 300
     }
     
+    static var Padding:CGFloat{
+        return 10
+    }
+    
+    static var StandardButton:CGFloat{
+        return 40
+    }
+    
 }
 
 
@@ -44,6 +52,8 @@ struct TimeConstants{
     static let ScreenShot:Double = 0.3
     static let Timeout:Double = 0.2
     static let Delay:Double = 1.0
+    static let Request:Double = 5.0
+
 
 }
 

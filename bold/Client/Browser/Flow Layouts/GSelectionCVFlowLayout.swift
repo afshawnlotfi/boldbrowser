@@ -10,7 +10,7 @@ import UIKit
 
 class GSelectionCVFlowLayout:NSObject,UICollectionViewDelegateFlowLayout {
     
-    private var sectionInsets = UIEdgeInsets(top: 0, left: 10.0, bottom: 0, right: 10.0)
+    private var sectionInsets = UIEdgeInsets(top: 0, left: SizeConstants.Padding, bottom: 0, right: SizeConstants.Padding)
     
 
     

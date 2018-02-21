@@ -16,8 +16,6 @@ class WorkspaceSliderOptions:NSObject{
         options = [
             [
                 
-            ],
-            [
             ]
         ]
         super.init()

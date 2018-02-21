@@ -18,7 +18,7 @@ class WebRequestManager{
             
             let semaphore = DispatchSemaphore(value: 0);
             let request = NSMutableURLRequest(url: fetchURL, cachePolicy: .useProtocolCachePolicy,
-                                                                       timeoutInterval: 10.0)
+                                                                       timeoutInterval: TimeConstants.Request)
                 
                 
             request.httpMethod = httpMethod

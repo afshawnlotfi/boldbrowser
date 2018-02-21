@@ -19,10 +19,10 @@ class GToastView:UIVisualEffectView{
         self.effect = UIBlurEffect(style: .dark)
         self.contentStack.addArrangedSubview(descriptorIcon)
         self.contentStack.addArrangedSubview(optionStack)
-        self.contentStack.spacing = 10
+        self.contentStack.spacing = SizeConstants.Padding
         self.contentView.addSubview(view: self.contentStack, attributes: [.bottom,.top,.left,.right])
         self.heightAnchor.constraint(equalToConstant: SizeConstants.TabTitleHeight).isActive = true
-        contentStack.layoutMargins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        contentStack.layoutMargins = UIEdgeInsets(top: SizeConstants.Padding, left: SizeConstants.Padding, bottom: SizeConstants.Padding, right: SizeConstants.Padding)
         contentStack.isLayoutMarginsRelativeArrangement = true
         removeFromViewBtn.configureButton(image: #imageLiteral(resourceName: "close-circled"), isTinted: true, selector: GSelector(target: self, selector: #selector(dismissFromScreen)))
     }

@@ -13,6 +13,7 @@ class SliderView:UIStackView{
     private var optionViewSlider = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
     private var backDropView = UIView()
     private var isRightSide = false
+    public var sliderManagerDelegate:SliderManagerDelegate?
     private var isSliderDrawn = false
     private var panGesture = UIPanGestureRecognizer()
     private var focusTapGesture = UITapGestureRecognizer()
@@ -63,7 +64,6 @@ class SliderView:UIStackView{
                 drawForward()
             }
         
-        
     }
     
         
@@ -101,14 +101,17 @@ class SliderView:UIStackView{
                     
                 }else{
                     drawAway()
+                    sliderManagerDelegate?.sliderDidCloseFromDrag()
                 }
             }else{
                 
                 if self.alpha > AlphaValues.SliderStackCutoff || gesture.velocity(in: self).x < 0{
                     drawForward()
 
+
                 }else{
                     drawAway()
+                    sliderManagerDelegate?.sliderDidCloseFromDrag()
                 }
                 
             }
@@ -127,7 +130,6 @@ class SliderView:UIStackView{
             self.alpha = 0
             switch self.isRightSide{
             case true:
-                
                 self.insertArrangedSubview(backDropView, at: 0)
                 self.insertArrangedSubview(optionViewSlider, at: 1)
                 
@@ -136,7 +138,6 @@ class SliderView:UIStackView{
                 self.insertArrangedSubview(optionViewSlider, at: 0)
             }
             isSliderDrawn = true
-
         }
 
         

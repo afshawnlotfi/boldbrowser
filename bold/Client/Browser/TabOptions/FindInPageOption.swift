@@ -10,7 +10,7 @@ import UIKit
 
 class FindInPageOption:NSObject,TabOption,TabOptionDelegate,UITextFieldDelegate{
     
-    public var sliderControllerDelegate:SliderCotrollerDelegate?
+    public var sliderControllerDelegate:SliderManagerDelegate?
     private var toastView = GToastView()
     private var textfield = UITextField()
     private var forwardBtn = GMenuButton()

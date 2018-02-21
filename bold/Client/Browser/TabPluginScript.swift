@@ -47,29 +47,32 @@ class TabPluginScript:NSObject{
         if let pManager = manager{
             self.manager = pManager
         }
-        let configPath = Bundle.main.path(forResource: "config", ofType: "json", inDirectory: "JS/Plugins/" + pluginName)
-        do {
-            let data = try Data(contentsOf: URL(fileURLWithPath: configPath!), options: .mappedIfSafe)
-            let jsonResult = JSONParser.deserialize(data: data)
-                if let name = jsonResult["name"] as? String {
-                    if let handler = jsonResult["handler"] as? String {
-                        isValid = true
-                        scriptName = name
-                        messageHandler = handler
-                        let configPath = Bundle.main.path(forResource: scriptName, ofType: "js", inDirectory: "JS/Plugins/" + scriptName)
-                        
-                        do{
-                            sScript = try String(contentsOf: URL(fileURLWithPath: configPath!), encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue))
-                        }catch{
-                            sScript = String.empty
+        
+        
+        if let configPath = Bundle.main.path(forResource: "config", ofType: "json", inDirectory: "JS/Plugins/" + pluginName){
+            do {
+                let data = try Data(contentsOf: URL(fileURLWithPath: configPath), options: .mappedIfSafe)
+                let jsonResult = JSONParser.deserialize(data: data)
+                    if let name = jsonResult["name"] as? String {
+                        if let handler = jsonResult["handler"] as? String {
+                            isValid = true
+                            scriptName = name
+                            messageHandler = handler
+                            let configPath = Bundle.main.path(forResource: scriptName, ofType: "js", inDirectory: "JS/Plugins/" + scriptName)
+                            
+                            do{
+                                sScript = try String(contentsOf: URL(fileURLWithPath: configPath!), encoding: String.Encoding(rawValue: String.Encoding.utf8.rawValue))
+                            }catch{
+                                sScript = String.empty
+                            }
+                            
+                            
                         }
-                        
-                        
                     }
-                }
-            
-        }catch{
-            fatalError(ErrorStrings.PluginConfig)
+                
+            }catch{
+                fatalError(ErrorStrings.PluginConfig)
+            }
         }
         
         pluginDescriptor = PluginScriptDescriptor(scriptName: scriptName, messageHandlerName: messageHandler, isValid: isValid)
