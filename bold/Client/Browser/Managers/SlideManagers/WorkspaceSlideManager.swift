@@ -30,12 +30,27 @@ class WorkspaceSlideManager:OptionSlideManager{
     
     override func sliderDidOpen() {
         titleLabel.text = BrowserInfo.currentWorkspace
-        let workspace = (workspaceStorageManager.fetchObjects(fromDisk: false) as? [Workspace])?.filter{
+        let allWorkspaces = (workspaceStorageManager.fetchObjects(fromDisk: false) as? [Workspace])
+        if let workspaces = (allWorkspaces?.filter{
             $0.title == BrowserInfo.currentWorkspace
+            }){
+            if workspaces.count > 0{
+                let workspace = workspaces[0]
+                if let tabCount = workspace.savedTabs?.allObjects.count{
+                    descipLabel.text = String(format: "%d Tabs • %d Tags", arguments: [tabCount,tabCount])
+                }
+                var gMenuOptions:[[GMenuOption]] = [[]]
+                allWorkspaces?.forEach{
+                    let gMenuOption = GMenuOption(title: $0.title)
+                    gMenuOptions[0].append(gMenuOption)
+                }
+                self.updateOptions(options: gMenuOptions)
+                
+            }
         }
-
-        descipLabel.text = String(describing: workspace![0].savedTabs?.allObjects.count)
     }
+        
+        
 
     
     

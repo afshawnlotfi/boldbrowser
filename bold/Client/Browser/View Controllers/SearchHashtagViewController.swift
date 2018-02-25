@@ -21,9 +21,8 @@ class SearchHashtagViewController: UIViewController {
     @IBOutlet private weak var searchIconBtn: UIButton!
     @IBOutlet private weak var searchTextField: UITextField!
     private var hashtagSelectionManager = SelectionManager<String>()
-    private var storageManager = StorageManager<SavedTag>()
     private var collectionHeight:NSLayoutConstraint!
-    
+    private var tagManager = TagManager()
     
     override func viewDidLoad() {
 
@@ -67,20 +66,9 @@ class SearchHashtagViewController: UIViewController {
     
     func presentView(forWebsite : String){
         self.currentURL = forWebsite
-        
-        if let tags = storageManager.fetchObjects(fromDisk: true) as? [SavedTag]{
-            let tags = tags.filter{
-                $0.url == self.currentURL
-            }
-            print(tags)
-            
-            hashTagCollectionView.selectionManager.items = [tags.map{$0.tagName ?? String.empty}]
-
-        }
-        
+        hashTagCollectionView.selectionManager.items = [tagManager.getTags(forURL: forWebsite)]
         UIApplication.shared.keyWindow?.rootViewController?.present(self, animated: true, completion: nil)
         searchTextField.becomeFirstResponder()
-        
     }
     
     private lazy var hashtagDataSource: GTVDataSource<String> = {
@@ -106,17 +94,7 @@ extension SearchHashtagViewController:SelectionDelegate{
 
 
         if let tag = item as? String{
-            if let tags = storageManager.fetchObjects(fromDisk: false) as? [SavedTag]{
-                let identifiedTags = tags.filter{
-                    $0.tagName == tag
-                }
-                if identifiedTags.count == 0{
-                    var storageDefaults = TagDefaults()
-                    storageDefaults.tagName = tag
-                    storageDefaults.url = self.currentURL
-                    storageManager.addObject(from: storageDefaults)
-                }
-            }
+            tagManager.addTag(tagName: tag, forURL: self.currentURL)
         }
         
         for (index,cell) in hashTagCollectionView.visibleCells.enumerated(){
@@ -131,12 +109,7 @@ extension SearchHashtagViewController:SelectionDelegate{
         
         
         if let tag = item as? String{
-            if let tags = storageManager.dataObjects as? [SavedTag]{
-                let identifiedTags = tags.filter{
-                    $0.tagName == tag
-                }
-                storageManager.deleteObjects(objects: identifiedTags)
-            }
+            tagManager.removeTag(tagName: tag, forURL: self.currentURL)
         }
         
         
