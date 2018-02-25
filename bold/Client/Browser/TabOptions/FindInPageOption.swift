@@ -84,7 +84,7 @@ class FindInPageOption:NSObject,TabOption,TabOptionDelegate,UITextFieldDelegate{
     
     
     func activateOption() {
-        sliderControllerDelegate?.requestSliderToClose()
+        sliderControllerDelegate?.sliderWillClose()
         if let webView = self.webView{
             toastView.showToast(view: webView)
         }

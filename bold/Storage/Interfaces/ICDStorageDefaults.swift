@@ -9,11 +9,11 @@
 import Foundation
 import CoreData
 
-protocol IStorageDefaults{
+protocol ICDStorageDefaults{
 
 }
 
-extension IStorageDefaults{
+extension ICDStorageDefaults{
 
     var fieldnames: [String] {
         let result = Mirror(reflecting: self).children.map {

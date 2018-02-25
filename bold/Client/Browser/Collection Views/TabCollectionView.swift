@@ -45,11 +45,6 @@ class TabCollectionView: GCollectionView {
             TabPluginScript(pluginName: "find")
         ]
         
-        //Tab Options
-        optionButtonManager.tabOptionManager.updateOptions(options: tabSliderOptions.options)
-        tabSliderOptions.findInPageOption.sliderControllerDelegate = optionButtonManager.tabOptionManager
-        tabSliderOptions.pdfPageOption.sliderControllerDelegate = optionButtonManager.tabOptionManager
-
         downloadManager.downloadManagerDelegate = tabSliderOptions.downloadPageOption
         
         self.tabManager.tabManagerDelegates.append(self)

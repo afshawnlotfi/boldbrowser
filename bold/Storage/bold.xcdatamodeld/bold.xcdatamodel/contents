@@ -23,8 +23,9 @@
         <attribute name="screenshotData" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="sessionData" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="worspace" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Workspace" inverseName="savedTabs" inverseEntity="Workspace" syncable="YES"/>
     </entity>
-    <entity name="Tag" representedClassName="Tag" syncable="YES" codeGenerationType="class">
+    <entity name="SavedTag" representedClassName="SavedTag" syncable="YES" codeGenerationType="class">
         <attribute name="tagName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
@@ -33,6 +34,11 @@
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="Workspace" representedClassName=".Workspace" syncable="YES">
+        <attribute name="dateCreated" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="savedTabs" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SavedTab" inverseName="worspace" inverseEntity="SavedTab" syncable="YES"/>
+    </entity>
     <elements>
         <element name="Bookmark" positionX="0" positionY="36" width="128" height="45"/>
         <element name="DownloadedWebsite" positionX="0" positionY="36" width="128" height="75"/>
@@ -40,8 +46,9 @@
         <element name="History" positionX="0" positionY="36" width="128" height="45"/>
         <element name="OrderedObject" positionX="0" positionY="36" width="128" height="60"/>
         <element name="PDF" positionX="0" positionY="36" width="128" height="90"/>
-        <element name="SavedTab" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="SavedTab" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="SavedTag" positionX="18" positionY="63" width="128" height="75"/>
         <element name="WebsiteObject" positionX="0" positionY="27" width="128" height="90"/>
-        <element name="Tag" positionX="18" positionY="63" width="128" height="75"/>
+        <element name="Workspace" positionX="9" positionY="45" width="128" height="90"/>
     </elements>
 </model>

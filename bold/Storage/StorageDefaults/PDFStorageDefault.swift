@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct PDFStorageDefaults:IStorageDefaults{
+struct PDFStorageDefaults:ICDStorageDefaults{
     var title:String = String.empty
     var url = String.empty
     var data = Data()

@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct TagDefaults:IStorageDefaults{
+struct TagDefaults:ICDStorageDefaults{
     var tagName:String =  String.empty
     var url:String = String.empty
 }

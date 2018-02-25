@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct DownloadedWebsiteDefaults:IStorageDefaults{
+struct DownloadedWebsiteDefaults:ICDStorageDefaults{
     var url:String = String.empty
     var data:Data = Data()
 

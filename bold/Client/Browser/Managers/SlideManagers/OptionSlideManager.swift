@@ -11,13 +11,19 @@ import UIKit
 
 protocol SliderManagerDelegate{
     
-    func requestSliderToClose()
+    func sliderWillClose()
     func sliderDidCloseFromDrag()
+    func sliderDidOpen()
+
 
 }
 class OptionSlideManager:NSObject, SliderManagerDelegate{
+    
+    func sliderDidOpen() {
+        
+    }
   
-    func requestSliderToClose() {
+    func sliderWillClose() {
         sliderView.drawAway()
     }
     
@@ -28,13 +34,15 @@ class OptionSlideManager:NSObject, SliderManagerDelegate{
     
     
     private(set) var bottomView:UIView?
-    private var gMenuButton :GMenuButton?
+    private(set) var gMenuButton :GMenuButton?
     private let sliderView = SliderView()
     private(set) var selectionManager = SelectionManager<GMenuOption>()
     private(set) var optionFormatter:OptionTVCellFormatter
     private var gTVDataSource:GTVDataSource<GMenuOption>
-    override init() {
-        
+    init(gMenuButton : GMenuButton? = nil) {
+        if let gButton = gMenuButton{
+            self.gMenuButton = gButton
+        }
         optionFormatter = OptionTVCellFormatter()
         gTVDataSource = GTVDataSource(selectionManager: selectionManager, cellFormatter: optionFormatter)
         super.init()
@@ -46,7 +54,7 @@ class OptionSlideManager:NSObject, SliderManagerDelegate{
 
     public func updateOptions(options : [[GMenuOption]]){
         selectionManager.items = options
-        
+
         self.sliderView.tableView.reloadData()
     }
 
@@ -58,6 +66,7 @@ extension OptionSlideManager:GMenuButtonDelegate{
 
     func gMenuButton(didSelectButton button: GMenuButton, buttonDefaults: IButtonDefaults, index : Int) {
         drawMenu(didSelectButton: button, buttonDefaults: buttonDefaults, index : index)
+        sliderDidOpen()
 
     }
     
@@ -67,7 +76,6 @@ extension OptionSlideManager:GMenuButtonDelegate{
     
     
     func drawMenu(didSelectButton button: GMenuButton, buttonDefaults: IButtonDefaults, index : Int) {
-        self.gMenuButton = button
         if let optionButton = (buttonDefaults as? OptionButtonDefaults){
             if let optionSliderView = optionButton.optionSliderView as? TabWebView{
                 self.bottomView = optionSliderView
@@ -88,7 +96,6 @@ extension OptionSlideManager:GMenuButtonDelegate{
 
 //TableView Adjustments
 extension OptionSlideManager:UITableViewDelegate{
-
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return UIView.empty
     }

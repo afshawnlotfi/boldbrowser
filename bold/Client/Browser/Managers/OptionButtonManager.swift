@@ -13,10 +13,21 @@ class OptionButtonManager{
     
     
     private let bookmarkManager = BookmarkManager()
-    let tabOptionManager = TabSlideManager()
+    private let tabSliderOptions = TabSliderOptions()
 
+    private var tabOptionManager = TabSlideManager()
 
+    init(){
+        
+        tabOptionManager.updateOptions(options: tabSliderOptions.options)
+        tabSliderOptions.findInPageOption.sliderControllerDelegate = tabOptionManager
+        tabSliderOptions.pdfPageOption.sliderControllerDelegate = tabOptionManager
+        
+        
+    }
     
+    
+
     
     func updateOptionButtons(gCell : GContainerCVCell, tab : Tab){
         

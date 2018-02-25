@@ -25,16 +25,26 @@ class TabManager:NSObject{
     private(set) var tabScriptManager = TabScriptManager()
     private var routerManager = RouterManager()
     var tabScrollManager:TabScrollManager?
-    private let storageManager = StorageManager<SavedTab>()
+    private let storageManager:WorkspaceStorageManager
+
     var tabManagerDelegates = [TabManagerDelegate]()
     
-    override init() {
+    init(workspaceManager : StorageManager<Workspace>) {
+        self.storageManager = WorkspaceStorageManager(workspaceManager: workspaceManager)
         super.init()
+        
+        if BrowserInfo.currentWorkspace == String.empty{
+            var workspaceKeyDefaults = WorkspaceKeyDefaults()
+            workspaceKeyDefaults.value = "general"
+            KeyStorageManager.setValue(from: workspaceKeyDefaults)
+        }
+        
+        workspaceManager.fetchObjects(fromDisk: true)
         
     }
     
     
-    /// Adds tab at specified index with cofniguration
+    /// Adds tab at specified index with cofniguratio≈n
     ///
     /// - Parameters:
     ///   - atIndex: index to put tab
@@ -47,7 +57,7 @@ class TabManager:NSObject{
         
         if restoreFrom == nil{
             let savedTabDefaults = SavedTabDefaults(startIndex: tabs.count)
-            savedTab = storageManager.addObject(from: savedTabDefaults) as! SavedTab
+            savedTab = storageManager.addObject(from: savedTabDefaults, tagName: BrowserInfo.currentWorkspace)
         }else{
             savedTab = restoreFrom!
         }
@@ -136,7 +146,7 @@ class TabManager:NSObject{
                 let snapshot = UIImage.cropImage(image: screenshot, size: CGSize(width: screenshot.size.width, height: screenshot.size.width - SizeConstants.TabTitleHeight))
                 if let data = UIImagePNGRepresentation(snapshot){
                     tab.screenshotImage = snapshot
-                    self.storageManager.updateObject(updatedValues: ["screenshotData":data], object: self.storageManager.dataObjects[atIndex])
+                    self.storageManager.updateObject(updatedValues: ["screenshotData":data], object: storageManager.fetchObjects(fromDisk: false, tagName: BrowserInfo.currentWorkspace)[atIndex])
                 }
             }
         }
@@ -171,12 +181,12 @@ class TabManager:NSObject{
     
     /// Restores All Tabs from Saved Tabs
     func restoreTabs(){
-        var savedTabs = storageManager.fetchObjects(fromDisk: true) as! [SavedTab]
+        var savedTabs = storageManager.fetchObjects(fromDisk: true, tagName: BrowserInfo.currentWorkspace)
 
         if savedTabs.count == 0{
             self.addTab(atIndex: nil, configuration: nil, restoreFrom: nil)
             //Updates from Cached Saved Tabs
-            savedTabs = storageManager.fetchObjects(fromDisk: false) as! [SavedTab]
+            savedTabs = storageManager.fetchObjects(fromDisk: false, tagName: BrowserInfo.currentWorkspace)
 
         }else{
             for savedTab in savedTabs{
@@ -193,7 +203,7 @@ class TabManager:NSObject{
         if let webView = object as? TabWebView{
             let index = webView.tag
             let tab = tabs[index]
-            let savedTab = (storageManager.dataObjects as! [SavedTab])[index]
+            let savedTab = (storageManager.fetchObjects(fromDisk: false, tagName: BrowserInfo.currentWorkspace))[index]
             let newValue = change?[NSKeyValueChangeKey(rawValue: "new")]
             if let key = keyPath{
                 switch key {

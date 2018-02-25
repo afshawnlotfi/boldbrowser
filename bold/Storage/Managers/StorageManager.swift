@@ -13,11 +13,10 @@ import UIKit
 class StorageManager<StorageObject:NSManagedObject>:NSObject{
     private var appDelegate = UIApplication.shared.delegate as! AppDelegate
     private var context: NSManagedObjectContext
-    var dataObjects: [NSManagedObject]
+    var dataObjects: [NSManagedObject] = []
 
     override init() {
         context = appDelegate.persistentContainer.viewContext
-        dataObjects = []
         super.init()
     }
     
@@ -25,7 +24,7 @@ class StorageManager<StorageObject:NSManagedObject>:NSObject{
     /// Adds Object to Core Data which is configured for IStorageDefaults
     ///
     /// - Parameter storageDefaults: Storage Dafaults of Object
-    @discardableResult func addObject(from storageDefaults: IStorageDefaults) -> NSManagedObject {
+    @discardableResult func addObject(from storageDefaults: ICDStorageDefaults) -> NSManagedObject {
         let entity = NSEntityDescription.entity(forEntityName: String(describing : StorageObject.self), in: context)
         let item = StorageObject(entity: entity!, insertInto: context)
 
@@ -52,17 +51,18 @@ class StorageManager<StorageObject:NSManagedObject>:NSObject{
     ///
     /// - Returns: Standard NSManagedObject which is casted to specific storage object later
     @discardableResult func fetchObjects(fromDisk : Bool) -> [NSManagedObject]{
-        
-        do{
-            dataObjects = try context.fetch(StorageObject.fetchRequest()) as! [StorageObject]
-        }catch let error as NSError{
-            dataObjects = []
-            print(error, ErrorStrings.FetchError)
-        }
-        
-        //Order objects if it is a OrderObject
-        if let orderedObjects = dataObjects as? [OrderedObject]{
-            dataObjects = orderedObjects.sorted { $0.index < $1.index }
+        if fromDisk{
+            do{
+                dataObjects = try context.fetch(StorageObject.fetchRequest()) as! [StorageObject]
+            }catch let error as NSError{
+                dataObjects = []
+                print(error, ErrorStrings.FetchError)
+            }
+            
+            //Order objects if it is a OrderObject
+            if let orderedObjects = dataObjects as? [OrderedObject]{
+                dataObjects = orderedObjects.sorted { $0.index < $1.index }
+            }
         }
         
         return dataObjects

@@ -9,7 +9,7 @@
 import Foundation
 
 
-struct WebsiteObjectDefaults:IStorageDefaults{
+struct WebsiteObjectDefaults:ICDStorageDefaults{
     var faviconURL:String =  String.empty
     var url:String = String.empty
     var title:String = BrowserStrings.NoTitle

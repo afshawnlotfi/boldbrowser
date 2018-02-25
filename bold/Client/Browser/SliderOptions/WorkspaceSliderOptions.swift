@@ -11,9 +11,9 @@ import UIKit
 class WorkspaceSliderOptions:NSObject{
   
     
-    private(set) var options:[[GMenuOption]]
+    private(set) var menuOptions:[[GMenuOption]]
     override init() {
-        options = [
+        menuOptions = [
             [
                 
             ]

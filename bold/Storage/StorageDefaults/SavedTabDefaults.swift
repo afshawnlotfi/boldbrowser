@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct SavedTabDefaults:IStorageDefaults{
+struct SavedTabDefaults:ICDStorageDefaults{
     var index: Int
     init(startIndex : Int) {
         index = startIndex

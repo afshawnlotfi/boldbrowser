@@ -21,7 +21,7 @@ class SearchHashtagViewController: UIViewController {
     @IBOutlet private weak var searchIconBtn: UIButton!
     @IBOutlet private weak var searchTextField: UITextField!
     private var hashtagSelectionManager = SelectionManager<String>()
-    private var storageManager = StorageManager<Tag>()
+    private var storageManager = StorageManager<SavedTag>()
     private var collectionHeight:NSLayoutConstraint!
     
     
@@ -68,7 +68,7 @@ class SearchHashtagViewController: UIViewController {
     func presentView(forWebsite : String){
         self.currentURL = forWebsite
         
-        if let tags = storageManager.fetchObjects(fromDisk: true) as? [Tag]{
+        if let tags = storageManager.fetchObjects(fromDisk: true) as? [SavedTag]{
             let tags = tags.filter{
                 $0.url == self.currentURL
             }
@@ -106,7 +106,7 @@ extension SearchHashtagViewController:SelectionDelegate{
 
 
         if let tag = item as? String{
-            if let tags = storageManager.fetchObjects(fromDisk: false) as? [Tag]{
+            if let tags = storageManager.fetchObjects(fromDisk: false) as? [SavedTag]{
                 let identifiedTags = tags.filter{
                     $0.tagName == tag
                 }
@@ -131,7 +131,7 @@ extension SearchHashtagViewController:SelectionDelegate{
         
         
         if let tag = item as? String{
-            if let tags = storageManager.dataObjects as? [Tag]{
+            if let tags = storageManager.dataObjects as? [SavedTag]{
                 let identifiedTags = tags.filter{
                     $0.tagName == tag
                 }

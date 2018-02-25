@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct FaviconDefaults:IStorageDefaults{
+struct FaviconDefaults:ICDStorageDefaults{
     var faviconURL:String = String.empty
     var faviconData:Data = UIImagePNGRepresentation(#imageLiteral(resourceName: "webpage"))!
 }

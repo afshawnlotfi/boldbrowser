@@ -13,18 +13,18 @@ class BrowserViewController: UIViewController {
     @IBOutlet weak var topMenu: UIVisualEffectView!
     @IBOutlet private var backgroundImageView: UIImageView!
     private var tabManager:TabManager!
-    private var storageManager:StorageManager<Tag>!
     @IBOutlet weak var workspaceBtn: GMenuButton!
     private var tabCollectionView: TabCollectionView!
     @IBOutlet private var tabStack: UIStackView!
     @IBOutlet private var addTabBtn: UIButton!
     private var tabScrollManager = TabScrollManager()
     @IBOutlet private weak var showTabsBtn: UIButton!
-    private var tabOptionManager = WorkspaceSlideManager()
+    private var tabOptionManager:WorkspaceSlideManager!
+    private var workspaceStorageManager:StorageManager<Workspace>!
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tabManager = TabManager()
-        self.storageManager = StorageManager<Tag>()
+        self.workspaceStorageManager = StorageManager<Workspace>()
+        self.tabManager = TabManager(workspaceManager: workspaceStorageManager)
         
         self.tabCollectionView = TabCollectionView(tabManager: tabManager)
         self.tabStack.addArrangedSubview(self.tabCollectionView)
@@ -37,18 +37,16 @@ class BrowserViewController: UIViewController {
         topMenu.isHidden = true
         UIApplication.shared.isStatusBarHidden = true
         
+        self.tabOptionManager = WorkspaceSlideManager(gMenuButton: workspaceBtn, workspaceStorageManager: workspaceStorageManager)
         var buttonDefaults = OptionButtonDefaults(view: tabStack)
         buttonDefaults.isRightSide = false
         buttonDefaults.unselectedImage = #imageLiteral(resourceName: "arrow-right")
         buttonDefaults.selectedImage = #imageLiteral(resourceName: "arrow-left")
-        workspaceBtn.alternateSelection = true
-
         workspaceBtn.configureButton(buttonDefaults: buttonDefaults)
-        workspaceBtn.setTitle("Hello", for: .normal)
-        workspaceBtn.contentHorizontalAlignment = .left
+        
         workspaceBtn.gMenuButtonDelegate = tabOptionManager
-        let options = WorkspaceSliderOptions()
-        tabOptionManager.updateOptions(options: options.options)
+        let sliderOptions = WorkspaceSliderOptions()
+        tabOptionManager.updateOptions(options: sliderOptions.menuOptions)
     }
     @objc func addTabToDisk(){
         
