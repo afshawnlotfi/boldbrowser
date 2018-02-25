@@ -25,7 +25,7 @@ class FaviconManager:ITabPluginManager{
     /// - Parameter forUrl: url to search favicon for
     /// - Returns: returns resulting favicon data
     func fetchFavicon(forUrl : String) -> Favicon{
-        let favicons = storageManager.fetchObjects(fromDisk: false)  as! [Favicon]
+        let favicons = storageManager.fetchObjects(fromDisk: false)  
         let matchingFavicons = (favicons.filter{ $0.faviconURL == forUrl})
         if matchingFavicons.count == 0{
             return Favicon.DefaultFavicon(faviconURL: BrowserStrings.NewTabURL, faviconData: UIImagePNGRepresentation(#imageLiteral(resourceName: "webpage"))!)
@@ -49,7 +49,7 @@ class FaviconManager:ITabPluginManager{
                         storageDefaults.faviconData = UIImagePNGRepresentation(image)!
                     }
                     
-                    let matchingIndecies = ((self.storageManager.fetchObjects(fromDisk: false) as! [Favicon]).filter{ $0.faviconURL == faviconURL})
+                    let matchingIndecies = ((self.storageManager.fetchObjects(fromDisk: false) ).filter{ $0.faviconURL == faviconURL})
 
                     if matchingIndecies.count == 0{
                         self.storageManager.addObject(from: storageDefaults)

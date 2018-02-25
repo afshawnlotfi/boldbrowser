@@ -11,49 +11,50 @@ import UIKit
 class WorkspaceSlideManager:OptionSlideManager{
     private let titleLabel = GLabel()
     private let descipLabel =  GLabel()
-
+    private let padding = SizeConstants.Padding * 2
+    private var tagStorageManager = StorageManager<SavedTag>()
     private var workspaceStorageManager:StorageManager<Workspace>
+    
     init(gMenuButton : GMenuButton, workspaceStorageManager : StorageManager<Workspace>) {
         self.workspaceStorageManager = workspaceStorageManager
         super.init(gMenuButton : gMenuButton)
-
+        workspaceStorageManager.fetchObjects(fromDisk: true)
+        tagStorageManager.fetchObjects(fromDisk: true)
         gMenuButton.alternateSelection = true
         gMenuButton.setTitle(BrowserInfo.currentWorkspace, for: .normal)
         gMenuButton.contentHorizontalAlignment = .left
-        titleLabel.font = UIFont.systemFont(ofSize: SizeConstants.Padding * 2)
+        titleLabel.font = UIFont.systemFont(ofSize: padding)
         descipLabel.font = UIFont.systemFont(ofSize: SizeConstants.Padding)
-        
-        
     }
     
-
     
     override func sliderDidOpen() {
         titleLabel.text = BrowserInfo.currentWorkspace
-        let allWorkspaces = (workspaceStorageManager.fetchObjects(fromDisk: false) as? [Workspace])
-        if let workspaces = (allWorkspaces?.filter{
+        let allWorkspaces = (workspaceStorageManager.fetchObjects(fromDisk: false))
+        
+        let tags = (tagStorageManager.fetchObjects(fromDisk: false)).filter{
+            $0.tagName == BrowserInfo.currentWorkspace
+        }
+        
+        let workspaces = (allWorkspaces.filter{
             $0.title == BrowserInfo.currentWorkspace
-            }){
+            })
             if workspaces.count > 0{
                 let workspace = workspaces[0]
+                let tagCount = tags.count
                 if let tabCount = workspace.savedTabs?.allObjects.count{
-                    descipLabel.text = String(format: "%d Tabs • %d Tags", arguments: [tabCount,tabCount])
+                    descipLabel.text = String(format: "%d Tabs • %d Tags", arguments: [tabCount,tagCount])
                 }
                 var gMenuOptions:[[GMenuOption]] = [[]]
-                allWorkspaces?.forEach{
+                allWorkspaces.forEach{
                     let gMenuOption = GMenuOption(title: $0.title)
                     gMenuOptions[0].append(gMenuOption)
                 }
                 self.updateOptions(options: gMenuOptions)
                 
             }
-        }
+        
     }
-        
-        
-
-    
-    
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
@@ -71,7 +72,6 @@ class WorkspaceSlideManager:OptionSlideManager{
         imageView.image = #imageLiteral(resourceName: "background-image")
         
         imageView.contentMode = .scaleAspectFit
-        let padding = SizeConstants.Padding * 2
         headerStack.layoutMargins = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
         headerStack.isLayoutMarginsRelativeArrangement = true
         imageView.heightAnchor.constraint(equalToConstant: SizeConstants.Padding * 10).isActive = true

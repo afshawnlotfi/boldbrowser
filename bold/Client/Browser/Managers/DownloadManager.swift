@@ -71,7 +71,7 @@ class DownloadManager:ITabPluginManager{
         
         let storageDefaults = DownloadedWebsiteDefaults(url: webSource.url, data: HTMLSnapshot.data(using: .utf8) ?? Data())
 
-        let matchingIndecies = ((self.storageManager.dataObjects as! [DownloadedWebsite]).filter{ $0.url == storageDefaults.url})
+        let matchingIndecies = ((self.storageManager.dataObjects).filter{ $0.url == storageDefaults.url})
         
         if matchingIndecies.count == 0{
             self.storageManager.addObject(from: storageDefaults)

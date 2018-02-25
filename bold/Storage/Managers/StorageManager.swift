@@ -13,7 +13,7 @@ import UIKit
 class StorageManager<StorageObject:NSManagedObject>:NSObject{
     private var appDelegate = UIApplication.shared.delegate as! AppDelegate
     private var context: NSManagedObjectContext
-    var dataObjects: [NSManagedObject] = []
+    var dataObjects: [StorageObject] = []
 
     override init() {
         context = appDelegate.persistentContainer.viewContext
@@ -24,7 +24,7 @@ class StorageManager<StorageObject:NSManagedObject>:NSObject{
     /// Adds Object to Core Data which is configured for IStorageDefaults
     ///
     /// - Parameter storageDefaults: Storage Dafaults of Object
-    @discardableResult func addObject(from storageDefaults: ICDStorageDefaults) -> NSManagedObject {
+    @discardableResult func addObject(from storageDefaults: ICDStorageDefaults) -> StorageObject {
         let entity = NSEntityDescription.entity(forEntityName: String(describing : StorageObject.self), in: context)
         let item = StorageObject(entity: entity!, insertInto: context)
 
@@ -50,7 +50,7 @@ class StorageManager<StorageObject:NSManagedObject>:NSObject{
     /// Fetches Object from Core Data
     ///
     /// - Returns: Standard NSManagedObject which is casted to specific storage object later
-    @discardableResult func fetchObjects(fromDisk : Bool) -> [NSManagedObject]{
+    @discardableResult func fetchObjects(fromDisk : Bool) -> [StorageObject]{
         if fromDisk{
             do{
                 dataObjects = try context.fetch(StorageObject.fetchRequest()) as! [StorageObject]
@@ -61,7 +61,9 @@ class StorageManager<StorageObject:NSManagedObject>:NSObject{
             
             //Order objects if it is a OrderObject
             if let orderedObjects = dataObjects as? [OrderedObject]{
-                dataObjects = orderedObjects.sorted { $0.index < $1.index }
+                if let storageObjects = (orderedObjects.sorted { $0.index < $1.index } as? [StorageObject]){
+                    dataObjects = storageObjects
+                }
             }
         }
         

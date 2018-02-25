@@ -97,7 +97,7 @@ class PDFPagePageOption:NSObject,TabOption,TabOptionDelegate,PDFGenerationManage
     
     func writeToDisk(storageDefaults : PDFStorageDefaults){
     
-        let matchingIndecies = ((self.storageManager.fetchObjects(fromDisk: false) as! [PDF]).filter{ $0.url == storageDefaults.url})
+        let matchingIndecies = ((self.storageManager.fetchObjects(fromDisk: false)).filter{ $0.url == storageDefaults.url})
 
         
         if matchingIndecies.count == 0{

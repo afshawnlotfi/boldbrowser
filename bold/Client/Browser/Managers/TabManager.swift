@@ -9,7 +9,7 @@
 import Foundation
 import WebKit
 
-@objc protocol TabManagerDelegate{
+protocol TabManagerDelegate{
     
     func tabManager(_ tabManager : TabManager, didAddTab tab: Tab , atIndex : Int)
     func tabManager(_ tabManager : TabManager, didRemoveTab tab: Tab, atIndex : Int)
@@ -19,18 +19,21 @@ import WebKit
 
 
 
+
+
+
 class TabManager:NSObject{
     
     var tabs:[Tab] = []
     private(set) var tabScriptManager = TabScriptManager()
     private var routerManager = RouterManager()
     var tabScrollManager:TabScrollManager?
-    private let storageManager:WorkspaceStorageManager
+    private let storageManager:SavedTabStorageManager
 
     var tabManagerDelegates = [TabManagerDelegate]()
     
     init(workspaceManager : StorageManager<Workspace>) {
-        self.storageManager = WorkspaceStorageManager(workspaceManager: workspaceManager)
+        self.storageManager = SavedTabStorageManager(workspaceManager: workspaceManager)
         super.init()
         
         if BrowserInfo.currentWorkspace == String.empty{

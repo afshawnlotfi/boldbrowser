@@ -56,7 +56,7 @@
                                                 <rect key="frame" x="128.5" y="20" width="118" height="66"/>
                                                 <state key="normal" image="tavis"/>
                                             </button>
-                                            <button opaque="NO" alpha="0.60000002384185791" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E7r-zN-tVV" customClass="GMenuButton" customModule="bold" customModuleProvider="target">
+                                            <button opaque="NO" alpha="0.60000002384185791" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E7r-zN-tVV">
                                                 <rect key="frame" x="246.5" y="20" width="118.5" height="66"/>
                                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <state key="normal" image="switch-tabs"/>

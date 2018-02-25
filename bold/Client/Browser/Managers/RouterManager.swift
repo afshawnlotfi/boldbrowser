@@ -38,7 +38,7 @@ class RouterManager:NSObject{
     ///
     /// - Parameter url: url to attempt to load
     func loadOffline(forUrl : URL, webview : TabWebView){
-        let matchingIndecies = ((self.storageManager.fetchObjects(fromDisk: false) as! [DownloadedWebsite]).filter{ $0.url == forUrl.absoluteString})
+        let matchingIndecies = ((self.storageManager.fetchObjects(fromDisk: false)).filter{ $0.url == forUrl.absoluteString})
         
         if matchingIndecies.count > 0{
             let downloaded = matchingIndecies[matchingIndecies.count - 1]

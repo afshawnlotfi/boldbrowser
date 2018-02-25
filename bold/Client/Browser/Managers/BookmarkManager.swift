@@ -14,7 +14,7 @@ class BookmarkManager:GMenuButtonDelegate{
     private var searchHashtag = SearchHashtagViewController()
     
     func gMenuButton(didSelectButton button: GMenuButton, buttonDefaults: IButtonDefaults, index : Int) {
-        if let bookmarkButtonDefault = buttonDefaults as? BookmarkButtonDefaults{
+        if buttonDefaults is BookmarkButtonDefaults{
 //            let tab = bookmarkButtonDefault.tab
             searchHashtag.modalPresentationStyle = .overCurrentContext
             searchHashtag.presentView(forWebsite: "https://wikipedia.org")
@@ -49,7 +49,7 @@ class BookmarkManager:GMenuButtonDelegate{
  
     
     func isBookmark(url : String) -> Bool{
-        return ((self.storageManager.dataObjects as! [Bookmark]).filter{$0.url == url }).count > 0
+        return ((self.storageManager.dataObjects ).filter{$0.url == url }).count > 0
         
     }
     
@@ -72,7 +72,7 @@ class BookmarkManager:GMenuButtonDelegate{
     
     func removeBookmark(url : String){
         
-        let bookmarks = (self.storageManager.dataObjects as! [Bookmark]).filter{$0.url == url }
+        let bookmarks = (self.storageManager.dataObjects ).filter{$0.url == url }
         storageManager.deleteObjects(objects: bookmarks)
         
     }
