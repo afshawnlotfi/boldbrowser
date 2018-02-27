@@ -8,17 +8,35 @@
 
 import UIKit
 
+class WorkspaceOption:SliderOptionDelegate{
+    
+    private var wsStorageManager:WorkspaceStorageManager
+    init(wsStorageManager : WorkspaceStorageManager){
+        self.wsStorageManager = wsStorageManager
+    }
+    
+    func sliderOption(didSelectCell cell: GTableViewCell){
+        if let tag = cell.textLabel?.text{
+            wsStorageManager.switchWorkspace(fromTag: tag)
+        }
+    }
+    
+}
+
+
+
 class WorkspaceSlideManager:OptionSlideManager{
     private let titleLabel = GLabel()
     private let descipLabel =  GLabel()
     private let padding = SizeConstants.Padding * 2
     private var tagStorageManager = StorageManager<SavedTag>()
-    private var workspaceStorageManager:StorageManager<Workspace>
-    
-    init(gMenuButton : GMenuButton, workspaceStorageManager : StorageManager<Workspace>) {
-        self.workspaceStorageManager = workspaceStorageManager
+    private var wsStorageManager:WorkspaceStorageManager
+    private var wsOption:WorkspaceOption
+    init(gMenuButton : GMenuButton, wsStorageManager : WorkspaceStorageManager) {
+        self.wsStorageManager = wsStorageManager
+        self.wsOption = WorkspaceOption(wsStorageManager: wsStorageManager)
         super.init(gMenuButton : gMenuButton)
-        workspaceStorageManager.fetchObjects(fromDisk: true)
+        wsStorageManager.fetchObjects(fromDisk: true)
         tagStorageManager.fetchObjects(fromDisk: true)
         gMenuButton.alternateSelection = true
         gMenuButton.setTitle(BrowserInfo.currentWorkspace, for: .normal)
@@ -28,9 +46,11 @@ class WorkspaceSlideManager:OptionSlideManager{
     }
     
     
+
+    
     override func sliderDidOpen() {
         titleLabel.text = BrowserInfo.currentWorkspace
-        let allWorkspaces = (workspaceStorageManager.fetchObjects(fromDisk: false))
+        let allWorkspaces = (wsStorageManager.fetchObjects(fromDisk: false))
         
         let tags = (tagStorageManager.fetchObjects(fromDisk: false)).filter{
             $0.tagName == BrowserInfo.currentWorkspace
@@ -47,7 +67,7 @@ class WorkspaceSlideManager:OptionSlideManager{
                 }
                 var gMenuOptions:[[GMenuOption]] = [[]]
                 allWorkspaces.forEach{
-                    let gMenuOption = GMenuOption(title: $0.title)
+                    let gMenuOption = GMenuOption(title: $0.title, delegate : wsOption)
                     gMenuOptions[0].append(gMenuOption)
                 }
                 self.updateOptions(options: gMenuOptions)

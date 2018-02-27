@@ -10,10 +10,10 @@ import UIKit
 
 
 
-class PDFPagePageOption:NSObject,TabOption,TabOptionDelegate,PDFGenerationManagerDelegate{
+class PDFPagePageOption:NSObject,SliderOption,SliderOptionDelegate,PDFGenerationManagerDelegate{
    
     func pdfGenerationManager(_ pdfGenerationManager: PDFGenerationManager, didUpdatePDFProgress progress: Float) {
-        progressView.progressLabel.text = "Generating : " + String(Int(progress*100)) + "%"
+        progressView.progressLabel.text = SliderOptionStrings.PDFGenerationStatusGenerating + " : " + String(Int(progress*100)) + "%"
         progressView.progressBar.setProgress(progress, animated: true)
 
     }
@@ -33,7 +33,7 @@ class PDFPagePageOption:NSObject,TabOption,TabOptionDelegate,PDFGenerationManage
         writeToDisk(storageDefaults: storageDefaults)
         
         
-        progressView.progressLabel.text = "Finshed Generation"
+        progressView.progressLabel.text = SliderOptionStrings.PDFGenerationStatusFinished
         progressView.progressBar.setProgress(1.0, animated: true)
         
         writeToDisk(storageDefaults: storageDefaults)
@@ -57,7 +57,7 @@ class PDFPagePageOption:NSObject,TabOption,TabOptionDelegate,PDFGenerationManage
     override init() {
         super.init()
         toastView.addOptions(options: [progressView])
-        progressView.progressLabel.text = "Starting ..."
+        progressView.progressLabel.text = SliderOptionStrings.PDFGenerationStatusStarting + " ..."
         toastView.setSpacing(spacing: 20)
         toastView.setImage(image: UIImage.tintImage(image: #imageLiteral(resourceName: "download")))
         pdfManager.pdfGenerationManagerDelegate = self
@@ -65,24 +65,24 @@ class PDFPagePageOption:NSObject,TabOption,TabOptionDelegate,PDFGenerationManage
 
     }
     
-    func tabOption(didSelectCell cell: GTableViewCell, webView: TabWebView) {
+    func sliderOption(didSelectCell cell: GTableViewCell, webView: TabWebView) {
             activateOption()
         
         
         
             toastView.showToast(view: appDelegate.browserViewController.view)
             
-            let alert = UIAlertController(title: TabOptionStrings.PDFGenerationTypeTitle, message: TabOptionStrings.PDFGenerationTypeMessage, preferredStyle: .alert)
+            let alert = UIAlertController(title: SliderOptionStrings.PDFGenerationTypeTitle, message: SliderOptionStrings.PDFGenerationTypeMessage, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: String.OptionStrings.Cancel, style: .cancel, handler: { [] (_) in
                 self.toastView.dismissFromScreen()
             }))
 
-            alert.addAction(UIAlertAction(title: TabOptionStrings.PDFFullScreen, style: .default, handler: { [] (_) in
+            alert.addAction(UIAlertAction(title: SliderOptionStrings.PDFFullScreen, style: .default, handler: { [] (_) in
                 self.pdfManager.scanWebpage(webView: webView)
             }))
 
 
-            alert.addAction(UIAlertAction(title: TabOptionStrings.PDFPrintPreview, style: .default, handler: { [] (_) in
+            alert.addAction(UIAlertAction(title: SliderOptionStrings.PDFPrintPreview, style: .default, handler: { [] (_) in
                 self.pdfManager.createPrintPreview(webView: webView, pageSize: PageType.A4)
 
             }))

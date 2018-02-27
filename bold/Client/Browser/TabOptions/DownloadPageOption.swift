@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DownloadPageOption:NSObject,TabOption,TabOptionDelegate,DownloadManagerDelegate{
+class DownloadPageOption:NSObject,SliderOption,SliderOptionDelegate,DownloadManagerDelegate{
     
     
     
@@ -34,7 +34,7 @@ class DownloadPageOption:NSObject,TabOption,TabOptionDelegate,DownloadManagerDel
 
     }
     
-    func tabOption(didSelectCell cell: GTableViewCell, webView: TabWebView) {
+    func sliderOption(didSelectCell cell: GTableViewCell, webView: TabWebView) {
         self.webView = webView
         activateOption()
         self.cell = cell

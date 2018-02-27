@@ -10,5 +10,5 @@ import Foundation
 
 struct WorkspaceDefaults:ICDStorageDefaults{
     var title:String =  String.empty
-    var dateCreated:Date = Date(timeIntervalSince1970: Date.timeIntervalBetween1970AndReferenceDate)
+    private(set) var dateCreated:Date = Date(timeIntervalSince1970: Date.timeIntervalBetween1970AndReferenceDate)
 }

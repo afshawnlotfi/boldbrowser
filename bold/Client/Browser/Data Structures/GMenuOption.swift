@@ -13,9 +13,9 @@ class GMenuOption{
     private(set) var title = String.empty
     private(set) var icon:UIImage?
     private(set) var selector:GSelector?
-    private(set) var delegate:TabOptionDelegate?
+    private(set) var delegate:SliderOptionDelegate?
     private(set) var includeSwitch:Bool = false
-    init(title : String? = nil, icon : UIImage? = nil, selector:GSelector? = nil, includeSwitch : Bool = false, delegate : TabOptionDelegate? = nil) {
+    init(title : String? = nil, icon : UIImage? = nil, selector:GSelector? = nil, includeSwitch : Bool = false, delegate : SliderOptionDelegate? = nil) {
         if let menuTitle = title{
             self.title = menuTitle
         }

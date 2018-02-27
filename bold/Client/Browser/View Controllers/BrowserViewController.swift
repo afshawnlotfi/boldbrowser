@@ -37,7 +37,7 @@ class BrowserViewController: UIViewController {
         topMenu.isHidden = true
         UIApplication.shared.isStatusBarHidden = true
         
-        self.tabOptionManager = WorkspaceSlideManager(gMenuButton: workspaceBtn, workspaceStorageManager: workspaceStorageManager)
+        self.tabOptionManager = WorkspaceSlideManager(gMenuButton: workspaceBtn, wsStorageManager: workspaceStorageManager)
         var buttonDefaults = OptionButtonDefaults(view: tabStack)
         buttonDefaults.isRightSide = false
         buttonDefaults.unselectedImage = #imageLiteral(resourceName: "arrow-right")

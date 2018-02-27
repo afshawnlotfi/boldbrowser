@@ -1,5 +1,5 @@
 //
-//  TabOptionStrings.swift
+//  SliderOptionStrings.swift
 //  bold
 //
 //  Created by Afshawn Lotfi on 1/8/18.
@@ -8,10 +8,10 @@
 
 import Foundation
 
-struct TabOptionStrings{}
+struct SliderOptionStrings{}
 
 //All Options
-extension TabOptionStrings{
+extension SliderOptionStrings{
     
     public static let FindInPage = NSLocalizedString("GTableViewCell.textLabel", value: "Find In Page", comment: "Find in page option title")
     public static let  DownloadPage = NSLocalizedString("GTableViewCell.textLabel", value: "Download Page", comment: "Download page option title")
@@ -23,8 +23,10 @@ extension TabOptionStrings{
 
 
 //PDF Options
-extension TabOptionStrings{
-    
+extension SliderOptionStrings{
+    public static let PDFGenerationStatusGenerating = NSLocalizedString("UIAlertAction.title", value: "Generating", comment: "PDF Type generating status")
+    public static let PDFGenerationStatusStarting = NSLocalizedString("UIAlertAction.title", value: "Starting", comment: "PDF Type generating status")
+    public static let PDFGenerationStatusFinished = NSLocalizedString("UIAlertAction.title", value: "Finshed Generation", comment: "PDF Type finished status")
     public static let PDFGenerationTypeTitle = NSLocalizedString("UIAlertAction.title", value: "What type of PDF would you like to generate?", comment: "PDF Type selection title")
     public static let PDFGenerationTypeMessage = NSLocalizedString("UIAlertAction.title", value: "Full Page (exactly how you would see it in the browser, without text selection) or Print Preview", comment: "PDF Type selection message")
     public static let PDFFullScreen = NSLocalizedString("UIAlertAction.title", value: "Full Page", comment: "PDF Type selection Fullscreen")

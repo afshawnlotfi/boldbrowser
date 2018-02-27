@@ -9,6 +9,6 @@
 import Foundation
 
 struct WorkspaceKeyDefaults:IKeyStorageDefaults{
-    var key: String = "workspace"
+    private(set) var key: String = "workspace"
     var value: String = String.empty
 }

@@ -14,7 +14,6 @@ protocol TabManagerDelegate{
     func tabManager(_ tabManager : TabManager, didAddTab tab: Tab , atIndex : Int)
     func tabManager(_ tabManager : TabManager, didRemoveTab tab: Tab, atIndex : Int)
     func tabManager(_ tabManager : TabManager, didSelectTab tab: Tab, atIndex : Int)
-    
 }
 
 
@@ -22,9 +21,22 @@ protocol TabManagerDelegate{
 
 
 
-class TabManager:NSObject{
+class TabManager:NSObject, WSStorageManagerDelegate{
     
-    var tabs:[Tab] = []
+    func wsStorageManager(_ wsStorageManager: WorkspaceStorageManager, didAddWorkspace workspace: Workspace, atTag: String) {
+        
+    }
+    
+    func wsStorageManager(_ wsStorageManager: WorkspaceStorageManager, didRemoveWorkspace atTag: String) {
+        
+    }
+    
+    func wsStorageManager(_ wsStorageManager: WorkspaceStorageManager, didSwitchWorkspace toTag: String) {
+        self.restoreTabs()
+    }
+    
+    
+    private(set) var tabs:[Tab] = []
     private(set) var tabScriptManager = TabScriptManager()
     private var routerManager = RouterManager()
     var tabScrollManager:TabScrollManager?
@@ -184,6 +196,9 @@ class TabManager:NSObject{
     
     /// Restores All Tabs from Saved Tabs
     func restoreTabs(){
+        
+        self.tabs = []
+        
         var savedTabs = storageManager.fetchObjects(fromDisk: true, tagName: BrowserInfo.currentWorkspace)
 
         if savedTabs.count == 0{

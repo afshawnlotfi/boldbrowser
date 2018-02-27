@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FindInPageOption:NSObject,TabOption,TabOptionDelegate,UITextFieldDelegate{
+class FindInPageOption:NSObject,SliderOption,SliderOptionDelegate,UITextFieldDelegate{
     
     public var sliderControllerDelegate:SliderManagerDelegate?
     private var toastView = GToastView()
@@ -24,7 +24,7 @@ class FindInPageOption:NSObject,TabOption,TabOptionDelegate,UITextFieldDelegate{
         super.init()
         textfield.backgroundColor = UIColor.System.FadedWhite
         textfield.borderStyle = .roundedRect
-        textfield.attributedPlaceholder = NSAttributedString(string: TabOptionStrings.FindInPage,
+        textfield.attributedPlaceholder = NSAttributedString(string: SliderOptionStrings.FindInPage,
                                                             attributes: [NSAttributedStringKey.foregroundColor: UIColor.System.FadedWhite])
         toastView.setDismissSelector(selector: GSelector(target: self, selector: #selector(deactivateOption)) )
         textfield.delegate = self
@@ -34,7 +34,7 @@ class FindInPageOption:NSObject,TabOption,TabOptionDelegate,UITextFieldDelegate{
         backwardBtn.configureButton(image: #imageLiteral(resourceName: "arrow-left") , isTinted: true, selector: GSelector(target: self, selector: #selector(goBackward)))
     }
     
-    func tabOption(didSelectCell cell: GTableViewCell, webView: TabWebView) {
+    func sliderOption(didSelectCell cell: GTableViewCell, webView: TabWebView) {
         self.webView = webView
         activateOption()
     }
