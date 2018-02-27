@@ -8,33 +8,14 @@
 
 import UIKit
 
-class WorkspaceOption:SliderOptionDelegate{
-    
-    private var wsStorageManager:WorkspaceStorageManager
-    init(wsStorageManager : WorkspaceStorageManager){
-        self.wsStorageManager = wsStorageManager
-    }
-    
-    func sliderOption(didSelectCell cell: GTableViewCell){
-        if let tag = cell.textLabel?.text{
-            wsStorageManager.switchWorkspace(fromTag: tag)
-        }
-    }
-    
-}
-
-
-
 class WorkspaceSlideManager:OptionSlideManager{
     private let titleLabel = GLabel()
     private let descipLabel =  GLabel()
     private let padding = SizeConstants.Padding * 2
     private var tagStorageManager = StorageManager<SavedTag>()
     private var wsStorageManager:WorkspaceStorageManager
-    private var wsOption:WorkspaceOption
     init(gMenuButton : GMenuButton, wsStorageManager : WorkspaceStorageManager) {
         self.wsStorageManager = wsStorageManager
-        self.wsOption = WorkspaceOption(wsStorageManager: wsStorageManager)
         super.init(gMenuButton : gMenuButton)
         wsStorageManager.fetchObjects(fromDisk: true)
         tagStorageManager.fetchObjects(fromDisk: true)
@@ -51,9 +32,26 @@ class WorkspaceSlideManager:OptionSlideManager{
     override func sliderDidOpen() {
         titleLabel.text = BrowserInfo.currentWorkspace
         let allWorkspaces = (wsStorageManager.fetchObjects(fromDisk: false))
+        var allTags = Dictionary<String,Int>()
         
-        let tags = (tagStorageManager.fetchObjects(fromDisk: false)).filter{
-            $0.tagName == BrowserInfo.currentWorkspace
+        allWorkspaces.forEach{
+            if let tagName = $0.title{
+                if let existingTags = allTags[tagName]{
+                    allTags[tagName] = existingTags + 1
+                }else{
+                    allTags[tagName] = 1
+                }
+            }
+        }
+        
+        (tagStorageManager.fetchObjects(fromDisk: false)).forEach{
+            if let tagName = $0.tagName{
+                if let existingTags = allTags[tagName]{
+                    allTags[tagName] = existingTags + 1
+                }else{
+                    allTags[tagName] = 1
+                }
+            }
         }
         
         let workspaces = (allWorkspaces.filter{
@@ -61,13 +59,16 @@ class WorkspaceSlideManager:OptionSlideManager{
             })
             if workspaces.count > 0{
                 let workspace = workspaces[0]
-                let tagCount = tags.count
+                var tagCount = 0
+                if let tCount = allTags[BrowserInfo.currentWorkspace]{
+                    tagCount = tCount
+                }
                 if let tabCount = workspace.savedTabs?.allObjects.count{
                     descipLabel.text = String(format: "%d Tabs • %d Tags", arguments: [tabCount,tagCount])
                 }
                 var gMenuOptions:[[GMenuOption]] = [[]]
-                allWorkspaces.forEach{
-                    let gMenuOption = GMenuOption(title: $0.title, delegate : wsOption)
+                allTags.forEach{
+                    let gMenuOption = GMenuOption(title: $0.key)
                     gMenuOptions[0].append(gMenuOption)
                 }
                 self.updateOptions(options: gMenuOptions)
@@ -75,6 +76,19 @@ class WorkspaceSlideManager:OptionSlideManager{
             }
         
     }
+    
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
+        if let gCell = tableView.cellForRow(at: indexPath) as? GTableViewCell{
+            if let tag = gCell.textLabel?.text{
+                wsStorageManager.switchWorkspace(fromTag: tag)
+                gMenuButton?.setTitle(BrowserInfo.currentWorkspace, for: .normal)
+                sliderDidOpen()
+            }
+        }
+    }
+    
+    
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         

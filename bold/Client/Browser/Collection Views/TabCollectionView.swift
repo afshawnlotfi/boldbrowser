@@ -98,13 +98,13 @@ extension TabCollectionView:GCollectionViewMoveDelegate{
 
 
 extension TabCollectionView:TabManagerDelegate{
+    func tabManager(_ tabManager: TabManager, updateTabs tabs: [Tab]) {
+        self.reloadData()
+    }
     
     func tabManager(_ tabManager: TabManager, didAddTab tab: Tab, atIndex: Int) {
         tabManager.tabs[atIndex].tabDelegate = self
-        
-
         self.reloadData()
-        
     }
     
     func tabManager(_ tabManager: TabManager, didRemoveTab tab: Tab, atIndex: Int) {

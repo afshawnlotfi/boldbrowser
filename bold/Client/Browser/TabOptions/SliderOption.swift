@@ -9,11 +9,9 @@
 import Foundation
 
 
-@objc protocol SliderOptionDelegate{
+protocol SliderOptionDelegate{
 
-    @objc optional func sliderOption(didSelectCell cell: GTableViewCell, webView : TabWebView)
-    
-    @objc optional func sliderOption(didSelectCell cell: GTableViewCell)
+    func sliderOption(didSelectCell cell: GTableViewCell, webView : TabWebView)
 
 }
 

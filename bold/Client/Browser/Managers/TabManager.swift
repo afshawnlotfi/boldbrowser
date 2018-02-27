@@ -14,6 +14,8 @@ protocol TabManagerDelegate{
     func tabManager(_ tabManager : TabManager, didAddTab tab: Tab , atIndex : Int)
     func tabManager(_ tabManager : TabManager, didRemoveTab tab: Tab, atIndex : Int)
     func tabManager(_ tabManager : TabManager, didSelectTab tab: Tab, atIndex : Int)
+    func tabManager(_ tabManager : TabManager, updateTabs tabs: [Tab])
+
 }
 
 
@@ -33,6 +35,9 @@ class TabManager:NSObject, WSStorageManagerDelegate{
     
     func wsStorageManager(_ wsStorageManager: WorkspaceStorageManager, didSwitchWorkspace toTag: String) {
         self.restoreTabs()
+        tabManagerDelegates.forEach{
+            $0.tabManager(self, updateTabs: self.tabs)
+        }
     }
     
     
@@ -47,7 +52,7 @@ class TabManager:NSObject, WSStorageManagerDelegate{
     init(wsStorageManager : WorkspaceStorageManager) {
         self.storageManager = SavedTabStorageManager(wsStorageManager: wsStorageManager)
         super.init()
-        
+        wsStorageManager.wsStorageManagerDelegate = self
         if BrowserInfo.currentWorkspace == String.empty{
             var workspaceKeyDefaults = WorkspaceKeyDefaults()
             workspaceKeyDefaults.value = "general"
@@ -155,13 +160,15 @@ class TabManager:NSObject, WSStorageManagerDelegate{
     func updateTabScreenshot(atIndex : Int, withDelay : Bool  = true){
         
         func invokeScreenshot(){
-            let tab = self.tabs[atIndex]
-            if let screenshot = tab.webView?.screenshot(){
-                print(screenshot.size.height)
-                let snapshot = UIImage.cropImage(image: screenshot, size: CGSize(width: screenshot.size.width, height: screenshot.size.width - SizeConstants.TabTitleHeight))
-                if let data = UIImagePNGRepresentation(snapshot){
-                    tab.screenshotImage = snapshot
-                    self.storageManager.updateObject(updatedValues: ["screenshotData":data], object: storageManager.fetchObjects(fromDisk: false, tagName: BrowserInfo.currentWorkspace)[atIndex])
+            if self.tabs.count >= atIndex + 1{
+                let tab = self.tabs[atIndex]
+                if let screenshot = tab.webView?.screenshot(){
+                    print(screenshot.size.height)
+                    let snapshot = UIImage.cropImage(image: screenshot, size: CGSize(width: screenshot.size.width, height: screenshot.size.width - SizeConstants.TabTitleHeight))
+                    if let data = UIImagePNGRepresentation(snapshot){
+                        tab.screenshotImage = snapshot
+                        self.storageManager.updateObject(updatedValues: ["screenshotData":data], object: storageManager.fetchObjects(fromDisk: false, tagName: BrowserInfo.currentWorkspace)[atIndex])
+                    }
                 }
             }
         }
@@ -220,53 +227,54 @@ class TabManager:NSObject, WSStorageManagerDelegate{
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if let webView = object as? TabWebView{
             let index = webView.tag
-            let tab = tabs[index]
-            let savedTab = (storageManager.fetchObjects(fromDisk: false, tagName: BrowserInfo.currentWorkspace))[index]
-            let newValue = change?[NSKeyValueChangeKey(rawValue: "new")]
-            if let key = keyPath{
-                switch key {
-                case KVOConstants.estimatedProgress:
-                    //Updates webView progress bar
-                    webView.progressBarUpdated()
-                    tab.tabDelegate?.tab(tab, didUpdateProgress: webView, atIndex: index)
-                case KVOConstants.title:
-                    if let title = newValue as? String{
-                        storageManager.updateObject(updatedValues: [KVOConstants.title:title], object: savedTab)
-                        tab.lastTitle = title
-                        tab.tabDelegate?.tab(tab, didUpdateTitle: title, atIndex: index)
-                    }
-                case KVOConstants.URL:
-                    if let url = newValue as? String{
-                        tab.lastURL = URL(string: url)
-                    }
-                case KVOConstants.faviconURL:
-                    if let faviconURL = newValue as? String{
-                        storageManager.updateObject(updatedValues: [KVOConstants.faviconURL:faviconURL], object: savedTab)
-                        
-                        //Updates Tab Favicon
-                        tab.tabDelegate?.tab(tab, didUpdateFaviconURL: faviconURL, atIndex: index)
-
-                        
-                    }
-                case KVOConstants.loading:
-                    if let isLoading = newValue as? Bool{
-                        if isLoading == false{
-                            if webView.offlineLoaded == false{
-                                tab.tabSession?.updateSession(tab: tab)
-                                storageManager.updateObject(updatedValues: ["sessionData" : tab.tabSession?.data ?? TabSession.defaultData], object: savedTab)
-                                tab.webView?.evaluateJavaScript("getFavicons()")
-                            }
-                            self.updateTabScreenshot(atIndex: index)
-                            tab.tabDelegate?.tab(tab, didFinishLoading: index)
-                        }else{
-                            routerManager.route(webView: webView)
+            if tabs.count >= index + 1{
+                let tab = tabs[index]
+                let savedTab = (storageManager.fetchObjects(fromDisk: false, tagName: BrowserInfo.currentWorkspace))[index]
+                let newValue = change?[NSKeyValueChangeKey(rawValue: "new")]
+                if let key = keyPath{
+                    switch key {
+                    case KVOConstants.estimatedProgress:
+                        //Updates webView progress bar
+                        webView.progressBarUpdated()
+                        tab.tabDelegate?.tab(tab, didUpdateProgress: webView, atIndex: index)
+                    case KVOConstants.title:
+                        if let title = newValue as? String{
+                            storageManager.updateObject(updatedValues: [KVOConstants.title:title], object: savedTab)
+                            tab.lastTitle = title
+                            tab.tabDelegate?.tab(tab, didUpdateTitle: title, atIndex: index)
                         }
+                    case KVOConstants.URL:
+                        if let url = newValue as? String{
+                            tab.lastURL = URL(string: url)
+                        }
+                    case KVOConstants.faviconURL:
+                        if let faviconURL = newValue as? String{
+                            storageManager.updateObject(updatedValues: [KVOConstants.faviconURL:faviconURL], object: savedTab)
+                            
+                            //Updates Tab Favicon
+                            tab.tabDelegate?.tab(tab, didUpdateFaviconURL: faviconURL, atIndex: index)
+
+                            
+                        }
+                    case KVOConstants.loading:
+                        if let isLoading = newValue as? Bool{
+                            if isLoading == false{
+                                if webView.offlineLoaded == false{
+                                    tab.tabSession?.updateSession(tab: tab)
+                                    storageManager.updateObject(updatedValues: ["sessionData" : tab.tabSession?.data ?? TabSession.defaultData], object: savedTab)
+                                    tab.webView?.evaluateJavaScript("getFavicons()")
+                                }
+                                self.updateTabScreenshot(atIndex: index)
+                                tab.tabDelegate?.tab(tab, didFinishLoading: index)
+                            }else{
+                                routerManager.route(webView: webView)
+                            }
+                        }
+                    default:
+                        break
                     }
-                default:
-                    break
                 }
             }
-        }
-        
+      }
     }
 }

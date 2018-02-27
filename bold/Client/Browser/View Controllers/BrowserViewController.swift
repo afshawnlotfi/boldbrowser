@@ -25,7 +25,6 @@ class BrowserViewController: UIViewController {
         super.viewDidLoad()
         self.workspaceStorageManager = WorkspaceStorageManager()
         self.tabManager = TabManager(wsStorageManager: workspaceStorageManager)
-        
         self.tabCollectionView = TabCollectionView(tabManager: tabManager)
         self.tabStack.addArrangedSubview(self.tabCollectionView)
         self.tabManager.restoreTabs()
