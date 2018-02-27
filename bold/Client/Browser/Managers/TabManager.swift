@@ -32,8 +32,8 @@ class TabManager:NSObject{
 
     var tabManagerDelegates = [TabManagerDelegate]()
     
-    init(workspaceManager : StorageManager<Workspace>) {
-        self.storageManager = SavedTabStorageManager(workspaceManager: workspaceManager)
+    init(wsStorageManager : WorkspaceStorageManager) {
+        self.storageManager = SavedTabStorageManager(wsStorageManager: wsStorageManager)
         super.init()
         
         if BrowserInfo.currentWorkspace == String.empty{
@@ -42,7 +42,7 @@ class TabManager:NSObject{
             KeyStorageManager.setValue(from: workspaceKeyDefaults)
         }
         
-        workspaceManager.fetchObjects(fromDisk: true)
+        wsStorageManager.fetchObjects(fromDisk: true)
         
     }
     

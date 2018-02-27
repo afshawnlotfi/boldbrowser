@@ -20,11 +20,11 @@ class BrowserViewController: UIViewController {
     private var tabScrollManager = TabScrollManager()
     @IBOutlet private weak var showTabsBtn: UIButton!
     private var tabOptionManager:WorkspaceSlideManager!
-    private var workspaceStorageManager:StorageManager<Workspace>!
+    private var workspaceStorageManager:WorkspaceStorageManager!
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.workspaceStorageManager = StorageManager<Workspace>()
-        self.tabManager = TabManager(workspaceManager: workspaceStorageManager)
+        self.workspaceStorageManager = WorkspaceStorageManager()
+        self.tabManager = TabManager(wsStorageManager: workspaceStorageManager)
         
         self.tabCollectionView = TabCollectionView(tabManager: tabManager)
         self.tabStack.addArrangedSubview(self.tabCollectionView)
