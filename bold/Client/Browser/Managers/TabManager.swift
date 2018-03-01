@@ -18,11 +18,6 @@ protocol TabManagerDelegate{
 
 }
 
-
-
-
-
-
 class TabManager:NSObject, WSStorageManagerDelegate{
     
     func wsStorageManager(_ wsStorageManager: WorkspaceStorageManager, didAddWorkspace workspace: Workspace, atTag: String) {
@@ -63,6 +58,21 @@ class TabManager:NSObject, WSStorageManagerDelegate{
         
     }
     
+    
+    
+    /// Deletes a tab at a specifc index
+    ///
+    /// - Parameter atIndex: index of tab
+    func deleteTab(atIndex : Int){
+        let tab = tabs[atIndex]
+        storageManager.deleteObjects(objects: [storageManager.dataObjects[atIndex]])
+        tabs.remove(at: atIndex)
+        tabManagerDelegates.forEach{
+            $0.tabManager(self, didRemoveTab: tab, atIndex: atIndex)
+        }
+        self.restoreTabs()
+
+    }
     
     /// Adds tab at specified index with cofniguratio≈n
     ///

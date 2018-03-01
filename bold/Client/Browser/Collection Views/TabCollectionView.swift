@@ -18,13 +18,12 @@ protocol TabCollectionViewDelegate {
 
 
 class TabCollectionView: GCollectionView {
-    private let optionButtonManager = OptionButtonManager()
+    let optionButtonManager = OptionButtonManager()
     private var tabManager:TabManager
    
     //Built In Plugins
     let faviconManager = FaviconManager()
     private let downloadManager = DownloadManager()
-
     private let tabSliderOptions = TabSliderOptions()
     
     private var builtInScripts = [TabPluginScript]()
@@ -33,11 +32,9 @@ class TabCollectionView: GCollectionView {
     init(tabManager : TabManager) {
         self.tabManager = tabManager
         super.init(identifier: GIdentifierStrings.ContainerCVCell)
-        
         self.dataSource = tabDataSource
-        
         self.delegate = tabFlowLayout
-        
+        self.optionButtonManager.tabDelegate = self
         //Built in scripts
         builtInScripts = [
             TabPluginScript(pluginName: "favicon", manager: faviconManager),
@@ -129,13 +126,12 @@ extension TabCollectionView:TabDelegate{
 
     }
     
+    func tab(willDeleteTab atIndex: Int) {
+        tabManager.deleteTab(atIndex: atIndex)
+    }
+    
     func tab(_ tab: Tab, didFinishLoading atIndex: Int) {
-        if let cell = self.cellForItem(at: IndexPath(row: atIndex, section: 0)) as? GContainerCVCell{
-            optionButtonManager.updateOptionButtons(gCell: cell, tab: tab)
-            
-
-
-        }
+        
     }
     
     func tab(_ tab: Tab, didUpdateTitle title: String, atIndex: Int) {

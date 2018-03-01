@@ -9,13 +9,14 @@
 import UIKit
 
 
+
 class OptionButtonManager{
     
     
     private let bookmarkManager = BookmarkManager()
     private let tabSliderOptions = TabSliderOptions()
-
     private var tabOptionManager = TabSlideManager()
+    public var tabDelegate:TabDelegate?
 
     init(){
         
@@ -23,16 +24,10 @@ class OptionButtonManager{
         tabSliderOptions.findInPageOption.sliderControllerDelegate = tabOptionManager
         tabSliderOptions.pdfPageOption.sliderControllerDelegate = tabOptionManager
         
-        
     }
     
     
-
-    
-    func updateOptionButtons(gCell : GContainerCVCell, tab : Tab){
-        
-
-        
+    func updateFocusOptions(gCell : GContainerCVCell, tab : Tab){
         var bookmarkDefault = BookmarkButtonDefaults(tab: tab)
         bookmarkDefault.isSelected = bookmarkManager.isBookmark(url: (tab.displayURL?.absoluteString)!)
         let bookmarkBtn = GMenuButton(buttonDefaults: bookmarkDefault)
@@ -48,8 +43,19 @@ class OptionButtonManager{
         }else{
             gCell.setOptionButtons(buttons: [bookmarkBtn])
         }
+    }
+    
+    func updateUnFocusOptions(gCell : GContainerCVCell){
         
-        
+        let deleteBtn = GMenuButton()
+        deleteBtn.tag = gCell.tag
+        deleteBtn.configureButton(image: #imageLiteral(resourceName: "close-page"), isTinted: true, selector: GSelector(target: self, selector: #selector(deleteTab(_:))))
+        gCell.setOptionButtons(buttons: [deleteBtn])
+
+    }
+    
+    @objc private func deleteTab(_ button : UIButton){
+        tabDelegate?.tab(willDeleteTab: button.tag)
     }
     
 }

@@ -62,6 +62,13 @@ class TabCVDataSource: NSObject, UICollectionViewDataSource{
         
             cell.setCellTitle(title: tab.displayTitle)
         
+            tabCollectionView.optionButtonManager.updateFocusOptions(gCell: cell, tab: tab)
+                
+                
+                
+            
+            
+            
             if indexPath.row == tabManager.tabs.count - 1{
                 cell.alpha = 0
                 UIView.animate(withDuration: 0.25, animations: {

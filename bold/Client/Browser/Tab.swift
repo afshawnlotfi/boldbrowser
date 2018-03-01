@@ -12,6 +12,7 @@ import WebKit
 
 protocol TabDelegate {
     func tab(_ tab: Tab, didCreateWebview webView: TabWebView, atIndex : Int)
+    func tab(willDeleteTab atIndex : Int)
     func tab(_ tab : Tab, didFinishLoading atIndex : Int)
     func tab(_ tab : Tab, didUpdateTitle title : String, atIndex : Int)
     func tab(_ tab : Tab, didUpdateFaviconURL faviconURL : String, atIndex : Int)
