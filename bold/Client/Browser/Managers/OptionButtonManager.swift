@@ -12,7 +12,7 @@ import UIKit
 
 class OptionButtonManager{
     
-    
+    public var isTabFocused:Bool = true
     private let bookmarkManager = BookmarkManager()
     private let tabSliderOptions = TabSliderOptions()
     private var tabOptionManager = TabSlideManager()

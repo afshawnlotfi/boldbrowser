@@ -66,12 +66,12 @@ class TabManager:NSObject, WSStorageManagerDelegate{
     func deleteTab(atIndex : Int){
         let tab = tabs[atIndex]
         storageManager.deleteObjects(objects: [storageManager.dataObjects[atIndex]])
+        tab.webView?.removeAllWebViewObservers(self)
         tabs.remove(at: atIndex)
         tabManagerDelegates.forEach{
             $0.tabManager(self, didRemoveTab: tab, atIndex: atIndex)
         }
         self.restoreTabs()
-
     }
     
     /// Adds tab at specified index with cofniguratio≈n
@@ -145,7 +145,7 @@ class TabManager:NSObject, WSStorageManagerDelegate{
     ///   - observerKeys: Observer Keys
     func addObserver(tab : Tab, observerKeys : [String]){
         observerKeys.forEach{
-            tab.webView?.addObserver(self, forKeyPath: $0, options: .new, context: nil)
+            tab.webView?.addWebViewObserver(self, forKeyPath: $0, options: .new, context: nil)
         }
     }
     
@@ -197,12 +197,7 @@ class TabManager:NSObject, WSStorageManagerDelegate{
     
     
     func configureWebview(tab : Tab, plugins : [TabPluginScript]){
-        
-
-
         self.addObserver(tab: tab, observerKeys: [KVOConstants.estimatedProgress,KVOConstants.title,KVOConstants.faviconURL, KVOConstants.URL, KVOConstants.loading])
-        
-        
         self.addTabPluginScripts(tab: tab, tabScripts: plugins)
         tab.restoreWebview()
         tab.webView?.scrollView.panGestureRecognizer.addTarget(tabScrollManager!, action: #selector(tabScrollManager?.tabScrollUpdated(_:) ))

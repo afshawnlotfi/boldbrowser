@@ -37,9 +37,9 @@ class TabScrollManager{
                 if dragVelocity > (0.5 * newScreenSize.height) {
                     tabScrollDelegate?.tabScrollManager(self, didShowTopMenu: gesture)
                     dismissTimer.invalidate()
-//                    dismissTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { (timer) in
-//                        self.tabScrollDelegate?.tabScrollManager(self, didHideTopMenu: gesture)
-//                    }
+                    dismissTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { (timer) in
+                        self.tabScrollDelegate?.tabScrollManager(self, didHideTopMenu: gesture)
+                    }
                 }
             }else if dragVelocity < 0{
                 tabScrollDelegate?.tabScrollManager(self, didHideTitleMenu: gesture)

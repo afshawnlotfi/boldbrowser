@@ -11,6 +11,7 @@ import UIKit
 class WorkspaceSlideManager:OptionSlideManager{
     private let titleLabel = GLabel()
     private let descipLabel =  GLabel()
+    public var tabScrollManager:TabScrollManager?
     private let padding = SizeConstants.Padding * 2
     private var tagStorageManager = StorageManager<SavedTag>()
     private var wsStorageManager:WorkspaceStorageManager
@@ -28,8 +29,10 @@ class WorkspaceSlideManager:OptionSlideManager{
     
     
 
+
     
     override func sliderDidOpen() {
+        tabScrollManager?.dismissTimer.invalidate()
         titleLabel.text = BrowserInfo.currentWorkspace
         let allWorkspaces = (wsStorageManager.fetchObjects(fromDisk: false))
         var allTags = Dictionary<String,Int>()

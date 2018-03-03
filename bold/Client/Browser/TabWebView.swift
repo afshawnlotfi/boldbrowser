@@ -19,6 +19,7 @@ class TabWebView:WKWebView{
     private var progressConstraints:[NSLayoutConstraint] = []
     private var storageManager = StorageManager<DownloadedWebsite>()
     public var offlineLoaded = false
+    private(set) var observerKeys:[String:NSKeyValueObservingOptions] = [:]
     @objc public var faviconURL:String = ""
     override init(frame: CGRect, configuration: WKWebViewConfiguration) {
         super.init(frame: frame, configuration:  configuration)
@@ -32,7 +33,20 @@ class TabWebView:WKWebView{
         progressConstraints = self.addSubview(view: progressBar, attributes: [.top,.left,.right])
     }
     
-
+    func addWebViewObserver(_ observer: NSObject, forKeyPath keyPath: String, options: NSKeyValueObservingOptions = [], context: UnsafeMutableRawPointer?) {
+        observerKeys[keyPath] = options
+        self.addObserver(observer, forKeyPath: keyPath, options: options, context: context)
+    }
+    func removeWebViewObserver(_ observer: NSObject, forKeyPath keyPath: String, context: UnsafeMutableRawPointer?) {
+        observerKeys.removeValue(forKey: keyPath)
+        self.removeObserver(observer, forKeyPath: keyPath, context: context)
+    }
+    func removeAllWebViewObservers(_ observer: NSObject) {
+        for key in observerKeys.keys{
+            self.removeObserver(observer, forKeyPath: key)
+        }
+        self.observerKeys.removeAll()
+    }
     
     
     func progressBarUpdated(){

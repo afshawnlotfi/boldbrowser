@@ -61,9 +61,13 @@ class TabCVDataSource: NSObject, UICollectionViewDataSource{
         
         
             cell.setCellTitle(title: tab.displayTitle)
-        
-            tabCollectionView.optionButtonManager.updateFocusOptions(gCell: cell, tab: tab)
-                
+            
+            if tabCollectionView.optionButtonManager.isTabFocused{
+                tabCollectionView.optionButtonManager.updateFocusOptions(gCell: cell, tab: tab)
+            }else{
+                tabCollectionView.optionButtonManager.updateUnFocusOptions(gCell: cell)
+            }
+            
                 
                 
             

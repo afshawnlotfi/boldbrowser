@@ -19,7 +19,7 @@ class BrowserViewController: UIViewController {
     @IBOutlet private var addTabBtn: UIButton!
     private var tabScrollManager = TabScrollManager()
     @IBOutlet private weak var showTabsBtn: UIButton!
-    private var tabOptionManager:WorkspaceSlideManager!
+    private var workspaceSlideManager:WorkspaceSlideManager!
     private var workspaceStorageManager:WorkspaceStorageManager!
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,22 +36,21 @@ class BrowserViewController: UIViewController {
         topMenu.isHidden = true
         UIApplication.shared.isStatusBarHidden = true
         
-        self.tabOptionManager = WorkspaceSlideManager(gMenuButton: workspaceBtn, wsStorageManager: workspaceStorageManager)
+        self.workspaceSlideManager = WorkspaceSlideManager(gMenuButton: workspaceBtn, wsStorageManager: workspaceStorageManager)
+        self.workspaceSlideManager.tabScrollManager = tabScrollManager
         var buttonDefaults = OptionButtonDefaults(view: tabStack)
         buttonDefaults.isRightSide = false
         buttonDefaults.unselectedImage = #imageLiteral(resourceName: "arrow-right")
         buttonDefaults.selectedImage = #imageLiteral(resourceName: "arrow-left")
         workspaceBtn.configureButton(buttonDefaults: buttonDefaults)
-        
-        workspaceBtn.gMenuButtonDelegate = tabOptionManager
+        workspaceBtn.gMenuButtonDelegate = workspaceSlideManager
         let sliderOptions = WorkspaceSliderOptions()
-        tabOptionManager.updateOptions(options: sliderOptions.menuOptions)
+        workspaceSlideManager.updateOptions(options: sliderOptions.menuOptions)
     }
     @objc func addTabToDisk(){
-        
         self.tabManager.addTab(atIndex: nil, configuration: nil, restoreFrom: nil)
-        
     }
+    
     
     private func getSelectedIndexPath(from tabCollectionView : TabCollectionView) -> IndexPath{
         
@@ -91,8 +90,6 @@ class BrowserViewController: UIViewController {
     
         
     
-    
-    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         tabCollectionView.collectionViewLayout.invalidateLayout()
         let indexPath = self.getSelectedIndexPath(from: self.tabCollectionView)
@@ -118,6 +115,7 @@ extension BrowserViewController:TabCollectionViewDelegate{
             tabScrollManager.dismissTimer.invalidate()
             tabCollectionView.scrollToItem(at:  atIndexPath, at: [.centeredHorizontally,.centeredVertically], animated: false)
             tabCollectionView.reloadData()
+            focusCells()
     }
     
     func tabCollectionView(_ tabCollectionView: TabCollectionView, didMinmizeCells atIndexPath: IndexPath) {
@@ -186,29 +184,13 @@ extension BrowserViewController:TabScrollManagerDelegate{
     }
     
     func tabScrollManager(_ tabScrollManager: TabScrollManager, didShowTopMenu gesture: UIPanGestureRecognizer) {
-        let selectedCells = self.tabCollectionView.visibleCells.filter{$0.isSelected == true}
-        for cell in selectedCells{
-            if let tabCell = cell as? GContainerCVCell{
-                UIView.animate(withDuration: TimeConstants.Animation, animations: {
-                    self.tabCollectionView.optionButtonManager.updateUnFocusOptions(gCell: tabCell)
-
-                })
-            }
-        }
+        unFocusCells()
         invokeTopMenu(showTopMenu: true)
 
     }
     
     func tabScrollManager(_ tabScrollManager: TabScrollManager, didHideTopMenu gesture: UIPanGestureRecognizer) {
-        let selectedCells = self.tabCollectionView.visibleCells.filter{$0.isSelected == true}
-        for cell in selectedCells{
-            if let tabCell = cell as? GContainerCVCell{
-                UIView.animate(withDuration: TimeConstants.Animation, animations: {
-                    self.tabCollectionView.optionButtonManager.updateFocusOptions(gCell: tabCell, tab: self.tabManager.tabs[tabCell.tag])
-                    
-                })
-            }
-        }
+        focusCells()
         invokeTopMenu(showTopMenu: false)
 
     }
@@ -221,6 +203,32 @@ extension BrowserViewController:TabScrollManagerDelegate{
     func tabScrollManager(_ tabScrollManager: TabScrollManager, didHideTitleMenu gesture: UIPanGestureRecognizer) {
         invokeTitleMenu(showTitleMenu: false)
 
+    }
+    
+    func focusCells(){
+        let selectedCells = self.tabCollectionView.visibleCells.filter{$0.isSelected == true}
+        tabCollectionView.optionButtonManager.isTabFocused = true
+        for cell in selectedCells{
+            if let tabCell = cell as? GContainerCVCell{
+                UIView.animate(withDuration: TimeConstants.Animation, animations: {
+                    self.tabCollectionView.optionButtonManager.updateFocusOptions(gCell: tabCell, tab: self.tabManager.tabs[tabCell.tag])
+                    
+                })
+            }
+        }
+    }
+    
+    func unFocusCells(){
+        let selectedCells = self.tabCollectionView.visibleCells.filter{$0.isSelected == true}
+        tabCollectionView.optionButtonManager.isTabFocused = false
+        for cell in selectedCells{
+            if let tabCell = cell as? GContainerCVCell{
+                UIView.animate(withDuration: TimeConstants.Animation, animations: {
+                    self.tabCollectionView.optionButtonManager.updateUnFocusOptions(gCell: tabCell)
+                    
+                })
+            }
+        }
     }
     
 

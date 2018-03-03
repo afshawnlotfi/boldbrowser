@@ -58,6 +58,10 @@ class Tab:NSObject{
         self.configuration = configuration
     }
     
+    deinit {
+        
+    }
+    
     func createWebview(){
         
         if webView == nil {

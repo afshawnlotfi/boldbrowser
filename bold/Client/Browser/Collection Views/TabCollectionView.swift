@@ -105,6 +105,7 @@ extension TabCollectionView:TabManagerDelegate{
     }
     
     func tabManager(_ tabManager: TabManager, didRemoveTab tab: Tab, atIndex: Int) {
+        self.deleteItems(at: [IndexPath(row: atIndex, section: 0)])
         self.reloadData()
     }
     
