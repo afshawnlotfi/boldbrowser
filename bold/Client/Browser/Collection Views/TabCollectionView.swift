@@ -35,6 +35,7 @@ class TabCollectionView: GCollectionView {
         self.dataSource = tabDataSource
         self.delegate = tabFlowLayout
         self.optionButtonManager.tabDelegate = self
+        
         //Built in scripts
         builtInScripts = [
             TabPluginScript(pluginName: "favicon", manager: faviconManager),
@@ -60,6 +61,8 @@ class TabCollectionView: GCollectionView {
         return  TabCVDataSource(tabManager: tabManager)
     }()
     
+    
+    
 }
 
 extension TabCollectionView:GCollectionViewMoveDelegate{
@@ -69,7 +72,6 @@ extension TabCollectionView:GCollectionViewMoveDelegate{
     func gCollectionview(_ gCollectionview: GCollectionView, willSelectCell cell: UICollectionViewCell, atIndexPath: IndexPath) {
 
         startIndexPath = atIndexPath
-        tabFlowLayout.tabCollectionViewDelegate?.tabCollectionView(self, didMinmizeCells: atIndexPath)
 
         if let gCell = cell as? GContainerCVCell{
             gCell.screenshotView.image = tabManager.tabs[atIndexPath.row].screenshotImage

@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 class SelectionCVDataSource: NSObject, UICollectionViewDataSource{
-
+    public var includeClose = false
     private var selectionManager:SelectionManager<String>
     
     
@@ -66,7 +66,8 @@ class SelectionCVDataSource: NSObject, UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if let selectionCollectionView = collectionView as? SelectionCollectionView{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: selectionCollectionView.identifier, for: indexPath) as! GSelectionCVCell
-            cell.setTitle(title: BrowserStrings.TagSymbol + self.selectionManager.items[indexPath.section][indexPath.row])
+            cell.setTitle(title: self.selectionManager.items[indexPath.section][indexPath.row])
+            cell.includeClose(self.includeClose)
             cell.tag = indexPath.row
             print(indexPath.row)
             cell.gSelectionCVCellDelegate = selectionCollectionView

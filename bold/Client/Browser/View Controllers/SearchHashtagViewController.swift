@@ -21,7 +21,6 @@ class SearchHashtagViewController: UIViewController {
     @IBOutlet private weak var searchIconBtn: UIButton!
     @IBOutlet private weak var searchTextField: UITextField!
     private var hashtagSelectionManager = SelectionManager<String>()
-    private var collectionHeight:NSLayoutConstraint!
     private var tagManager = TagManager()
     
     override func viewDidLoad() {
@@ -35,24 +34,19 @@ class SearchHashtagViewController: UIViewController {
         searchTextField.textColor = UIColor.System.Light
         searchTextField.attributedPlaceholder = NSAttributedString(string: BrowserStrings.SearchPlaceholder,
                                                              attributes: [NSAttributedStringKey.foregroundColor: UIColor.System.FadedWhite])
-        
-        
+        hashTagCollectionView.includeClose(true)
         hashTagCollectionView.selectionManager.selectionManagerDelegate = self
         searchHashTagTableView.dataSource = hashtagDataSource
         searchHashTagTableView.separatorColor = UIColor.System.FadedWhite
         searchHashTagTableView.separatorInset = UIEdgeInsets(top: 0, left: SizeConstants.Padding, bottom: 0, right: SizeConstants.Padding)
         hashtagSelectionManager.items = [[]]
         hashTagCollectionView.horizontalScroll(true)
-        collectionHeight = hashTagCollectionView.heightAnchor.constraint(equalToConstant: 45)
-        collectionHeight.isActive = true
+        hashTagCollectionView.heightAnchor.constraint(equalToConstant: 45).isActive = true
         contentStack.spacing = SizeConstants.Padding
-        hashTagCollectionView.showsHorizontalScrollIndicator = false
         contentStack.isLayoutMarginsRelativeArrangement = true
         contentStack.layoutMargins = UIEdgeInsets(top: SizeConstants.Padding, left: 0, bottom: SizeConstants.Padding, right: 0)
         contentStack.addArrangedSubview(hashTagCollectionView)
         contentStack.addArrangedSubview(searchHashTagTableView)
-        
-        
         
         
     }

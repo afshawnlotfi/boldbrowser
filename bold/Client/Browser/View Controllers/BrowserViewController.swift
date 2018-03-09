@@ -10,7 +10,10 @@ import UIKit
 import WebKit
 
 class BrowserViewController: UIViewController {
+
+    @IBOutlet weak var optionStack: UIStackView!
     @IBOutlet weak var topMenu: UIVisualEffectView!
+    @IBOutlet weak var topMenuHeightLC: NSLayoutConstraint!
     @IBOutlet private var backgroundImageView: UIImageView!
     private var tabManager:TabManager!
     @IBOutlet weak var workspaceBtn: GMenuButton!
@@ -21,6 +24,7 @@ class BrowserViewController: UIViewController {
     @IBOutlet private weak var showTabsBtn: UIButton!
     private var workspaceSlideManager:WorkspaceSlideManager!
     private var workspaceStorageManager:WorkspaceStorageManager!
+//    private var tabSelectionCV = TabSelectionCollectionView()
     override func viewDidLoad() {
         super.viewDidLoad()
         self.workspaceStorageManager = WorkspaceStorageManager()
@@ -34,7 +38,10 @@ class BrowserViewController: UIViewController {
         self.tabManager.tabScrollManager = tabScrollManager
         self.tabCollectionView.tabFlowLayout.tabCollectionViewDelegate = self
         topMenu.isHidden = true
+        optionStack.heightAnchor.constraint(equalToConstant: topMenuHeightLC.constant).isActive = true
         UIApplication.shared.isStatusBarHidden = true
+//        self.topMenu.contentView.addSubview(view: tabSelectionCV, attributes: [.right,.left,.bottom])
+//        tabSelectionCV.isHidden = true
         
         self.workspaceSlideManager = WorkspaceSlideManager(gMenuButton: workspaceBtn, wsStorageManager: workspaceStorageManager)
         self.workspaceSlideManager.tabScrollManager = tabScrollManager
@@ -75,7 +82,6 @@ class BrowserViewController: UIViewController {
     
     
     @objc func showAllTabs(){
-        
         let indexPath = getSelectedIndexPath(from: tabCollectionView)
         if tabCollectionView.tabFlowLayout.isMinimized == false{
             tabCollectionView(self.tabCollectionView, didMinmizeCells : indexPath)
@@ -83,9 +89,6 @@ class BrowserViewController: UIViewController {
         }else{
             tabCollectionView(self.tabCollectionView, didMaximizeCells : indexPath)
         }
-
-                
-        
     }
     
         
@@ -106,7 +109,8 @@ class BrowserViewController: UIViewController {
 extension BrowserViewController:TabCollectionViewDelegate{
     
     func tabCollectionView(_ tabCollectionView: TabCollectionView, didMaximizeCells atIndexPath: IndexPath) {
-        
+//            self.topMenuHeightLC.constant -= 50
+//            tabSelectionCV.isHidden = true
             tabCollectionView.tabFlowLayout.updateCollectionViewInsets(isMinimized: false)
             tabCollectionView.horizontalScroll(true)
             tabCollectionView.isPagingEnabled = true
@@ -119,7 +123,8 @@ extension BrowserViewController:TabCollectionViewDelegate{
     }
     
     func tabCollectionView(_ tabCollectionView: TabCollectionView, didMinmizeCells atIndexPath: IndexPath) {
-        
+//        self.topMenuHeightLC.constant += 50
+//        tabSelectionCV.isHidden = false
         if tabCollectionView.tabFlowLayout.isMinimized == false{
             tabManager.updateTabScreenshot(atIndex: atIndexPath.row, withDelay: false)
             tabCollectionView.horizontalScroll(false)

@@ -33,8 +33,8 @@ class GSelectionCVCell: UICollectionViewCell {
         self.titleBtn.tintColor = UIColor.System.Light
     }
     
-    func includeClose(isHidden : Bool){
-        self.isHidden = isHidden
+    func includeClose(_ include : Bool){
+        self.closeBtn.isHidden = !include
     }
     
     public func setTitle(title : String){

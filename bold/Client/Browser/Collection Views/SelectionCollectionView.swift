@@ -10,16 +10,20 @@ import UIKit
 
 class SelectionCollectionView : GCollectionView, GSelectionCVCellDelegate{
     private(set) var selectionManager = SelectionManager<String>()
-
     init() {
         super.init(identifier: GIdentifierStrings.SelectionCVCell)
         self.delegate = selectionFlowLayout
         self.dataSource = selectionDataSource
+        self.showsHorizontalScrollIndicator = false
 
     }
     
     required convenience init?(coder aDecoder: NSCoder) {
         self.init()
+    }
+    
+    func includeClose(_ include: Bool){
+        self.selectionDataSource.includeClose = include
     }
     
     private lazy var selectionDataSource: SelectionCVDataSource = {

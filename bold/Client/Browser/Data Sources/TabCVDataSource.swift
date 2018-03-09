@@ -16,11 +16,8 @@ class TabCVDataSource: NSObject, UICollectionViewDataSource{
         
     
     }
-    
-    
+        
     func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        
-        
     }
     
     
