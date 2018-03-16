@@ -186,13 +186,29 @@ extension BrowserViewController:TabScrollManagerDelegate{
     }
     
     func tabScrollManager(_ tabScrollManager: TabScrollManager, didShowTopMenu gesture: UIPanGestureRecognizer) {
+        let selectedCells = self.tabCollectionView.visibleCells.filter{$0.isSelected == true}
+        for cell in selectedCells{
+            if let tabCell = cell as? GContainerCVCell{
+                UIView.animate(withDuration: TimeConstants.Animation, animations: {
+                    self.tabCollectionView.optionButtonManager.updateUnFocusOptions(gCell: tabCell)
 
+                })
+            }
+        }
         invokeTopMenu(showTopMenu: true)
 
     }
     
     func tabScrollManager(_ tabScrollManager: TabScrollManager, didHideTopMenu gesture: UIPanGestureRecognizer) {
-
+        let selectedCells = self.tabCollectionView.visibleCells.filter{$0.isSelected == true}
+        for cell in selectedCells{
+            if let tabCell = cell as? GContainerCVCell{
+                UIView.animate(withDuration: TimeConstants.Animation, animations: {
+                    self.tabCollectionView.optionButtonManager.updateFocusOptions(gCell: tabCell, tab: self.tabManager.tabs[tabCell.tag])
+                    
+                })
+            }
+        }
         invokeTopMenu(showTopMenu: false)
 
     }

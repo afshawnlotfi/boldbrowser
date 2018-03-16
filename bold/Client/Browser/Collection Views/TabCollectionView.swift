@@ -18,7 +18,7 @@ protocol TabCollectionViewDelegate {
 
 
 class TabCollectionView: GCollectionView {
-    private let optionButtonManager = OptionButtonManager()
+    let optionButtonManager = OptionButtonManager()
     private var tabManager:TabManager
    
     //Built In Plugins
@@ -130,12 +130,7 @@ extension TabCollectionView:TabDelegate{
     }
     
     func tab(_ tab: Tab, didFinishLoading atIndex: Int) {
-        if let cell = self.cellForItem(at: IndexPath(row: atIndex, section: 0)) as? GContainerCVCell{
-            optionButtonManager.updateOptionButtons(gCell: cell, tab: tab)
-            
 
-
-        }
     }
     
     func tab(_ tab: Tab, didUpdateTitle title: String, atIndex: Int) {

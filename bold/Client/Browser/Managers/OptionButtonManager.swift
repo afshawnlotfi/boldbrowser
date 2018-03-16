@@ -29,10 +29,7 @@ class OptionButtonManager{
     
 
     
-    func updateOptionButtons(gCell : GContainerCVCell, tab : Tab){
-        
-
-        
+    func updateFocusOptions(gCell : GContainerCVCell, tab : Tab){
         var bookmarkDefault = BookmarkButtonDefaults(tab: tab)
         bookmarkDefault.isSelected = bookmarkManager.isBookmark(url: (tab.displayURL?.absoluteString)!)
         let bookmarkBtn = GMenuButton(buttonDefaults: bookmarkDefault)
@@ -48,8 +45,14 @@ class OptionButtonManager{
         }else{
             gCell.setOptionButtons(buttons: [bookmarkBtn])
         }
+    }
+    
+    func updateUnFocusOptions(gCell : GContainerCVCell){
         
-        
+        let deleteBtn = GMenuButton()
+        deleteBtn.configureButton(image: #imageLiteral(resourceName: "close-page"), isTinted: true)
+        gCell.setOptionButtons(buttons: [deleteBtn])
+
     }
     
 }
