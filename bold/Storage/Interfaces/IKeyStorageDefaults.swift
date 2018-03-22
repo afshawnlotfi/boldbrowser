@@ -10,5 +10,5 @@ import Foundation
 
 protocol IKeyStorageDefaults{
     var key:String {get}
-    var value:String {get set}
+    var value:Any {get set}
 }

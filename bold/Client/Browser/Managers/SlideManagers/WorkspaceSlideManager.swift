@@ -8,23 +8,42 @@
 
 import UIKit
 
+
+protocol ImagePickerDelegate{
+    func imagePicker(_ imagePicker : UIImagePickerController, imageChosen : UIImage)
+    func imagePicker(_ imagePicker : UIImagePickerController, imageNotChosen : UIImage)
+}
+
+
+
 class WorkspaceSlideManager:OptionSlideManager{
     private let titleLabel = GLabel()
     private let descipLabel =  GLabel()
     public var tabScrollManager:TabScrollManager?
     private let padding = SizeConstants.Padding * 2
     private var tagStorageManager = StorageManager<SavedTag>()
-    private var wsStorageManager:WorkspaceStorageManager
+    private(set) var wsStorageManager:WorkspaceStorageManager
+    private var wsPromptManager:WorkspacePromptManager!
+    private var bgPromptManager:BackgroundPromptManager!
+    private(set) var imageView = UIImageView()
+    private var imChooseManager = ImageChooseManager()
+
     init(gMenuButton : GMenuButton, wsStorageManager : WorkspaceStorageManager) {
         self.wsStorageManager = wsStorageManager
         super.init(gMenuButton : gMenuButton)
+        self.wsPromptManager = WorkspacePromptManager(wsSlideManager : self)
+        self.bgPromptManager = BackgroundPromptManager(wsSlideManager : self)
         wsStorageManager.fetchObjects(fromDisk: true)
         tagStorageManager.fetchObjects(fromDisk: true)
         gMenuButton.alternateSelection = true
+        imChooseManager.imagePickerDelegate = self
         gMenuButton.setTitle(BrowserInfo.currentWorkspace, for: .normal)
         gMenuButton.contentHorizontalAlignment = .left
         titleLabel.font = UIFont.systemFont(ofSize: padding)
         descipLabel.font = UIFont.systemFont(ofSize: SizeConstants.Padding)
+        
+        
+        wsStorageManager.updateBackgroundImage()
     }
     
     
@@ -83,12 +102,16 @@ class WorkspaceSlideManager:OptionSlideManager{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
         if let gCell = tableView.cellForRow(at: indexPath) as? GTableViewCell{
-            if let tag = gCell.textLabel?.text{
-                wsStorageManager.switchWorkspace(fromTag: tag)
-                gMenuButton?.setTitle(BrowserInfo.currentWorkspace, for: .normal)
-                sliderDidOpen()
+            if let tagName = gCell.textLabel?.text{
+                invokeTagSwitchEvent(tagName : tagName)
             }
         }
+    }
+    
+    func invokeTagSwitchEvent(tagName : String){
+        wsStorageManager.switchWorkspace(fromTag: tagName)
+        gMenuButton?.setTitle(BrowserInfo.currentWorkspace, for: .normal)
+        sliderDidOpen()
     }
     
     
@@ -105,8 +128,9 @@ class WorkspaceSlideManager:OptionSlideManager{
         
         
         titleBtnStack.addItems(items: [titleLabel,descipLabel])
-        let imageView = UIImageView()
-        imageView.image = #imageLiteral(resourceName: "background-image")
+        if let imData = wsStorageManager.currentWorkspace.backgroundData{
+            imageView.image = UIImage(data : imData)
+        }
         
         imageView.contentMode = .scaleAspectFit
         headerStack.layoutMargins = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
@@ -115,10 +139,31 @@ class WorkspaceSlideManager:OptionSlideManager{
         headerStack.spacing = SizeConstants.Padding * 3
         headerStack.addArrangedSubview(imageView)
         headerStack.addArrangedSubview(optionBtnStack)
+        
         imageView.addSubview(view: titleBtnStack, attributes: [.centerX,.centerY])
-        optionBtnStack.addItems(items: [BlurButton(image: #imageLiteral(resourceName: "new-workspace")), BlurButton(image: #imageLiteral(resourceName: "image")) , BlurButton(image: #imageLiteral(resourceName: "delete"))])
+        let addWSBtn = BlurButton(image: #imageLiteral(resourceName: "new-workspace"))
+        addWSBtn.addTarget(wsPromptManager, action: #selector(wsPromptManager.addWorkspacePrompt), for: .touchDown)
+        let imageChooseBtn = BlurButton(image: #imageLiteral(resourceName: "image"))
+        imageChooseBtn.addTarget(imChooseManager, action: #selector(imChooseManager.setBackgroundImage), for: .touchDown)
+        let removeWSBtn = BlurButton(image: #imageLiteral(resourceName: "delete"))
+        removeWSBtn.addTarget(wsPromptManager, action: #selector(wsPromptManager.removeWorkSpacePrompt), for: .touchDown)
+        optionBtnStack.addItems(items: [addWSBtn, imageChooseBtn , removeWSBtn])
         return backDrop
     }
     
+}
+
+extension WorkspaceSlideManager:ImagePickerDelegate{
+    func imagePicker(_ imagePicker: UIImagePickerController, imageChosen: UIImage) {
+        wsStorageManager.updateBackgroundImage(image: imageChosen)
+        if let imData = wsStorageManager.currentWorkspace.backgroundData{
+            imageView.image = UIImage(data : imData)
+        }
+    }
     
+    func imagePicker(_ imagePicker: UIImagePickerController, imageNotChosen: UIImage) {
+        self.bgPromptManager.imageCanceledPrompt()
+    }
+    
+
 }

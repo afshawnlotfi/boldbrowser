@@ -37,16 +37,16 @@ extension UIView{
 extension UIView{
     
     
-    @discardableResult func addSubview(view : UIView, attributes : [NSLayoutAttribute]) -> [NSLayoutConstraint]{
-        let layoutConstraints = constraintsFromAttributes(view : view, attributes: attributes)
+    @discardableResult func addSubview(view : UIView, attributes : [NSLayoutAttribute], padding : CGFloat = 0) -> [NSLayoutConstraint]{
+        let layoutConstraints = constraintsFromAttributes(view : view, attributes: attributes, padding : padding)
         view.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(view)
         self.addConstraints(layoutConstraints)
         return layoutConstraints
     }
     
-    @discardableResult func insertSubview(view : UIView, belowSubview : UIView, attributes : [NSLayoutAttribute]) -> [NSLayoutConstraint]{
-        let layoutConstraints = constraintsFromAttributes(view : view, attributes: attributes)
+    @discardableResult func insertSubview(view : UIView, belowSubview : UIView, attributes : [NSLayoutAttribute], padding : CGFloat = 0) -> [NSLayoutConstraint]{
+        let layoutConstraints = constraintsFromAttributes(view : view, attributes: attributes, padding : padding)
         view.translatesAutoresizingMaskIntoConstraints = false
         self.insertSubview(view, belowSubview: belowSubview)
         self.addConstraints(layoutConstraints)
@@ -54,11 +54,11 @@ extension UIView{
     }
     
     
-    func constraintsFromAttributes(view : UIView, attributes : [NSLayoutAttribute]) -> [NSLayoutConstraint]{
+    func constraintsFromAttributes(view : UIView, attributes : [NSLayoutAttribute], padding : CGFloat) -> [NSLayoutConstraint]{
         var layoutConstraints = [NSLayoutConstraint]()
 
         for attribute in attributes{
-            let constaint = NSLayoutConstraint(item: view, attribute: attribute, relatedBy: .equal, toItem: self, attribute: attribute, multiplier: 1.0, constant: 0.0)
+            let constaint = NSLayoutConstraint(item: view, attribute: attribute, relatedBy: .equal, toItem: self, attribute: attribute, multiplier: 1.0, constant: padding)
             layoutConstraints.append(constaint)
         }
         return layoutConstraints

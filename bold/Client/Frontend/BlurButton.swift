@@ -9,7 +9,7 @@
 import UIKit
 
 class BlurButton:UIButton{
-    var blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+    private var blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
     init(image : UIImage? = nil, size : CGFloat = SizeConstants.StandardButton) {
         super.init(frame: CGRect())
         self.backgroundColor = .clear
@@ -26,6 +26,7 @@ class BlurButton:UIButton{
         blurView.layer.cornerRadius = size*0.5
         if let imView = self.imageView{
             self.insertSubview(view: blurView, belowSubview: imView, attributes : [.centerX,.centerY])
+            blurView.isUserInteractionEnabled = false
         }
         
         

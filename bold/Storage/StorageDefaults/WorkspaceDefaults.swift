@@ -6,9 +6,10 @@
 //  Copyright © 2018 Afshawn Lotfi. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 struct WorkspaceDefaults:ICDStorageDefaults{
     var title:String =  String.empty
     private(set) var dateCreated:Date = Date(timeIntervalSince1970: Date.timeIntervalBetween1970AndReferenceDate)
+    var backgroundData = UIImagePNGRepresentation(#imageLiteral(resourceName: "background-image")) ?? Data()
 }

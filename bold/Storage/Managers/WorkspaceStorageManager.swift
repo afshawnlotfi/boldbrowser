@@ -6,7 +6,7 @@
 //  Copyright © 2018 Afshawn Lotfi. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 
 protocol WSStorageManagerDelegate{
@@ -20,14 +20,48 @@ protocol WSStorageManagerDelegate{
 class WorkspaceStorageManager:StorageManager<Workspace>{
 
     public var wsStorageManagerDelegate:WSStorageManagerDelegate?
+    private var appDelegate = UIApplication.shared.delegate as! AppDelegate
+    
+    public var sCurrentWorkspace:String{
+        let workspaceDefaults = WorkspaceKeyDefaults()
+        return KeyStorageManager.getValue(from: workspaceDefaults)
+    }
+    
+    public var currentWorkspace:Workspace{
+        let filteredWorkspaces = self.dataObjects.filter{$0.title == sCurrentWorkspace}
+        return filteredWorkspaces[0]
+    }
+    
     
     @discardableResult func addWorkspace(fromTag : String) -> Workspace{
+        
         var workspaceDefaults = WorkspaceDefaults()
         workspaceDefaults.title = fromTag
         let workspace = self.addObject(from: workspaceDefaults)
         wsStorageManagerDelegate?.wsStorageManager(self, didAddWorkspace: workspace, atTag: fromTag)
         return workspace
     }
+    
+    
+    
+    func updateBackgroundImage(image : UIImage? = nil){
+        
+        if let bImage = image{
+            appDelegate.browserViewController.changeBackgroundImage(image: bImage)
+            if let finalData = UIImagePNGRepresentation(bImage){
+                currentWorkspace.backgroundData = finalData
+                self.saveContext()
+            }
+        }else{
+            if let finalData = currentWorkspace.backgroundData{
+                if let bImage = UIImage(data : finalData){
+                    appDelegate.browserViewController.changeBackgroundImage(image: bImage)
+                }
+            }
+        }
+    }
+    
+    
     
     func switchWorkspace(fromTag : String){
         var workspaceDefaults = WorkspaceKeyDefaults()
@@ -41,13 +75,23 @@ class WorkspaceStorageManager:StorageManager<Workspace>{
         self.saveContext()
     }
     
+    
     func removeWorkspace(fromTag : String){
         
         let workspaces = searchWorkspace(fromKeyword: fromTag)
         if workspaces.count > 0{
             self.deleteObjects(objects: [workspaces[0]])
         }
+        if let tagName = self.dataObjects[self.dataObjects.count - 1].title{
+            var workspaceDefaults = WorkspaceKeyDefaults()
+            workspaceDefaults.value = tagName
+            KeyStorageManager.setValue(from: workspaceDefaults)
+            switchWorkspace(fromTag: tagName)
+        }
         wsStorageManagerDelegate?.wsStorageManager(self, didRemoveWorkspace: fromTag)
+        
+
+        
     }
     
     func searchWorkspace(fromKeyword : String) -> [Workspace]{

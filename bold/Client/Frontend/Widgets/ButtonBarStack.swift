@@ -15,7 +15,7 @@ class ButtonBarStack: UIStackView {
         
         self.axis = .horizontal
         self.distribution = .fillEqually
-        
+        self.spacing = 1
     }
     
     func addItems(items : [UIView]){

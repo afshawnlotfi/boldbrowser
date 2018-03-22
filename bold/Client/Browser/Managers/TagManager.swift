@@ -37,8 +37,6 @@ class TagManager:NSObject{
                 storageDefaults.url = forURL
                 storageManager.addObject(from: storageDefaults)
             }
-        
-        
     }
     
     func removeTag(tagName : String , forURL : String) {
